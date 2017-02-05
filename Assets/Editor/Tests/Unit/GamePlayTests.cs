@@ -1,16 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using NUnit.Framework;
 
-public class GamePlayTests : MonoBehaviour {
+[TestFixture]
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+public class GamePlayTests {
+
+	[Test]
+    public void isGamePlayable_InitialValue()
+    {
+        var gamePlay = new GamePlay();
+    }
 }
