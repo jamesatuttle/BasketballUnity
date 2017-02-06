@@ -19,7 +19,7 @@ public class Scoreboard : MonoBehaviour {
 
 		GamePlay.isGamePlayable = true;
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		timer = timer - 1;
