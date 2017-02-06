@@ -1095,7 +1095,7 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 253039345}
-  m_Text: 001
+  m_Text: 003
   m_OffsetZ: 0
   m_CharacterSize: 0.09
   m_LineSpacing: 1
@@ -2096,7 +2096,7 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 519623602}
-  m_Text: 00:00
+  m_Text: 04:00
   m_OffsetZ: 0
   m_CharacterSize: 0.09
   m_LineSpacing: 1
@@ -2609,10 +2609,10 @@ Rigidbody:
   m_Mass: 0.000001
   m_Drag: 0
   m_AngularDrag: 0
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!82 &614921134
 AudioSource:
@@ -7013,15 +7013,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400004, guid: a7ee37248f41c4eb69853ba4fa565cad, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.66
+      value: 0.02
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: a7ee37248f41c4eb69853ba4fa565cad, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 12.82
+      value: 5.08
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: a7ee37248f41c4eb69853ba4fa565cad, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 38.12
+      value: 9.96
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: a7ee37248f41c4eb69853ba4fa565cad, type: 3}
       propertyPath: m_LocalRotation.x
@@ -7132,9 +7132,9 @@ RectTransform:
   m_Father: {fileID: 1655778461}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 365, y: 280}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -176, y: 46}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1590520455
