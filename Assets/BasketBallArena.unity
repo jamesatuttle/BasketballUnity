@@ -4029,7 +4029,7 @@ TextMesh:
   m_Font: {fileID: 12800000, guid: 0e282aee32fb449ffa396a0b9a32cf3b, type: 3}
   m_Color:
     serializedVersion: 2
-    rgba: 4287222379
+    rgba: 4279703320
 --- !u!23 &1001443900
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -6774,7 +6774,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46767016a015f4c25b6842c869033e75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  score: 0
 --- !u!1 &1445983492
 GameObject:
   m_ObjectHideFlags: 0
@@ -7919,7 +7918,7 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1749233454}
-  m_Text: 000
+  m_Text: 020
   m_OffsetZ: 0
   m_CharacterSize: 0.09
   m_LineSpacing: 1
