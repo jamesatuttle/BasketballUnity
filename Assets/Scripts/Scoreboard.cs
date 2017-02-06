@@ -8,6 +8,7 @@ public class Scoreboard : MonoBehaviour {
 
 	private int timer;
 	public static int availableBalls;
+    public static int score;
 
 	// Use this for initialization
 	public void Start () {
@@ -17,7 +18,12 @@ public class Scoreboard : MonoBehaviour {
 		availableBalls = 3;
 		UpdateAvailableBalls ();
 
-		GamePlay.isGamePlayable = true;
+        score = 0;
+        updateScore();
+
+        updateBonusColour("#181717"); // set the bonus text to black
+
+        GamePlay.isGamePlayable = true;
 
         GameObject.Find("Game Over").GetComponent<Text>().text = "";
     }
@@ -81,6 +87,25 @@ public class Scoreboard : MonoBehaviour {
 
 		UpdateAvailableBalls();
 	}
+
+    public void updateScore()
+    {
+        TextMesh Scoreboard_score = GameObject.Find("Score").GetComponent<TextMesh>();
+
+        if (score >= 100)
+            Scoreboard_score.text = score.ToString();
+        else if (score >= 10)
+            Scoreboard_score.text = "0" + score.ToString();
+        else if (score >= 0)
+            Scoreboard_score.text = "00" + score.ToString();
+    }
+
+    public static void updateBonusColour(string hex)
+    {
+        Color bonusColour = new Color();
+        ColorUtility.TryParseHtmlString(hex, out bonusColour);
+        GameObject.Find("Bonus").GetComponent<TextMesh>().color = bonusColour;
+    }
 
 
 }
