@@ -8,9 +8,8 @@ namespace AssemblyCSharp
 
 		public GamePlay ()
 		{
-			
+
 		}
-			
+
 	}
 }
-
