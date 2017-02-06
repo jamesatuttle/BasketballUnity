@@ -87,4 +87,11 @@ public class ScoreboardTests
 
         Assert.AreEqual(false, GamePlay.isGamePlayable);
     }
+
+    /*[Test]
+    public void showCorrectScore_onStart()
+    {
+        startScoreboard();
+        Assert.AreEqual("000", GameObject.Find("Time Remaining").GetComponent<TextMesh>().text);
+    }*/
 }
