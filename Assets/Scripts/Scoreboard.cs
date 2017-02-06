@@ -10,7 +10,7 @@ public class Scoreboard : MonoBehaviour {
 	public static int availableBalls;
 
 	// Use this for initialization
-	void Start () {
+	public void Start () {
 		timer = 240;
 		SetTimerText ();
 
@@ -18,10 +18,12 @@ public class Scoreboard : MonoBehaviour {
 		UpdateAvailableBalls ();
 
 		GamePlay.isGamePlayable = true;
-	}
 
-	// Update is called once per frame
-	void Update () {
+        GameObject.Find("Game Over").GetComponent<Text>().text = "";
+    }
+
+    // Update is called once per frame
+    void Update () {
 		timer = timer - 1;
 		SetTimerText ();
 	}
@@ -58,7 +60,7 @@ public class Scoreboard : MonoBehaviour {
 		}
 	}
 
-	static void UpdateAvailableBalls()
+	public static void UpdateAvailableBalls()
 	{
 		TextMesh Scoreboard_noOfBalls = GameObject.Find("NumberOfBalls").GetComponent<TextMesh>();
 
