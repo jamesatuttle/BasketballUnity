@@ -8,7 +8,7 @@ public class BasketballTests {
 	public void ResetBall_CorrectPosition()
     {
         //tests to make sure that the ball starts in the correct location
-        var basketball = new Basketball();
+        //var basketball = new Basketball();
 
     }
 }
