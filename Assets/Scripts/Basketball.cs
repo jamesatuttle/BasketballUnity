@@ -30,7 +30,7 @@ public class Basketball : MonoBehaviour {
 		}
 	}
 
-	void OnCollisionEnter (Collision col) {
+	public void OnCollisionEnter (Collision col) {
 		try {
 			var collision = col.gameObject.name;
 
