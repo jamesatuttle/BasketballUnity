@@ -191,10 +191,11 @@ public class ScoreboardTests
     {
         Collider col = new Collider();
         Collision collision = new Collision();
+
         BasketDetected basketDetected = new BasketDetected();
         Basketball basketball = new Basketball();
 
-        collision.gameObject.name = (GameObject.Find("Floor").GetComponent<GameObject>().name);
+       // collision.gameObject.name = "Floor";
 
         startBasketDetected();
         startScoreboard();
@@ -202,7 +203,7 @@ public class ScoreboardTests
         basketDetected.OnTriggerEnter(col);
         basketDetected.OnTriggerExit(col);
 
-        basketball.OnCollisionEnter(collision);
+        //basketball.OnCollisionEnter(collision);
 
         basketDetected.OnTriggerEnter(col);
         basketDetected.OnTriggerExit(col);
