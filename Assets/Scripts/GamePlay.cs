@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace AssemblyCSharp
 {
 	public class GamePlay
@@ -9,9 +8,8 @@ namespace AssemblyCSharp
 
 		public GamePlay ()
 		{
-			
+
 		}
-			
+
 	}
 }
-

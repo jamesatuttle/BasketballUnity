@@ -15,7 +15,7 @@ public class Basketball : MonoBehaviour {
 	void Start () {
 		GetComponent<AudioSource> ().playOnAwake = false;
 		GetComponent<AudioSource> ().clip = bounce;
-	} 
+	}
 
 	void Update() {
 		GameObject basketball = GameObject.Find ("Basketball");
@@ -30,7 +30,7 @@ public class Basketball : MonoBehaviour {
 		}
 	}
 
-	void OnCollisionEnter (Collision col) {
+	public void OnCollisionEnter (Collision col) {
 		try {
 			var collision = col.gameObject.name;
 
@@ -46,8 +46,8 @@ public class Basketball : MonoBehaviour {
 				Scoreboard.MinusAvailableBalls();
 				BasketDetected.basketCount = 0;
 			}
-		} 
-		catch (Exception e) {
+		}
+		catch {
 			GetComponent<AudioSource> ().volume = 1;
 		}
 	}

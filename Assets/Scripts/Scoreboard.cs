@@ -8,20 +8,28 @@ public class Scoreboard : MonoBehaviour {
 
 	private int timer;
 	public static int availableBalls;
+    public static int score;
 
 	// Use this for initialization
-	void Start () {
+	public void Start () {
 		timer = 240;
 		SetTimerText ();
 
 		availableBalls = 3;
 		UpdateAvailableBalls ();
 
-		GamePlay.isGamePlayable = true;
-	}
-	
-	// Update is called once per frame
-	void Update () {
+        score = 0;
+        updateScore();
+
+        updateBonusColour("#181717"); // set the bonus text to black
+
+        GamePlay.isGamePlayable = true;
+
+        GameObject.Find("Game Over").GetComponent<Text>().text = "";
+    }
+
+    // Update is called once per frame
+    void Update () {
 		timer = timer - 1;
 		SetTimerText ();
 	}
@@ -58,7 +66,7 @@ public class Scoreboard : MonoBehaviour {
 		}
 	}
 
-	static void UpdateAvailableBalls()
+	public static void UpdateAvailableBalls()
 	{
 		TextMesh Scoreboard_noOfBalls = GameObject.Find("NumberOfBalls").GetComponent<TextMesh>();
 
@@ -79,6 +87,25 @@ public class Scoreboard : MonoBehaviour {
 
 		UpdateAvailableBalls();
 	}
+
+    public void updateScore()
+    {
+        TextMesh Scoreboard_score = GameObject.Find("Score").GetComponent<TextMesh>();
+
+        if (score >= 100)
+            Scoreboard_score.text = score.ToString();
+        else if (score >= 10)
+            Scoreboard_score.text = "0" + score.ToString();
+        else if (score >= 0)
+            Scoreboard_score.text = "00" + score.ToString();
+    }
+
+    public static void updateBonusColour(string hex)
+    {
+        Color bonusColour = new Color();
+        ColorUtility.TryParseHtmlString(hex, out bonusColour);
+        GameObject.Find("Bonus").GetComponent<TextMesh>().color = bonusColour;
+    }
 
 
 }
