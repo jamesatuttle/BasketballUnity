@@ -465,7 +465,7 @@ PlayerSettings:
     Collab: 0
     ErrorHub: 0
     Hub: 0
-    UNet: 0
+    UNet: 1
   cloudProjectId: d8a5c706-91f2-4d99-bda6-85aba661e007
   projectName: IP_Testing
   organizationId: jamesatuttle95
