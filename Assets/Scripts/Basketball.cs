@@ -20,7 +20,7 @@ public class Basketball : MonoBehaviour {
 	void Update() {
 		GameObject basketball = GameObject.Find ("Basketball");
 
-		Debug.Log ("Game: " + GamePlay.isGamePlayable );
+		//Debug.Log ("Game: " + GamePlay.isGamePlayable );
 
 		//NEEDS TO CHANGE TO GESTURE RECOGNITION
 		if (Input.GetKeyDown ("space") && GamePlay.isGamePlayable) {
