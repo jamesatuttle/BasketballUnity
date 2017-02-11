@@ -3,7 +3,7 @@
 public class GamePlay : MonoBehaviour {
 	public static bool isGamePlayable;
 	public static bool ViewingStartScreen;
-	public bool PlayGame;
+	public static bool PlayGame;
 	public bool ViewScoreboard;
 	public bool ViewLeaderboard;
 
@@ -16,5 +16,6 @@ public class GamePlay : MonoBehaviour {
 	void Awake()
 	{
 		ViewingStartScreen = true;
+		PlayGame = false;
 	}
 }

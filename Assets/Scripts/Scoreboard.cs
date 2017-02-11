@@ -30,8 +30,10 @@ public class Scoreboard : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-		timer = timer - 1;
-		SetTimerText ();
+		if (GamePlay.PlayGame) {
+			timer = timer - 1;
+			SetTimerText ();
+		}
 	}
 
 	void SetTimerText()

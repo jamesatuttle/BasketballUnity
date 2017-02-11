@@ -53,9 +53,16 @@ public class StartScreen : MonoBehaviour {
 
 			if (StartGame) {
 				StartGameText.text = "Starting Game...";
+				GamePlay.PlayGame = true;
 			} else if (ViewScoreboard) {
-				GameObject.Find ("StartScreen").GetComponent<Camera> ().transform.position = GameObject.Find ("Scoreboard Camera").GetComponent<Camera> ().transform.position;
-				GameObject.Find ("StartScreen").GetComponent<Camera> ().camera = GameObject.Find ("Scoreboard Camera").GetComponent<Camera> ().camera;
+				GameObject.Find ("StartScreen")
+					.GetComponent<Camera> ().transform.position = GameObject.Find ("Scoreboard Camera")
+					.GetComponent<Camera> ().transform.position;
+				GameObject.Find ("StartScreen")
+					.GetComponent<Camera> ()
+					.GetComponent<Camera>().fieldOfView = GameObject.Find ("Scoreboard Camera")
+						.GetComponent<Camera> ()
+						.GetComponent<Camera>().fieldOfView;
 			} else if (ViewLeaderboard) {
 
 			}
