@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using AssemblyCSharp;
 using UnityEngine;
 
 [TestFixture]

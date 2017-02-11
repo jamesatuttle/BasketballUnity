@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using AssemblyCSharp;
+//using AssemblyCSharp;
 
 public class Scoreboard : MonoBehaviour {
 
