@@ -43,7 +43,6 @@ public class Cameras : MonoBehaviour {
 	{
 		Debug.Log ("Inside Camera StartScreenCameraSetup");
 
-		StartScreen.enabled = true;
 		//PlayerPrefs.SetInt("UnitySelectMonitor", 3); // Select monitor 4
 
 		/*FrontCamera.enabled = false;

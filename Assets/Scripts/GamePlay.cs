@@ -9,7 +9,7 @@ public class GamePlay : MonoBehaviour {
 
 	void Start()
 	{
-		Cameras.StartScreenCameraSetup ();
+		//Cameras.StartScreenCameraSetup ();
 	
 	}
 
