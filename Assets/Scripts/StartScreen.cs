@@ -65,7 +65,7 @@ public class StartScreen : MonoBehaviour {
 		GameObject.Find ("Leaderboard Title").GetComponent<Text> ().text = "";
 		GameObject.Find ("Leaderboard").GetComponent<Text> ().text = "";
 
-		DisplayBall ();
+		Basketball.UpdateFixedBasketballPosition(0f, 1.53f, -15.44f);
 		StartGameTextActive ();
 	}
 
@@ -74,13 +74,6 @@ public class StartScreen : MonoBehaviour {
 		StartGameText.text = "";
 		ViewScoreboardText.text = "";
 		ViewLeaderboardText.text = "";
-	}
-
-	public static void DisplayBall() {
-		GameObject basketball = GameObject.Find ("Basketball");
-		basketball.GetComponent<Rigidbody> ().constraints = RigidbodyConstraints.FreezeAll;
-		basketball.transform.position = new Vector3(0f,1.53f,-15.44f); //inital position of ball
-		basketball.GetComponent<Rigidbody> ().useGravity = false; //turn gravity off
 	}
 
 	public void StartGameTextActive()
