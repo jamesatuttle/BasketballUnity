@@ -7,6 +7,11 @@ public class ScoreboardTests
 {
     //private Scoreboard scoreboard = new Scoreboard();
 
+	[TearDown] public void Cleanup()
+	{
+		HUDTests.ClearHUD ();
+	}
+
     public void startScoreboard()
     {
         var scoreboard = new Scoreboard();
