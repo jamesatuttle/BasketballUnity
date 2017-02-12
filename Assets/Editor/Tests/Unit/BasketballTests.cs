@@ -7,6 +7,11 @@ public class BasketballTests {
 
     GameObject basketball = GameObject.Find("Basketball");
 
+	[TearDown] public void Cleanup()
+	{
+		HUDTests.ClearHUD ();
+	}
+
     [Test]
 	public void ResetBall_CorrectPosition()
     {

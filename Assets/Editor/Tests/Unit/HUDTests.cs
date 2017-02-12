@@ -6,7 +6,12 @@ using UnityEngine;
 public class HUDTests 
 {
 
-	private void ClearHUD()
+	[TearDown] public void Cleanup()
+	{
+		ClearHUD ();
+	}
+
+	public static void ClearHUD()
 	{
 		GameObject.Find ("Game Over").GetComponent<UnityEngine.UI.Text> ().text = "";
 		GameObject.Find ("Countdown").GetComponent<UnityEngine.UI.Text> ().text = "";
@@ -19,7 +24,6 @@ public class HUDTests
 	{
 		HUD.Start();
 		Assert.AreEqual("", GameObject.Find("Game Over").GetComponent<UnityEngine.UI.Text>().text);
-		ClearHUD ();
 	}
 
 	[Test]
@@ -27,7 +31,6 @@ public class HUDTests
 	{
 		HUD.GameOver();
 		Assert.AreEqual("GAME OVER", GameObject.Find("Game Over").GetComponent<UnityEngine.UI.Text>().text);
-		ClearHUD ();
 	}
 
 }
