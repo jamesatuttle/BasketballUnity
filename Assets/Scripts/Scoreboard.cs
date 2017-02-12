@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 //using AssemblyCSharp;
 
 public class Scoreboard : MonoBehaviour {
 
-	private int timer;
+	float totalTime;
 	public static int availableBalls;
     public static int score;
 
 	// Use this for initialization
 	public void Start () {
-		timer = 240;
+		totalTime = Time.time + 240;
 		SetTimerText ();
 
 		availableBalls = 3;
@@ -24,47 +25,46 @@ public class Scoreboard : MonoBehaviour {
         updateBonusColour("#181717"); // set the bonus text to black
 
         GamePlay.isGamePlayable = true;
-
-        GameObject.Find("Game Over").GetComponent<Text>().text = "";
     }
 
     // Update is called once per frame
     void Update () {
-		if (GamePlay.PlayGame) {
-			timer = timer - 1;
-			SetTimerText ();
-		}
+		SetTimerText ();
 	}
 
 	void SetTimerText()
 	{
-		if (timer >= 0) {
+		int timeLeft = Convert.ToInt32(totalTime) - Convert.ToInt32(Time.time);
+		if (timeLeft < 0) timeLeft = 0;
+		//textMesh.text = timeLeft.ToString();
 
-			if (timer == 240)
+		if (timeLeft >= 0) {
+
+			if (timeLeft == 240)
 				GameObject.Find("Time Remaining").GetComponent<TextMesh> ().text = "04:00";
-			else if (timer >= 190)
-				GameObject.Find("Time Remaining").GetComponent<TextMesh> ().text = "03:" + (timer - 180);
-			else if (timer > 180)
-				GameObject.Find("Time Remaining").GetComponent<TextMesh> ().text = "03:0" + (timer - 180);
-			else if (timer == 180)
+			else if (timeLeft >= 190)
+				GameObject.Find("Time Remaining").GetComponent<TextMesh> ().text = "03:" + (timeLeft - 180);
+			else if (timeLeft > 180)
+				GameObject.Find("Time Remaining").GetComponent<TextMesh> ().text = "03:0" + (timeLeft - 180);
+			else if (timeLeft == 180)
 				GameObject.Find("Time Remaining").GetComponent<TextMesh> ().text = "03:00";
-			else if (timer > 130)
-				GameObject.Find("Time Remaining").GetComponent<TextMesh> ().text = "02:" + (timer - 120);
-			else if (timer > 120)
-				GameObject.Find("Time Remaining").GetComponent<TextMesh> ().text = "02:0" + (timer - 120);
+			else if (timeLeft >= 130)
+				GameObject.Find("Time Remaining").GetComponent<TextMesh> ().text = "02:" + (timeLeft - 120);
+			else if (timeLeft > 120)
+				GameObject.Find("Time Remaining").GetComponent<TextMesh> ().text = "02:0" + (timeLeft - 120);
 
-			else if (timer == 120)
+			else if (timeLeft == 120)
 				GameObject.Find("Time Remaining").GetComponent<TextMesh> ().text = "02:00";
-			else if (timer >= 70)
-				GameObject.Find("Time Remaining").GetComponent<TextMesh> ().text = "01:" + (timer - 60);
-			else if (timer > 60)
-				GameObject.Find("Time Remaining").GetComponent<TextMesh> ().text = "01:0" + (timer - 60);
-			else if (timer == 60)
+			else if (timeLeft >= 70)
+				GameObject.Find("Time Remaining").GetComponent<TextMesh> ().text = "01:" + (timeLeft - 60);
+			else if (timeLeft > 60)
+				GameObject.Find("Time Remaining").GetComponent<TextMesh> ().text = "01:0" + (timeLeft - 60);
+			else if (timeLeft == 60)
 				GameObject.Find("Time Remaining").GetComponent<TextMesh> ().text = "01:00";
-			else if (timer > 10)
-				GameObject.Find("Time Remaining").GetComponent<TextMesh> ().text = "00:" + timer;
+			else if (timeLeft >= 10)
+				GameObject.Find("Time Remaining").GetComponent<TextMesh> ().text = "00:" + timeLeft;
 			else
-				GameObject.Find("Time Remaining").GetComponent<TextMesh> ().text = "00:0" + timer;
+				GameObject.Find("Time Remaining").GetComponent<TextMesh> ().text = "00:0" + timeLeft;
 		}
 	}
 
@@ -83,7 +83,8 @@ public class Scoreboard : MonoBehaviour {
 		if (availableBalls > 0)
 			availableBalls--;
 		else if (availableBalls == 0) {
-			GameObject.Find ("Game Over").GetComponent<Text> ().text = "GAME OVER";
+			//GameObject.Find ("Game Over").GetComponent<Text> ().text = "GAME OVER";
+			HUD.GameOver();
 			GamePlay.isGamePlayable = false;
 		}
 
