@@ -24,22 +24,17 @@ public class StartScreen : MonoBehaviour {
 		ViewLeaderboard = false;
 	}
 
-	void Start () 
+	void Start ()
 	{
-		if (GamePlay.ViewingStartScreen) {
-			GameObject.Find ("Start Game").GetComponent<TextMesh> ().text = "START GAME";
-			GameObject.Find ("ViewScoreboard").GetComponent<TextMesh> ().text = "SCOREBOARD";
-			GameObject.Find ("ViewLeaderboard").GetComponent<TextMesh> ().text = "LEADERBOARD";
-			StartGameTextActive ();
-		} else {
+		if (GamePlay.ViewingStartScreen)
+			SetUpStartScreen ();
+		else 
 			ClearStartScreen ();
-		}
 	}
 		
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetKeyDown ("down") && GamePlay.ViewingStartScreen) {
-			Debug.Log ("down key was pressed");
 			if (StartGameText.color == Color.yellow)
 				ScoreboardTextActive ();
 			else if (ViewScoreboardText.color == Color.yellow)
@@ -51,22 +46,27 @@ public class StartScreen : MonoBehaviour {
 		if (Input.GetKeyDown ("return")) {
 			Debug.Log ("return key was pressed");
 
-			if (StartGame) {
-				StartGameText.text = "Starting Game...";
-				GamePlay.PlayGame = true;
-			} else if (ViewScoreboard) {
-				GameObject.Find ("StartScreen")
-					.GetComponent<Camera> ().transform.position = GameObject.Find ("Scoreboard Camera")
-					.GetComponent<Camera> ().transform.position;
-				GameObject.Find ("StartScreen")
-					.GetComponent<Camera> ()
-					.GetComponent<Camera>().fieldOfView = GameObject.Find ("Scoreboard Camera")
-						.GetComponent<Camera> ()
-						.GetComponent<Camera>().fieldOfView;
-			} else if (ViewLeaderboard) {
+			if (StartGame) SetUpGame ();
+			else if (ViewScoreboard) Cameras.ScoreboardCameraSetUp ();
+			else if (ViewLeaderboard) {
 
 			}
 		}
+	}
+
+	public void SetUpStartScreen()
+	{
+		Cameras.StartScreenCameraSetup ();
+		GameObject.Find ("Start Game").GetComponent<TextMesh> ().text = "START GAME";
+		GameObject.Find ("ViewScoreboard").GetComponent<TextMesh> ().text = "SCOREBOARD";
+		GameObject.Find ("ViewLeaderboard").GetComponent<TextMesh> ().text = "LEADERBOARD";
+
+		GameObject.Find ("spotlights").active = false;
+		GameObject.Find ("Leaderboard Title").GetComponent<Text> ().text = "";
+		GameObject.Find ("Leaderboard").GetComponent<Text> ().text = "";
+
+		DisplayBall ();
+		StartGameTextActive ();
 	}
 
 	public void ClearStartScreen()
@@ -74,6 +74,13 @@ public class StartScreen : MonoBehaviour {
 		StartGameText.text = "";
 		ViewScoreboardText.text = "";
 		ViewLeaderboardText.text = "";
+	}
+
+	public static void DisplayBall() {
+		GameObject basketball = GameObject.Find ("Basketball");
+		basketball.GetComponent<Rigidbody> ().constraints = RigidbodyConstraints.FreezeAll;
+		basketball.transform.position = new Vector3(0f,1.53f,-15.44f); //inital position of ball
+		basketball.GetComponent<Rigidbody> ().useGravity = false; //turn gravity off
 	}
 
 	public void StartGameTextActive()
@@ -107,5 +114,13 @@ public class StartScreen : MonoBehaviour {
 		StartGame = false;
 		ViewScoreboard = false;
 		ViewLeaderboard = true;
+	}
+
+	public void SetUpGame()
+	{
+		Cameras.MainGameCameraSetUp ();
+		Basketball.ResetBall ();
+		HUD.countdown = true;
+		GamePlay.PlayGame = true;
 	}
 }
