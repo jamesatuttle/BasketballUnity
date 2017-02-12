@@ -1,15 +1,21 @@
-﻿
-namespace AssemblyCSharp
-{
-	public class GamePlay
+﻿using UnityEngine;
+
+public class GamePlay : MonoBehaviour {
+	public static bool isGamePlayable;
+	public static bool ViewingStartScreen;
+	public static bool PlayGame;
+	public bool ViewScoreboard;
+	public bool ViewLeaderboard;
+
+	void Start()
 	{
+		//Cameras.StartScreenCameraSetup ();
+	
+	}
 
-		public static bool isGamePlayable;
-
-		public GamePlay ()
-		{
-
-		}
-
+	void Awake()
+	{
+		ViewingStartScreen = true;
+		PlayGame = false;
 	}
 }
