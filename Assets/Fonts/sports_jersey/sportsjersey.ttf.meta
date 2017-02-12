@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 0b360ad17b6354dd1b6a8fa3835797b9
+timeCreated: 1486853907
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Sports Jersey
+  fontNames:
+  - Sports Jersey
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
