@@ -27,13 +27,6 @@ public class ScoreboardTests
     }
 
     [Test]
-    public void gameOverTextCLearedOnStart()
-    {
-        startScoreboard();
-        Assert.AreEqual("", GameObject.Find("Game Over").GetComponent<UnityEngine.UI.Text>().text);
-    }
-
-    [Test]
     public void correctBallsShownIfZero()
     {
         Scoreboard.availableBalls = 0;
@@ -185,7 +178,9 @@ public class ScoreboardTests
         Assert.AreEqual("120", GameObject.Find("Score").GetComponent<TextMesh>().text);
     }
 
-    [Test]
+	//NEED TO MOCK COLLISION OF HITTING FLOOR
+
+    /*[Test]
     public void showCorrectScore_ScoreMissScoreScore()
     {
         Collider col = new Collider();
@@ -211,7 +206,7 @@ public class ScoreboardTests
         basketDetected.OnTriggerExit(col);
 
         Assert.AreEqual("30", GameObject.Find("Score").GetComponent<TextMesh>().text);
-    }
+    }*/
 
     [Test]
     public void hideBonusLight_OnStart()
