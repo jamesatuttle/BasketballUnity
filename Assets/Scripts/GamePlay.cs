@@ -15,7 +15,6 @@ public class GamePlay : MonoBehaviour {
 
 	void Awake()
 	{
-		ViewingStartScreen = true;
 		PlayGame = false;
 	}
 }

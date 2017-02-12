@@ -35,7 +35,6 @@ public class Scoreboard : MonoBehaviour {
 	{
 		int timeLeft = Convert.ToInt32(totalTime) - Convert.ToInt32(Time.time);
 		if (timeLeft < 0) timeLeft = 0;
-		//textMesh.text = timeLeft.ToString();
 
 		if (timeLeft >= 0) {
 
@@ -82,7 +81,6 @@ public class Scoreboard : MonoBehaviour {
 		if (availableBalls > 0)
 			availableBalls--;
 		else if (availableBalls == 0) {
-			//GameObject.Find ("Game Over").GetComponent<Text> ().text = "GAME OVER";
 			HUD.GameOver();
 			GamePlay.isGamePlayable = false;
 		}
