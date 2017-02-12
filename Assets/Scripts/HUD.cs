@@ -10,7 +10,7 @@ public class HUD : MonoBehaviour {
 	public static bool countdown;
 
 	// Use this for initialization
-	void Start () {
+	public static void Start () {
 		GameObject.Find ("Countdown").GetComponent<Text> ().text = "";
 		GameObject.Find("Game Over").GetComponent<Text>().text = "";
 		endTime = Time.time + 4;
