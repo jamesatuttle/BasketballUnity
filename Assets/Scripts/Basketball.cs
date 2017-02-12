@@ -8,10 +8,6 @@ public class Basketball : MonoBehaviour {
 
 	public AudioClip bounce;
 
-	void Awake () {
-		ResetBall ();
-	}
-
 	void Start () {
 		GetComponent<AudioSource> ().playOnAwake = false;
 		GetComponent<AudioSource> ().clip = bounce;
