@@ -2,7 +2,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-//using AssemblyCSharp;
 
 public class Basketball : MonoBehaviour {
 
@@ -15,8 +14,6 @@ public class Basketball : MonoBehaviour {
 
 	void Update() {
 		GameObject basketball = GameObject.Find ("Basketball");
-
-		//Debug.Log ("Game: " + GamePlay.isGamePlayable );
 
 		//NEEDS TO CHANGE TO GESTURE RECOGNITION
 		if (Input.GetKeyDown ("space") && GamePlay.isGamePlayable) {
@@ -49,9 +46,15 @@ public class Basketball : MonoBehaviour {
 	}
 
 	public static void ResetBall() {
+		UpdateFixedBasketballPosition(0.02f,5.08f,9.96f);
+	}
+
+	public static void UpdateFixedBasketballPosition(float x, float y, float z)
+	{
 		GameObject basketball = GameObject.Find ("Basketball");
 		basketball.GetComponent<Rigidbody> ().constraints = RigidbodyConstraints.FreezeAll;
-		basketball.transform.position = new Vector3(0.02f,5.08f,9.96f); //inital position of ball
 		basketball.GetComponent<Rigidbody> ().useGravity = false; //turn gravity off
+
+		GameObject.Find ("Basketball").transform.position = new Vector3 (x, y, z);
 	}
 }
