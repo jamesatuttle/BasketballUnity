@@ -28,7 +28,6 @@ public class HUD : MonoBehaviour {
 
 	public static void CountdownFromThree()
 	{
-		//GameObject.Find ("Countdown").GetComponent<Text> ().text = "3";
 		int timeLeft = Convert.ToInt32(endTime - Time.time);
 		if (timeLeft <= -1) timeLeft = -1;
 		if (timeLeft == -1) GameObject.Find ("Countdown").GetComponent<Text> ().text = "";
