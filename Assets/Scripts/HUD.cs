@@ -10,6 +10,12 @@ public class HUD : MonoBehaviour {
 	public static bool countdown;
 	public static int Down = 3;
 	public static bool setTimer = true;
+	public int timer;
+
+	void Awake()
+	{
+		timer = 55;
+	}
 
 	public static void Start () {
 		GameObject.Find ("Countdown").GetComponent<Text> ().text = "";
@@ -17,27 +23,30 @@ public class HUD : MonoBehaviour {
 	}
 
 	void Update () {
-		//StartCoroutine (CountdownFromThree ());
-		if (countdown)
-			GameObject.Find ("Countdown").GetComponent<Text> ().text = "3";
+		if (countdown) CountdownFromThree();
 	}
 
-	/*IEnumerator CountdownFromThree()
+	void CountdownFromThree()
 	{
-		while (countdown) {
+		Debug.Log ("CountdownFromThree: " + countdown + ", " + timer);
+		timer--;
+		Debug.Log (timer);
+		if (timer == 44) {
 			GameObject.Find ("Countdown").GetComponent<Text> ().text = "3";
-			yield return new WaitForSeconds(1.0f);
+			Debug.Log ("3 COUNTDOWN");
+		}
+		else if (timer == 33)
 			GameObject.Find ("Countdown").GetComponent<Text> ().text = "2";
-			yield return new WaitForSeconds(1.0f);
+		else if (timer == 22)
 			GameObject.Find ("Countdown").GetComponent<Text> ().text = "1";
-			yield return new WaitForSeconds(1.0f);
-			GameObject.Find ("Countdown").GetComponent<Text> ().text = "0";
-			yield return new WaitForSeconds(1.0f);
-			GameObject.Find ("Countdown").GetComponent<Text> ().text = "GO!";
+		else if (timer == 11)
+			GameObject.Find ("Countdown").GetComponent<Text> ().text = "GO";
+		else if (timer < 0) {
+			GameObject.Find ("Countdown").GetComponent<Text> ().text = "";
 			countdown = false;
 		}
-	}*/
 
+	}
 
 	public static void GameOver()
 	{
