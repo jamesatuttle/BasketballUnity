@@ -46,7 +46,6 @@ public class HUD : MonoBehaviour {
 			countdown = false;
 			GamePlay.GameIsPlayable = true;
 		}
-
 	}
 
 	public static void GameOver()

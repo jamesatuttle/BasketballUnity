@@ -80,7 +80,7 @@ public class Scoreboard : MonoBehaviour {
 	{
 		if (availableBalls > 0)
 			availableBalls--;
-		else if (availableBalls == 0) {
+		if (availableBalls == 0) {
 			if (GamePlay.PlayingMainGame) {
 				HUD.GameOver ();
 				GamePlay.GameIsPlayable = false;
