@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
 public class GamePlay : MonoBehaviour {
-	public static bool isGamePlayable;
+	public static bool GameIsPlayable;
+	public static bool PlayingMainGame;
 	public static bool ViewingStartScreen;
-	public static bool PlayGame;
 	public bool ViewScoreboard;
 	public bool ViewLeaderboard;
 
@@ -15,7 +15,28 @@ public class GamePlay : MonoBehaviour {
 
 	void Awake()
 	{
-		ViewingStartScreen = true;
-		PlayGame = false;
+		//PlayGame = false;
+	}
+
+	public static void SetUpMainGame()
+	{
+		Cameras.MainGameCameraSetUp ();
+		Basketball.ResetBall ();
+		StartScreen.ClearStartScreen ();
+		PlayingMainGame = true;
+		Scoreboard.ResetScoreboard ();
+		HUD.countdown = true;
+		//GamePlay.PlayGame = true;
+	}
+
+	public static void SetUpPregame()
+	{
+		Cameras.MainGameCameraSetUp ();
+		Basketball.ResetBall ();
+		StartScreen.ClearStartScreen ();
+		HUD.DisplayPreGameText ();
+		PlayingMainGame = false;
+		Scoreboard.ResetScoreboard ();
+		GameIsPlayable = true;
 	}
 }

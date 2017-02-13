@@ -25,10 +25,10 @@ public class ScoreboardTests
     }
 
     [Test]
-    public void playableGameOnStart()
+    public void notPlayableGameOnStart()
     {
         startScoreboard();
-        Assert.AreEqual(true, GamePlay.isGamePlayable);
+		Assert.AreEqual(false, GamePlay.GameIsPlayable);
     }
 
     [Test]
@@ -55,18 +55,55 @@ public class ScoreboardTests
         Assert.AreEqual("012", GameObject.Find("NumberOfBalls").GetComponent<TextMesh>().text);
     }
 
-    [Test]
-    public void minusAvailableBalls()
-    {
-        Scoreboard.availableBalls = 3;
-        Scoreboard.MinusAvailableBalls();
+	[Test]
+	public void PreGame_minusAvailableBalls()
+	{
+		GamePlay.GameIsPlayable = true;
+		GamePlay.PlayingMainGame = false;
+		Scoreboard.availableBalls = 3;
+		Scoreboard.MinusAvailableBalls();
 
-        Assert.AreEqual(2, Scoreboard.availableBalls);
-    }
+		Assert.AreEqual(2, Scoreboard.availableBalls);
+	}
 
-    [Test]
-    public void minusAvailableBalls_Zero()
+	[Test]
+	public void PreGame_minusAvailableBalls_Zero_Reset()
+	{
+		GamePlay.GameIsPlayable = true;
+		GamePlay.PlayingMainGame = false;
+		Scoreboard.availableBalls = 1;
+		Scoreboard.MinusAvailableBalls();
+
+		Assert.AreEqual(10, Scoreboard.availableBalls);
+	}
+
+	[Test]
+	public void PreGame_minusAvailableBalls_Zero_StartCountdown()
+	{
+		GamePlay.GameIsPlayable = true;
+		GamePlay.PlayingMainGame = false;
+		Scoreboard.availableBalls = 0;
+		Scoreboard.MinusAvailableBalls();
+
+		Assert.AreEqual(true, HUD.countdown);
+	}
+
+	[Test]
+	public void MainGame_minusAvailableBalls()
+	{
+		GamePlay.GameIsPlayable = true;
+		GamePlay.PlayingMainGame = true;
+		Scoreboard.availableBalls = 3;
+		Scoreboard.MinusAvailableBalls();
+
+		Assert.AreEqual(2, Scoreboard.availableBalls);
+	}
+
+	[Test]
+    public void MainGame_minusAvailableBalls_Zero()
     {
+		GamePlay.GameIsPlayable = true;
+		GamePlay.PlayingMainGame = true;
         Scoreboard.availableBalls = 1;
         Scoreboard.MinusAvailableBalls();
 
@@ -74,8 +111,10 @@ public class ScoreboardTests
     }
 
     [Test]
-    public void minusAvailableBalls_Zero_GameOver()
+    public void MainGame_minusAvailableBalls_Zero_GameOver()
     {
+		GamePlay.GameIsPlayable = true;
+		GamePlay.PlayingMainGame = true;
         Scoreboard.availableBalls = 0;
         Scoreboard.MinusAvailableBalls();
 
@@ -85,10 +124,12 @@ public class ScoreboardTests
     [Test]
     public void minusAvailableBalls_Zero_IsGamePlayable()
     {
+		GamePlay.GameIsPlayable = true;
+		GamePlay.PlayingMainGame = true;
         Scoreboard.availableBalls = 0;
         Scoreboard.MinusAvailableBalls();
 
-        Assert.AreEqual(false, GamePlay.isGamePlayable);
+		Assert.AreEqual(false, GamePlay.GameIsPlayable);
     }
 
     [Test]

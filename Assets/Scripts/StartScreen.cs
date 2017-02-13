@@ -5,10 +5,10 @@ using UnityEngine.UI;
 
 public class StartScreen : MonoBehaviour {
 
-	TextMesh StartGameText;
-	TextMesh ViewScoreboardText;
-	TextMesh ViewLeaderboardText;
-	TextMesh HowToPlayText;
+	static Text StartGameText;
+	static Text ViewScoreboardText;
+	static Text ViewLeaderboardText;
+	static Text HowToPlayText;
 
 	bool StartGame;
 	bool ViewScoreboard;
@@ -17,19 +17,22 @@ public class StartScreen : MonoBehaviour {
 
 	void Awake()
 	{
-		StartGameText = GameObject.Find ("Start Game").GetComponent<TextMesh> ();
-		ViewScoreboardText = GameObject.Find ("ViewScoreboard").GetComponent<TextMesh> ();
-		ViewLeaderboardText = GameObject.Find ("ViewLeaderboard").GetComponent<TextMesh> ();
-		HowToPlayText = GameObject.Find ("How to play").GetComponent<TextMesh> ();
+		GamePlay.ViewingStartScreen = true;
+		StartGameText = GameObject.Find ("Start Game").GetComponent<Text> ();
+		ViewScoreboardText = GameObject.Find ("View Scoreboard").GetComponent<Text> ();
+		ViewLeaderboardText = GameObject.Find ("View Leaderboard").GetComponent<Text> ();
+		HowToPlayText = GameObject.Find ("How to play").GetComponent<Text> ();
 
 		StartGame = false;
 		ViewScoreboard = false;
 		ViewLeaderboard = false;
 		HowToPlay = false;
+		GamePlay.GameIsPlayable = false;
 	}
 
 	void Start ()
 	{
+		Debug.Log (GamePlay.ViewingStartScreen);
 		if (GamePlay.ViewingStartScreen)
 			SetUpStartScreen ();
 		else 
@@ -52,8 +55,10 @@ public class StartScreen : MonoBehaviour {
 		if (Input.GetKeyDown ("return")) {
 			Debug.Log ("return key was pressed");
 
-			if (StartGame) SetUpGame ();
-			else if (ViewScoreboard) Cameras.ScoreboardCameraSetUp ();
+			if (StartGame)
+				GamePlay.SetUpPregame (); //SetUpGame (); 
+			else if (ViewScoreboard)
+				SetUpScoreboardView ();
 			else if (ViewLeaderboard) {
 
 			}
@@ -63,11 +68,10 @@ public class StartScreen : MonoBehaviour {
 	public void SetUpStartScreen()
 	{
 		Cameras.StartScreenCameraSetup ();
-		GameObject.Find ("Start Game").GetComponent<TextMesh> ().text = "START GAME";
-		GameObject.Find ("ViewScoreboard").GetComponent<TextMesh> ().text = "SCOREBOARD";
-		GameObject.Find ("ViewLeaderboard").GetComponent<TextMesh> ().text = "LEADERBOARD";
-		GameObject.Find ("How to play").GetComponent<TextMesh> ().text = "HOW TO PLAY";
-
+		GameObject.Find ("Start Game").GetComponent<Text> ().text = "START GAME";
+		GameObject.Find ("View Scoreboard").GetComponent<Text> ().text = "SCOREBOARD";
+		GameObject.Find ("View Leaderboard").GetComponent<Text> ().text = "LEADERBOARD";
+		GameObject.Find ("How to play").GetComponent<Text> ().text = "HOW TO PLAY";
 
 		GameObject.Find ("spotlights").active = false;
 		GameObject.Find ("Leaderboard Title").GetComponent<Text> ().text = "";
@@ -77,7 +81,7 @@ public class StartScreen : MonoBehaviour {
 		StartGameTextActive ();
 	}
 
-	public void ClearStartScreen()
+	public static void ClearStartScreen()
 	{
 		StartGameText.text = "";
 		ViewScoreboardText.text = "";
@@ -137,11 +141,18 @@ public class StartScreen : MonoBehaviour {
 		HowToPlay = true;
 	}
 
-	public void SetUpGame()
+	/*public void SetUpGame()
 	{
 		Cameras.MainGameCameraSetUp ();
 		Basketball.ResetBall ();
+		ClearStartScreen ();
 		HUD.countdown = true;
-		GamePlay.PlayGame = true;
+		//GamePlay.PlayGame = true;
+	}*/
+
+	public void SetUpScoreboardView()
+	{
+		ClearStartScreen ();
+		Cameras.ScoreboardCameraSetUp ();
 	}
 }

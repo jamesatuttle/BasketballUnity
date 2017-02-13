@@ -16,7 +16,7 @@ public class Basketball : MonoBehaviour {
 		GameObject basketball = GameObject.Find ("Basketball");
 
 		//NEEDS TO CHANGE TO GESTURE RECOGNITION
-		if (Input.GetKeyDown ("space") && GamePlay.isGamePlayable) {
+		if (Input.GetKeyDown ("space") && GamePlay.GameIsPlayable) {
 			Debug.Log ("space key was pressed");
 			basketball.GetComponent<Rigidbody> ().constraints = RigidbodyConstraints.None;
 			basketball.GetComponent<Rigidbody> ().useGravity = true; //turn gravity off
