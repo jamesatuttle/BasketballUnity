@@ -9,7 +9,7 @@ public class PScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		gestureListener = GameObject.Find ("MainCamera").GetComponent<GestureListener>();
+		gestureListener = GameObject.Find ("MainCamera").GetComponent<GListener>();
 
 	}
 	
