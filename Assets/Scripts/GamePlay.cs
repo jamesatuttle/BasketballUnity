@@ -4,7 +4,6 @@ public class GamePlay : MonoBehaviour {
 	public static bool GameIsPlayable;
 	public static bool PlayingMainGame;
 	public static bool ViewingStartScreen;
-	//public static bool PlayGame;
 	public bool ViewScoreboard;
 	public bool ViewLeaderboard;
 
@@ -24,9 +23,9 @@ public class GamePlay : MonoBehaviour {
 		Cameras.MainGameCameraSetUp ();
 		Basketball.ResetBall ();
 		StartScreen.ClearStartScreen ();
+		PlayingMainGame = true;
 		Scoreboard.ResetScoreboard ();
 		HUD.countdown = true;
-		PlayingMainGame = true;
 		//GamePlay.PlayGame = true;
 	}
 
@@ -35,7 +34,9 @@ public class GamePlay : MonoBehaviour {
 		Cameras.MainGameCameraSetUp ();
 		Basketball.ResetBall ();
 		StartScreen.ClearStartScreen ();
+		HUD.DisplayPreGameText ();
 		PlayingMainGame = false;
+		Scoreboard.ResetScoreboard ();
 		GameIsPlayable = true;
 	}
 }

@@ -15,7 +15,7 @@ public class Scoreboard : MonoBehaviour {
 		totalTime = Time.time + 240;
 		SetTimerText ();
 
-		availableBalls = 3;
+		//availableBalls = 3;
 		UpdateAvailableBalls ();
 
         score = 0;
@@ -95,7 +95,11 @@ public class Scoreboard : MonoBehaviour {
 
 	public static void ResetScoreboard()
 	{
-		availableBalls = 3;
+		//availableBalls = 3;
+		if (GamePlay.PlayingMainGame)
+			availableBalls = 10;
+		else if (!GamePlay.PlayingMainGame)
+			availableBalls = 3;
 		UpdateAvailableBalls ();
 	}
 

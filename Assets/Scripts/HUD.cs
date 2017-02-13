@@ -28,6 +28,8 @@ public class HUD : MonoBehaviour {
 
 	void CountdownFromThree()
 	{
+		GameObject.Find ("PracticeText").GetComponent<Text> ().text = "";
+
 		Debug.Log ("CountdownFromThree: " + countdown + ", " + timer);
 		timer--;
 		Debug.Log (timer);
@@ -46,6 +48,12 @@ public class HUD : MonoBehaviour {
 			countdown = false;
 			GamePlay.GameIsPlayable = true;
 		}
+	}
+
+	public static void DisplayPreGameText()
+	{
+		GameObject.Find ("PracticeText").GetComponent<Text> ().text = "3 BALL PRACTICE";
+		GameObject.Find ("PracticeText").GetComponent<Text> ().fontStyle = FontStyle.Normal;
 	}
 
 	public static void GameOver()

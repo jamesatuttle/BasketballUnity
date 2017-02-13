@@ -74,7 +74,7 @@ public class ScoreboardTests
 		Scoreboard.availableBalls = 1;
 		Scoreboard.MinusAvailableBalls();
 
-		Assert.AreEqual(3, Scoreboard.availableBalls);
+		Assert.AreEqual(10, Scoreboard.availableBalls);
 	}
 
 	[Test]
