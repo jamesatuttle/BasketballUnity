@@ -28,7 +28,7 @@ public class ScoreboardTests
     public void playableGameOnStart()
     {
         startScoreboard();
-        Assert.AreEqual(true, GamePlay.isGamePlayable);
+		Assert.AreEqual(true, GamePlay.GameIsPlayable);
     }
 
     [Test]
@@ -88,7 +88,7 @@ public class ScoreboardTests
         Scoreboard.availableBalls = 0;
         Scoreboard.MinusAvailableBalls();
 
-        Assert.AreEqual(false, GamePlay.isGamePlayable);
+		Assert.AreEqual(false, GamePlay.GameIsPlayable);
     }
 
     [Test]

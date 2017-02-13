@@ -23,7 +23,7 @@ public class Scoreboard : MonoBehaviour {
 
         updateBonusColour("#181717"); // set the bonus text to black
 
-        GamePlay.isGamePlayable = true;
+		//GamePlay.GameIsPlayable = true;
     }
 
     // Update is called once per frame
@@ -81,11 +81,22 @@ public class Scoreboard : MonoBehaviour {
 		if (availableBalls > 0)
 			availableBalls--;
 		else if (availableBalls == 0) {
-			HUD.GameOver();
-			GamePlay.isGamePlayable = false;
+			if (GamePlay.PlayingMainGame) {
+				HUD.GameOver ();
+				GamePlay.GameIsPlayable = false;
+			} else if (!GamePlay.PlayingMainGame) {
+				GamePlay.GameIsPlayable = false;
+				GamePlay.SetUpMainGame ();
+			}
 		}
 
 		UpdateAvailableBalls();
+	}
+
+	public static void ResetScoreboard()
+	{
+		availableBalls = 3;
+		UpdateAvailableBalls ();
 	}
 
     public void updateScore()

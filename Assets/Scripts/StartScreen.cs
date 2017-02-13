@@ -5,10 +5,10 @@ using UnityEngine.UI;
 
 public class StartScreen : MonoBehaviour {
 
-	Text StartGameText;
-	Text ViewScoreboardText;
-	Text ViewLeaderboardText;
-	Text HowToPlayText;
+	static Text StartGameText;
+	static Text ViewScoreboardText;
+	static Text ViewLeaderboardText;
+	static Text HowToPlayText;
 
 	bool StartGame;
 	bool ViewScoreboard;
@@ -27,6 +27,7 @@ public class StartScreen : MonoBehaviour {
 		ViewScoreboard = false;
 		ViewLeaderboard = false;
 		HowToPlay = false;
+		GamePlay.GameIsPlayable = false;
 	}
 
 	void Start ()
@@ -55,7 +56,7 @@ public class StartScreen : MonoBehaviour {
 			Debug.Log ("return key was pressed");
 
 			if (StartGame)
-				SetUpGame ();
+				GamePlay.SetUpPregame (); //SetUpGame (); 
 			else if (ViewScoreboard)
 				SetUpScoreboardView ();
 			else if (ViewLeaderboard) {
@@ -80,7 +81,7 @@ public class StartScreen : MonoBehaviour {
 		StartGameTextActive ();
 	}
 
-	public void ClearStartScreen()
+	public static void ClearStartScreen()
 	{
 		StartGameText.text = "";
 		ViewScoreboardText.text = "";
@@ -140,14 +141,14 @@ public class StartScreen : MonoBehaviour {
 		HowToPlay = true;
 	}
 
-	public void SetUpGame()
+	/*public void SetUpGame()
 	{
 		Cameras.MainGameCameraSetUp ();
 		Basketball.ResetBall ();
 		ClearStartScreen ();
 		HUD.countdown = true;
-		GamePlay.PlayGame = true;
-	}
+		//GamePlay.PlayGame = true;
+	}*/
 
 	public void SetUpScoreboardView()
 	{

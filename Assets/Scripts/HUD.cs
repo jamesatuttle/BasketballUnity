@@ -44,6 +44,7 @@ public class HUD : MonoBehaviour {
 		else if (timer < 0) {
 			GameObject.Find ("Countdown").GetComponent<Text> ().text = "";
 			countdown = false;
+			GamePlay.GameIsPlayable = true;
 		}
 
 	}
