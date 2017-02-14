@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.IO;
 using System.Text;
-
+using UnityEngine.UI;
 
 public class KinectManager : MonoBehaviour
 {
@@ -736,6 +736,7 @@ public class KinectManager : MonoBehaviour
 	// recreates and reinitializes the internal list of gesture listeners
 	public void ResetGestureListeners()
 	{
+        Debug.Log("ResetGestureListeners");
 		// create the list of gesture listeners
 		gestureListeners.Clear();
 		
@@ -745,6 +746,7 @@ public class KinectManager : MonoBehaviour
 			{
 				KinectGestures.GestureListenerInterface listener = (KinectGestures.GestureListenerInterface)script;
 				gestureListeners.Add(listener);
+                Debug.Log("Listener added");
 			}
 		}
 		
@@ -1074,15 +1076,22 @@ public class KinectManager : MonoBehaviour
 				Player2Controllers.Add(avatar.GetComponent<AvatarController>());
 			}
 		}
-		
+
+        Debug.Log("THIS IS FUCKING WPIDJsaodc sldhj");
 		// create the list of gesture listeners
 		gestureListeners = new List<KinectGestures.GestureListenerInterface>();
-		
-		foreach(MonoBehaviour script in GestureListeners)
+        Debug.Log("THIS IS FUCKING WP");
+
+        if (GestureListeners.Count == 0) Debug.Log("Gesture listeners is 0");
+
+        foreach (MonoBehaviour script in GestureListeners)
 		{
+            Debug.Log("GestureListeners list being created");
 			if(script && (script is KinectGestures.GestureListenerInterface))
 			{
-				KinectGestures.GestureListenerInterface listener = (KinectGestures.GestureListenerInterface)script;
+                Debug.Log("script ia KinectGestures.GestureListenerInterface: " + script.name);
+
+                KinectGestures.GestureListenerInterface listener = (KinectGestures.GestureListenerInterface)script;
 				gestureListeners.Add(listener);
 			}
 		}
@@ -1515,14 +1524,17 @@ public class KinectManager : MonoBehaviour
 	// Assign UserId to player 1 or 2.
     void CalibrateUser(uint UserId, int UserIndex, ref KinectWrapper.NuiSkeletonData skeletonData)
     {
+        Debug.Log("CalibrateUser");
 		// If player 1 hasn't been calibrated, assign that UserID to it.
 		if(!Player1Calibrated)
 		{
+            Debug.Log("Player1 not callibrated");
 			// Check to make sure we don't accidentally assign player 2 to player 1.
 			if (!allUsers.Contains(UserId))
 			{
 				if(CheckForCalibrationPose(UserId, ref Player1CalibrationPose, ref player1CalibrationData, ref skeletonData))
 				{
+                    Debug.Log("CheckForCalibrationPose");
 					Player1Calibrated = true;
 					Player1ID = UserId;
 					Player1Index = UserIndex;
@@ -1539,10 +1551,13 @@ public class KinectManager : MonoBehaviour
 					{
 						DetectGesture(UserId, gesture);
 					}
+
+                    Debug.Log("Count gestures: " + gestureListeners.Count);
 					
 					// notify the gesture listeners about the new user
 					foreach(KinectGestures.GestureListenerInterface listener in gestureListeners)
 					{
+                        Debug.Log("Found new user");
 						listener.UserDetected(UserId, 0);
 					}
 					
@@ -1600,8 +1615,10 @@ public class KinectManager : MonoBehaviour
 		if(AllPlayersCalibrated)
 		{
 			Debug.Log("All players calibrated.");
-			
-			if(CalibrationText != null)
+  //          GameObject.Find("GestureInfo").GetComponent<Text>().text = "User detected";
+
+
+            if (CalibrationText != null)
 			{
 				CalibrationText.GetComponent<GUIText>().text = "";
 			}
