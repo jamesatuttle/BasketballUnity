@@ -30,14 +30,16 @@ public class GestureListener : MonoBehaviour, KinectGestures.GestureListenerInte
 		return false;
 	}
 
-    /*public void Start()
+    public void Awake()
     {
-        GestureInfo = GameObject.Find("GestureInfo").GetComponent<Text>();
+
+        Debug.Log("AWAKEN THE FUCKING BEAST");
+       // GestureInfo = GameObject.Find("GestureInfo").GetComponent<Text>();
 
         //GameObject.Find("GestureInfo").GetComponent<Text>().text = "START";
 
         //GestureInfo.GetComponent<GUIText>().text = "User detected";
-    }*/
+    }
 
     public void UserDetected(uint userId, int userIndex)
 	{

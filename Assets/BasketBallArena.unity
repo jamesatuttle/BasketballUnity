@@ -7458,7 +7458,7 @@ MonoBehaviour:
   Player2Gestures: 
   MinTimeBetweenGestures: 0.7
   GestureListeners: []
-  CalibrationText: {fileID: 0}
+  CalibrationText: {fileID: 2123177030}
   HandCursor1: {fileID: 0}
   HandCursor2: {fileID: 0}
   ControlMouseCursor: 0
@@ -7927,6 +7927,7 @@ GameObject:
   - component: {fileID: 1655778458}
   - component: {fileID: 1655778462}
   - component: {fileID: 1655778463}
+  - component: {fileID: 1655778464}
   m_Layer: 5
   m_Name: HUD
   m_TagString: Untagged
@@ -8040,6 +8041,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5e5da2b85291b4c748c4415b00fdfb0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1655778464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1655778457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb23069efe1b62343a034663aeeb9b71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1660478281
