@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class PresentationScript : MonoBehaviour 
 {
-	public bool slideChangeWithGestures = true;
+    /*public bool slideChangeWithGestures = true;
 	public bool slideChangeWithKeys = true;
 	public float spinSpeed = 5;
 	
@@ -166,7 +166,49 @@ public class PresentationScript : MonoBehaviour
 		Vector3 rotateDegrees = new Vector3(0f, yawRotation, 0f);
 		targetRotation *= Quaternion.Euler(rotateDegrees);
 		isSpinning = true;
+	}*/
+	
+	private GestureListener gestureListener;
+	
+
+	
+	void Start() 
+	{		
+		// get the gestures listener
+		gestureListener = Camera.main.GetComponent<GestureListener>();
+	}
+	
+	void Update() 
+	{
+		// dont run Update() if there is no user
+		KinectManager kinectManager = KinectManager.Instance;
+		if(!kinectManager || !kinectManager.IsInitialized() || !kinectManager.IsUserDetected())
+			return;
+
+			
+			if(gestureListener)
+			{
+				if(gestureListener.IsSwipeLeft())
+					RotateToNext();
+				else if(gestureListener.IsSwipeRight())
+					RotateToPrevious();
+			}
+			
 	}
 	
 	
+	private void RotateToNext()
+	{
+        // set the next texture slide
+        Debug.Log("RotateToNext");
+	}
+	
+	
+	private void RotateToPrevious()
+	{
+        Debug.Log("RotateToPrevious");
+
+    }
+
+
 }
