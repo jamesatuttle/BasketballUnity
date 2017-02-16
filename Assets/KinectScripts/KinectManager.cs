@@ -1084,17 +1084,28 @@ public class KinectManager : MonoBehaviour
 
         if (GestureListeners.Count == 0) Debug.Log("Gesture listeners is 0");
 
-        foreach (MonoBehaviour script in GestureListeners)
+        GestureListenerFuck gl = new GestureListenerFuck();
+
+        GestureListeners.Add(gl);
+
+        Debug.Log("gL: " + GestureListeners.Count);
+
+
+
+        gestureListeners.Add(gl);
+
+        /*foreach (MonoBehaviour script in GestureListeners)
 		{
             Debug.Log("GestureListeners list being created");
 			if(script && (script is KinectGestures.GestureListenerInterface))
 			{
+
                 Debug.Log("script ia KinectGestures.GestureListenerInterface: " + script.name);
 
                 KinectGestures.GestureListenerInterface listener = (KinectGestures.GestureListenerInterface)script;
 				gestureListeners.Add(listener);
 			}
-		}
+		}*/
 		
 		// GUI Text.
 		if(CalibrationText != null)

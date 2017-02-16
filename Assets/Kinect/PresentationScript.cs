@@ -5,11 +5,11 @@ using UnityEngine.UI;
 
 public class PresentationScript : MonoBehaviour {
 
-	private GestureListener gestureListener;
+	private GestureListenerFuck gestureListener;
 
 	// Use this for initialization
 	void Start () {
-		gestureListener = GameObject.Find ("MainCamera").GetComponent<GestureListener>();
+		gestureListener = GameObject.Find ("MainCamera").GetComponent<GestureListenerFuck>();
        // GameObject.Find("GestureInfo").GetComponent<Text>().text = "START";
 
     }

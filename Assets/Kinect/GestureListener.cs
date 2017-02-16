@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class GestureListener : MonoBehaviour, KinectGestures.GestureListenerInterface {
+public class GestureListenerFuck : MonoBehaviour, KinectGestures.GestureListenerInterface {
 
     public Text GestureInfo;
 
