@@ -1077,22 +1077,18 @@ public class KinectManager : MonoBehaviour
 			}
 		}
 
-        Debug.Log("THIS IS FUCKING WPIDJsaodc sldhj");
 		// create the list of gesture listeners
 		gestureListeners = new List<KinectGestures.GestureListenerInterface>();
-        Debug.Log("THIS IS FUCKING WP");
 
-        if (GestureListeners.Count == 0) Debug.Log("Gesture listeners is 0");
+        //if (GestureListeners.Count == 0) Debug.Log("Gesture listeners is 0");
 
-        GestureListenerFuck gl = new GestureListenerFuck();
+        GestureListener gl = new GestureListener();
 
         GestureListeners.Add(gl);
-
-        Debug.Log("gL: " + GestureListeners.Count);
-
-
-
         gestureListeners.Add(gl);
+
+        Debug.Log("Gesture Listeners MonoBeh Count: " + GestureListeners.Count);
+        Debug.Log("Gesture Listeners Interface Count: " + gestureListeners.Count);
 
         /*foreach (MonoBehaviour script in GestureListeners)
 		{
