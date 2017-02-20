@@ -16,7 +16,7 @@ public class GestureListener : MonoBehaviour, KinectGestures.GestureListenerInte
 	private bool swipeRight;
 
 	public bool IsSwipeLeft()
-	{
+	{ 
         //Debug.Log("Swipe Left:- " + swipeLeft);
 		if(swipeLeft)
 		{
@@ -38,7 +38,7 @@ public class GestureListener : MonoBehaviour, KinectGestures.GestureListenerInte
 
 		return false;
 	}*/
-
+	 
 
 	public void UserDetected (uint userId, int userIndex)
 	{
@@ -77,6 +77,20 @@ public class GestureListener : MonoBehaviour, KinectGestures.GestureListenerInte
 		}*/
 	}
 
+
+	public void printHandPoints(uint userId, KinectGestures.Gestures gesture) 
+	{
+		KinectManager manager = KinectManager.Instance;
+
+		LeftHand = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft);
+		RightHand = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight);
+
+		//if (LeftHand.x 
+
+		Debug.Log ("LeftHand: x-" + LeftHand.x + ", y-" + LeftHand.y + ", z-" + LeftHand.z);
+		Debug.Log ("RightHand: x-" + RightHand.x + ", y-" + RightHand.y + ", z-" + RightHand.z);
+	}
+
 	public void UserLost (uint userId, int userIndex)
 	{
 		GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "User Lost";
@@ -91,26 +105,20 @@ public class GestureListener : MonoBehaviour, KinectGestures.GestureListenerInte
 	{
 		// don't do anything here
 
-		Debug.Log ("GestureInProgress: " + gesture);
+		//Debug.Log ("GestureInProgress: " + gesture);
 
-		if (gesture == KinectGestures.Gestures.RaiseLeftHand || gesture == KinectGestures.Gestures.RaiseLeftHand) {
-			GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Hands raise started";
+		//if (gesture == KinectGestures.Gestures.RaiseLeftHand || gesture == KinectGestures.Gestures.RaiseLeftHand) {
+		//	GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Hands raise started";
+			printHandPoints (userId, gesture);
+		//}
 
-			KinectManager manager = KinectManager.Instance;
-
-			LeftHand = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft);
-			RightHand = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight);
-
-			Debug.Log ("LeftHand: x-" + LeftHand.x + ", y-" + LeftHand.y + ", z-" + LeftHand.z);
-			Debug.Log ("RightHand: x-" + RightHand.x + ", y-" + RightHand.y + ", z-" + RightHand.z);
-		}
 	}
 
 	public bool GestureCompleted (uint userId, int userIndex, KinectGestures.Gestures gesture, 
 	                              KinectWrapper.NuiSkeletonPositionIndex joint, Vector3 screenPos)
 	{
 
-		if (gesture == KinectGestures.Gestures.RaiseLeftHand || gesture == KinectGestures.Gestures.RaiseLeftHand) {
+		/*if (gesture == KinectGestures.Gestures.RaiseLeftHand || gesture == KinectGestures.Gestures.RaiseLeftHand) {
 			GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Hands raise completed";
 
 			KinectManager manager = KinectManager.Instance;
@@ -120,7 +128,12 @@ public class GestureListener : MonoBehaviour, KinectGestures.GestureListenerInte
 
 			Debug.Log ("LeftHand: x-" + LeftHand.x + ", y-" + LeftHand.y + ", z-" + LeftHand.z);
 			Debug.Log ("RightHand: x-" + RightHand.x + ", y-" + RightHand.y + ", z-" + RightHand.z);
-		}
+		}*/
+
+		//if (gesture == KinectGestures.Gestures.RaiseLeftHand || gesture == KinectGestures.Gestures.RaiseLeftHand) {
+		//	GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Hands raise completed";
+			printHandPoints (userId, gesture);
+		//}
 
 		/*Debug.Log ("GestureCompleted: " + gesture);
 
