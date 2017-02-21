@@ -3,19 +3,18 @@ using System;
 
 public class KinectController : MonoBehaviour {
 
-  KinectManager manger;
+  KinectManager manager = KinectManager.Instance;
 
   Vector3 HandLeft;
   Vector3 HandRight;
 
   bool ballIsHeld;
 
-  public Start() {
-    manager = KinectManager.instance;
+  void Start() {
     ballIsHeld = false;
   }
 
-  public Update() {
+  void Update() {
 
     uint userId = manager.GetPlayer1ID;
 
@@ -23,9 +22,9 @@ public class KinectController : MonoBehaviour {
     HandRight = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft);
   }
 
-  public PrintHandPoints() {
-    Debug.log("HandLeft: " + HandLeft);
-    Debug.log("HandRight: " + HandRight);
+  public void PrintHandPoints() {
+    Debug.Log("HandLeft: " + HandLeft);
+    Debug.Log("HandRight: " + HandRight);
 
     float HandDifferences = HandLeft.x - HandRight.x;
 
@@ -35,7 +34,7 @@ public class KinectController : MonoBehaviour {
     if (HandDifferences > (ballWidth - inch) && HandDifferences < (ballWidth + inch) ) {
       ballIsHeld = true;
       while(ballIsHeld) {
-        Debug.log("Picked up ball")
+		Debug.Log ("Picked up ball");
       }
     }
 
