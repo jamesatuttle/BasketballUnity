@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class Basketball : MonoBehaviour {
 
 	public AudioClip bounce;
+	static public Vector3 InitialBallPosition = new Vector3(0.02f,5.08f,9.96f);
 
 	void Start () {
 		GetComponent<AudioSource> ().playOnAwake = false;
@@ -46,7 +47,7 @@ public class Basketball : MonoBehaviour {
 	}
 
 	public static void ResetBall() {
-		UpdateFixedBasketballPosition(0.02f,5.08f,9.96f);
+		UpdateFixedBasketballPosition(InitialBallPosition.x, InitialBallPosition.y, InitialBallPosition.z);
 	}
 
 	public static void UpdateFixedBasketballPosition(float x, float y, float z)
