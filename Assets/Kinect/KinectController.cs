@@ -16,10 +16,12 @@ public class KinectController : MonoBehaviour {
 
   void Update() {
 
-    uint userId = manager.GetPlayer1ID;
+	uint userId = manager.GetPlayer1ID();
 
     HandLeft = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft);
     HandRight = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft);
+
+	PrintHandPoints ();
   }
 
   public void PrintHandPoints() {
@@ -29,7 +31,7 @@ public class KinectController : MonoBehaviour {
     float HandDifferences = HandLeft.x - HandRight.x;
 
     float ballWidth = 0.26f; //Ball Width is 0.26 cm
-    float inch = 0.0254; //1 inch equals 2.5 cm.
+    float inch = 0.0254f; //1 inch equals 2.5 cm.
 
     if (HandDifferences > (ballWidth - inch) && HandDifferences < (ballWidth + inch) ) {
       ballIsHeld = true;
