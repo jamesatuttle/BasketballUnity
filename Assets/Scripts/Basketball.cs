@@ -13,17 +13,6 @@ public class Basketball : MonoBehaviour {
 		GetComponent<AudioSource> ().clip = bounce;
 	}
 
-	/*void Update() {
-		GameObject basketball = GameObject.Find ("Basketball");
-
-		//NEEDS TO CHANGE TO GESTURE RECOGNITION
-		if (Input.GetKeyDown ("space") && GamePlay.GameIsPlayable) {
-			Debug.Log ("space key was pressed");
-			basketball.GetComponent<Rigidbody> ().constraints = RigidbodyConstraints.None;
-			basketball.GetComponent<Rigidbody> ().useGravity = true; //turn gravity off
-		}
-	}*/
-
 	public void OnCollisionEnter (Collision col) {
 		try {
 			var collision = col.gameObject.name;
@@ -54,8 +43,12 @@ public class Basketball : MonoBehaviour {
 	{
 		GameObject basketball = GameObject.Find ("Basketball");
 		basketball.GetComponent<Rigidbody> ().constraints = RigidbodyConstraints.FreezeAll;
-		basketball.GetComponent<Rigidbody> ().useGravity = false; //turn gravity off
+		setBallGravity(false); //turn gravity off
 
 		GameObject.Find ("Basketball").transform.position = new Vector3 (x, y, z);
+	}
+
+	public static void setBallGravity(bool gravity) {
+		GameObject.Find("Basketball").GetComponent<Rigidbody>().useGravity = gravity;
 	}
 }
