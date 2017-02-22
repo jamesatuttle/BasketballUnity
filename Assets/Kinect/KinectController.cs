@@ -4,16 +4,17 @@ using UnityEngine.UI;
 
 public class KinectController : MonoBehaviour
 {
-
 	Vector3 HandLeft;
 	Vector3 HandRight;
+	Vector3 Head;
 
 	bool ballIsHeld;
 
 	float ballWidth = 0.26f; //Ball Width is 0.26 cm
 	float inch = 0.0254f; //1 inch equals 2.5 cm.
 
-	Vector3 callibratedPosition;
+	Vector3 HandsCallibratedPosition;
+	Vector3 HeadCallibratedPosition;
 
 	void Start ()
 	{
@@ -31,6 +32,8 @@ public class KinectController : MonoBehaviour
 
 				HandLeft = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft);
 				HandRight = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight);
+
+				Head = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.Head);
 
 				BallPickUpController ();
 			}
@@ -57,6 +60,7 @@ public class KinectController : MonoBehaviour
 
 			} else {
 				moveBall ();
+				moveMainCamera ();
 			}
 		} else {
 
@@ -79,14 +83,19 @@ public class KinectController : MonoBehaviour
 
 		uint userId = manager.GetPlayer1ID ();
 
-		callibratedPosition.x = (HandLeft.x + HandRight.x) / 2;
-		callibratedPosition.y = (HandLeft.y + HandRight.y) / 2;
-		callibratedPosition.z = (HandLeft.z + HandRight.z) / 2;
+		HandsCallibratedPosition.x = (HandLeft.x + HandRight.x) / 2;
+		HandsCallibratedPosition.y = (HandLeft.y + HandRight.y) / 2;
+		HandsCallibratedPosition.z = (HandLeft.z + HandRight.z) / 2;
+
+		HeadCallibratedPosition.x = Head.x;
+		HeadCallibratedPosition.y = Head.y;
+		HeadCallibratedPosition.z = Head.z;
 
 	}
 
 	private void moveBall ()
 	{
+		int movementSensitivity = 3;
 
 		Vector3 newBallPosition;
 
@@ -94,18 +103,35 @@ public class KinectController : MonoBehaviour
 		float HandsY = (HandLeft.y + HandRight.y) / 2;
 		float HandsZ = (HandLeft.z + HandRight.z) / 2;
 
-		var XMovement = HandsX - callibratedPosition.x;
-		var YMovement = HandsY - callibratedPosition.y;
-		var ZMovement = HandsZ - callibratedPosition.z;
+		var XMovement = HandsX - HandsCallibratedPosition.x;
+		var YMovement = HandsY - HandsCallibratedPosition.y;
+		var ZMovement = HandsZ - HandsCallibratedPosition.z;
 
-		newBallPosition.x = Basketball.InitialBallPosition.x + XMovement;
-		newBallPosition.y = Basketball.InitialBallPosition.y + YMovement;
-		newBallPosition.z = Basketball.InitialBallPosition.z + ZMovement;
+		newBallPosition.x = Basketball.InitialBallPosition.x + (XMovement * movementSensitivity);
+		newBallPosition.y = Basketball.InitialBallPosition.y + (YMovement * movementSensitivity);
+		newBallPosition.z = Basketball.InitialBallPosition.z - (ZMovement * movementSensitivity);
 
 		GameObject.Find ("Basketball").GetComponent<Rigidbody> ().constraints = RigidbodyConstraints.None;
 
 		GameObject.Find ("Basketball").transform.position = new Vector3 (newBallPosition.x, newBallPosition.y, newBallPosition.z);
 
+	}
+
+	private void moveMainCamera()
+	{
+		int movementSensitivity = 3;
+
+		Vector3 newCameraPosition;
+
+		var XMovement = Head.x - HeadCallibratedPosition.x;
+		var YMovement = Head.y - HeadCallibratedPosition.y;
+		var ZMovement = Head.z - HeadCallibratedPosition.z;
+
+		newCameraPosition.x = Cameras.MainCameraPosition.x + (XMovement * movementSensitivity);
+		newCameraPosition.y = Cameras.MainCameraPosition.y + (YMovement * movementSensitivity);
+		newCameraPosition.z = Cameras.MainCameraPosition.z - (ZMovement * movementSensitivity);
+
+		Cameras.UpdateCameraPosition (newCameraPosition.x, newCameraPosition.y, newCameraPosition.z, 34);
 	}
 
 }
