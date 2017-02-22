@@ -42,10 +42,10 @@ public class Basketball : MonoBehaviour {
 	public static void UpdateFixedBasketballPosition(float x, float y, float z)
 	{
 		GameObject basketball = GameObject.Find ("Basketball");
+
 		basketball.GetComponent<Rigidbody> ().constraints = RigidbodyConstraints.FreezeAll;
 		setBallGravity(false); //turn gravity off
-
-		GameObject.Find ("Basketball").transform.position = new Vector3 (x, y, z);
+		basketball.transform.position = new Vector3 (x, y, z);
 	}
 
 	public static void setBallGravity(bool gravity) {
