@@ -32,14 +32,14 @@ public class KinectController : MonoBehaviour
 				HandLeft = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft);
 				HandRight = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight);
 
-				PrintHandPoints ();
+				BallPickUpController ();
 			}
 		} catch (Exception e) {
 			Debug.Log ("An error occured: " + e.Message);
 		}
 	}
 
-	public void PrintHandPoints ()
+	private void BallPickUpController ()
 	{
 
 		var HandDifference = -HandLeft.x - -HandRight.x;  //These x values are negative, the minus sets them positive
