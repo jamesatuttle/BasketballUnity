@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Cameras : MonoBehaviour {
 
+	public static Vector3 MainCameraPosition = new Vector3 (0f, 6.5f, 5f);
+
 	public static void StartScreenCameraSetup()
 	{
 		UpdateCameraPosition (0f, 2.9f, -21f, 45);
@@ -11,7 +13,7 @@ public class Cameras : MonoBehaviour {
 
 	public static void MainGameCameraSetUp()
 	{
-		UpdateCameraPosition (0f, 6.5f, 5f, 34);
+		UpdateCameraPosition (MainCameraPosition.x, MainCameraPosition.y, MainCameraPosition.z, 34);
 	}
 
 	public static void ScoreboardCameraSetUp()
