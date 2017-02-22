@@ -13,7 +13,7 @@ public class Basketball : MonoBehaviour {
 		GetComponent<AudioSource> ().clip = bounce;
 	}
 
-	void Update() {
+	/*void Update() {
 		GameObject basketball = GameObject.Find ("Basketball");
 
 		//NEEDS TO CHANGE TO GESTURE RECOGNITION
@@ -22,7 +22,7 @@ public class Basketball : MonoBehaviour {
 			basketball.GetComponent<Rigidbody> ().constraints = RigidbodyConstraints.None;
 			basketball.GetComponent<Rigidbody> ().useGravity = true; //turn gravity off
 		}
-	}
+	}*/
 
 	public void OnCollisionEnter (Collision col) {
 		try {
