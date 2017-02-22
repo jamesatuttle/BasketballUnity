@@ -18,19 +18,13 @@ public class KinectController : MonoBehaviour {
 	 
   	void Start() {
 		ballIsHeld = false;
-
-		KinectManager manager = KinectManager.Instance;
-
-		if (!manager.IsUserDetected()) {
-			Debug.Log ("User not detected");
-		}
   	}
 
   	void Update() {
-
+		try {
 		KinectManager manager = KinectManager.Instance;
 
-		if (manager.IsUserDetected()) {
+		if (manager.IsUserDetected() && GamePlay.GameIsPlayable) {
 
 			uint userId = manager.GetPlayer1ID ();
 
@@ -38,6 +32,9 @@ public class KinectController : MonoBehaviour {
 			HandRight = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight);
 		
 			PrintHandPoints ();
+		}
+		} catch (Exception e) {
+			Debug.Log ("An error occured");
 		}
   	}
 		
