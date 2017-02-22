@@ -4,13 +4,10 @@ using UnityEngine.UI;
 
 public class KinectController : MonoBehaviour
 {
-
-	//kalman field
-	//particle field 
-
 	Vector3 HandLeft;
 	Vector3 HandRight;
 	Vector3 Head;
+	Vector3 HipCenter;
 
 	bool ballIsHeld;
 
@@ -39,6 +36,8 @@ public class KinectController : MonoBehaviour
 
 				Head = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.Head);
 
+				HipCenter = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HipCenter);
+
 				BallPickUpController ();
 			}
 		} catch (Exception e) {
@@ -54,7 +53,7 @@ public class KinectController : MonoBehaviour
 		if (ballIsHeld) {
 			GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Picked up ball";
 
-			if (HandDifference > ballWidth + (inch * 10)) { //check they haven't dropped the ball
+			if (HandDifference > ballWidth + (inch * 3)) { //check they haven't dropped the ball
 
 				GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Dropped ball";
 
@@ -73,12 +72,13 @@ public class KinectController : MonoBehaviour
 
 			bool handsInDistanceToPickUpBall = HandDifference > minimumBallWidth && HandDifference < maximumBallWidth;
 
-			if (handsInDistanceToPickUpBall) {
-				ballIsHeld = true;
+			bool handsInFrontOfBody = HipCenter.z > HandLeft.z && HipCenter.z > HandRight.z;
+
+			if (handsInDistanceToPickUpBall && handsInFrontOfBody) {
 				callibrateUser ();
+				ballIsHeld = true;
 			}
 		}
-
 	}
 
 	private void callibrateUser ()
@@ -94,7 +94,6 @@ public class KinectController : MonoBehaviour
 		HeadCallibratedPosition.x = Head.x;
 		HeadCallibratedPosition.y = Head.y;
 		HeadCallibratedPosition.z = Head.z;
-
 	}
 
 	private void moveBall ()
@@ -118,7 +117,6 @@ public class KinectController : MonoBehaviour
 		GameObject.Find ("Basketball").GetComponent<Rigidbody> ().constraints = RigidbodyConstraints.None;
 
 		GameObject.Find ("Basketball").transform.position = new Vector3 (newBallPosition.x, newBallPosition.y, newBallPosition.z);
-
 	}
 
 	private void moveMainCamera()
