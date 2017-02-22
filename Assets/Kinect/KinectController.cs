@@ -4,6 +4,10 @@ using UnityEngine.UI;
 
 public class KinectController : MonoBehaviour
 {
+
+	//kalman field
+	//particle field 
+
 	Vector3 HandLeft;
 	Vector3 HandRight;
 	Vector3 Head;
@@ -17,7 +21,7 @@ public class KinectController : MonoBehaviour
 	Vector3 HeadCallibratedPosition;
 
 	void Start ()
-	{
+	{  
 		ballIsHeld = false;
 	}
 
