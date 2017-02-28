@@ -17,7 +17,7 @@ public class Basketball : MonoBehaviour {
 		try {
 			var collision = col.gameObject.name;
 
-			Debug.Log (col.relativeVelocity.magnitude / 21 * 100 + "%");
+			//Debug.Log (col.relativeVelocity.magnitude / 21 * 100 + "%");
 
 			if (collision == "Floor" || collision == "wall" || collision == "wall (1)" || collision == "wall (2)" || collision == "wall (3)" || collision == "Ceiling" ) {
 				GetComponent<AudioSource> ().volume = col.relativeVelocity.magnitude/100;
@@ -37,6 +37,7 @@ public class Basketball : MonoBehaviour {
 
 	public static void ResetBall() {
 		UpdateFixedBasketballPosition(InitialBallPosition.x, InitialBallPosition.y, InitialBallPosition.z);
+		KinectController.ballThrown = false;
 	}
 
 	public static void UpdateFixedBasketballPosition(float x, float y, float z)
