@@ -41,6 +41,7 @@ public class KinectController : MonoBehaviour
 				BasketballController ();
 			}
 		} catch (Exception e) {
+			GamePlay.GameIsPlayable = false;
 			Debug.Log ("An error occured: " + e.Message);
 		}
 	}
