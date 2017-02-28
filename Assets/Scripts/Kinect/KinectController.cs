@@ -57,7 +57,7 @@ public class KinectController : MonoBehaviour
 
 				GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Dropped ball";
 
-				Basketball.setBallGravity (true); //turn gravity on
+				Basketball.SetBallGravity (true); //turn gravity on
 
 				ballIsHeld = false;
 
@@ -114,7 +114,7 @@ public class KinectController : MonoBehaviour
 		newBallPosition.y = Basketball.InitialBallPosition.y + (YMovement * movementSensitivity);
 		newBallPosition.z = Basketball.InitialBallPosition.z - (ZMovement * movementSensitivity);
 
-		GameObject.Find ("Basketball").GetComponent<Rigidbody> ().constraints = RigidbodyConstraints.None;
+		Basketball.LockBasketballPosition (false);
 
 		GameObject.Find ("Basketball").transform.position = new Vector3 (newBallPosition.x, newBallPosition.y, newBallPosition.z);
 	}
