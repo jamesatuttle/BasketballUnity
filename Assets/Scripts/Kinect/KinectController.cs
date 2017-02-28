@@ -38,14 +38,14 @@ public class KinectController : MonoBehaviour
 
 				HipCenter = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HipCenter);
 
-				PickupBasketballController ();
+				BasketballController ();
 			}
 		} catch (Exception e) {
 			Debug.Log ("An error occured: " + e.Message);
 		}
 	}
 
-	private void PickupBasketballController ()
+	private void BasketballController ()
 	{
 
 		var HandDifference = -HandLeft.x - -HandRight.x;  //These x values are negative, the minus sets them positive
