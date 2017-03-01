@@ -8313,7 +8313,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Testing
+  m_Text: 
 --- !u!222 &1716983461
 CanvasRenderer:
   m_ObjectHideFlags: 0
