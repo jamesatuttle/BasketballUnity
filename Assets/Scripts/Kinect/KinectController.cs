@@ -17,6 +17,8 @@ public class KinectController : MonoBehaviour
 	Vector3 HandsCallibratedPosition;
 	Vector3 HeadCallibratedPosition;
 
+	float HandDifference;
+
 	void Start ()
 	{  
 		ballIsHeld = false;
@@ -37,14 +39,13 @@ public class KinectController : MonoBehaviour
 
 					HandLeft = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft);
 					HandRight = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight);
-
 					Head = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.Head);
-
 					HipCenter = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HipCenter);
 
 					BasketballController ();
-				} else {
 
+				} else {
+					GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Stand in front of sensor";
 				}
 			}
 		} catch (Exception e) {
@@ -55,12 +56,13 @@ public class KinectController : MonoBehaviour
 
 	private void BasketballController ()
 	{
-		var HandDifference = -HandLeft.x - -HandRight.x;  //These x values are negative, the minus sets them positive
+		HandDifference = -HandLeft.x - -HandRight.x;  //These x values are negative, the minus sets them positive
 
 		if (ballIsHeld) {
+
 			GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Picked up ball";
 
-			if (HandDifference > ballWidth + (inch * 3)) { //check they haven't dropped the ball
+			if (IsBallDropped()) { //check they haven't dropped the ball
 				dropBall ();
 			} else {
 				moveBall ();
@@ -68,15 +70,31 @@ public class KinectController : MonoBehaviour
 			}
 
 		} else {
-			
-			bool handsInDistanceToPickUpBall = HandDifference > (ballWidth - inch) && HandDifference < (ballWidth + inch);
-			bool handsInFrontOfBody = HipCenter.z > HandLeft.z && HipCenter.z > HandRight.z;
 
-			if (handsInDistanceToPickUpBall && handsInFrontOfBody) {
+			if (IsBallPickedUp()) {
 				callibrateUser ();
 				ballIsHeld = true;
 			}
 		}
+	}
+
+	private bool IsBallPickedUp()
+	{
+		bool handsInDistanceToPickUpBall = HandDifference > (ballWidth - (inch * 2)) && HandDifference < (ballWidth + (inch * 2));
+		bool handsInFrontOfBody = HipCenter.z > HandLeft.z && HipCenter.z > HandRight.z;
+
+		if (handsInDistanceToPickUpBall && handsInFrontOfBody)
+			return true;
+		else
+			return false;
+	}
+
+	private bool IsBallDropped() 
+	{
+		if (HandDifference > ballWidth + (inch * 3))
+			return true;
+		else
+			return false;
 	}
 
 	private void callibrateUser ()
