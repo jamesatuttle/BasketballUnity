@@ -20,25 +20,32 @@ public class KinectController : MonoBehaviour
 	void Start ()
 	{  
 		ballIsHeld = false;
+		GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "";
 	}
 
 	void Update ()
 	{ 
 		try {
-			KinectManager manager = KinectManager.Instance;
 
-			if (manager.IsUserDetected () && GamePlay.GameIsPlayable) {
+			if (GamePlay.GameIsPlayable) {
 
-				uint userId = manager.GetPlayer1ID ();
+				KinectManager manager = KinectManager.Instance;
 
-				HandLeft = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft);
-				HandRight = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight);
+				if (manager.IsUserDetected ()) {
 
-				Head = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.Head);
+					uint userId = manager.GetPlayer1ID ();
 
-				HipCenter = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HipCenter);
+					HandLeft = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft);
+					HandRight = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight);
 
-				BasketballController ();
+					Head = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.Head);
+
+					HipCenter = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HipCenter);
+
+					BasketballController ();
+				} else {
+
+				}
 			}
 		} catch (Exception e) {
 			GamePlay.GameIsPlayable = false;
@@ -48,31 +55,21 @@ public class KinectController : MonoBehaviour
 
 	private void BasketballController ()
 	{
-
 		var HandDifference = -HandLeft.x - -HandRight.x;  //These x values are negative, the minus sets them positive
 
 		if (ballIsHeld) {
 			GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Picked up ball";
 
 			if (HandDifference > ballWidth + (inch * 3)) { //check they haven't dropped the ball
-
-				GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Dropped ball";
-
-				Basketball.SetBallGravity (true); //turn gravity on
-
-				ballIsHeld = false;
-
+				dropBall ();
 			} else {
 				moveBall ();
 				moveMainCamera ();
 			}
+
 		} else {
-
-			var minimumBallWidth = ballWidth - inch;
-			var maximumBallWidth = ballWidth + inch;
-
-			bool handsInDistanceToPickUpBall = HandDifference > minimumBallWidth && HandDifference < maximumBallWidth;
-
+			
+			bool handsInDistanceToPickUpBall = HandDifference > (ballWidth - inch) && HandDifference < (ballWidth + inch);
 			bool handsInFrontOfBody = HipCenter.z > HandLeft.z && HipCenter.z > HandRight.z;
 
 			if (handsInDistanceToPickUpBall && handsInFrontOfBody) {
@@ -97,6 +94,15 @@ public class KinectController : MonoBehaviour
 		HeadCallibratedPosition.z = Head.z;
 	}
 
+	private void dropBall()
+	{
+		GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Dropped ball";
+
+		Basketball.SetBallGravity (true); //turn gravity on
+
+		ballIsHeld = false;
+	}
+
 	private void moveBall ()
 	{
 		int movementSensitivity = 3;
@@ -106,6 +112,8 @@ public class KinectController : MonoBehaviour
 		float HandsX = (HandLeft.x + HandRight.x) / 2;
 		float HandsY = (HandLeft.y + HandRight.y) / 2;
 		float HandsZ = (HandLeft.z + HandRight.z) / 2;
+
+		// average the hands movement here
 
 		var XMovement = HandsX - HandsCallibratedPosition.x;
 		var YMovement = HandsY - HandsCallibratedPosition.y;
@@ -136,5 +144,4 @@ public class KinectController : MonoBehaviour
 
 		Cameras.UpdateCameraPosition (newCameraPosition.x, newCameraPosition.y, newCameraPosition.z, 34);
 	}
-
 }
