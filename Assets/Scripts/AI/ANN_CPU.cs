@@ -7,10 +7,10 @@ public class ANN_CPU : MonoBehaviour {
 
 	public static NeuralNetwork ANN = new NeuralNetwork ();
 	public static double[,] ANNTrainingData = Database.ANNTrainingData();
-	public static double[] trackedSkeletalPoints = new double[9];
+	public static double[] trackedSkeletalPoints = new double[15];
 
 	public static void StartANN() {
-		ANN.Initialise (9, 4, 4);
+		ANN.Initialise (15, 4, 4);
 		ANN.SetLearningRate (0.2);
 		ANN.SetMomentum (true, 0.9);
 		TrainANN ();
@@ -27,14 +27,14 @@ public class ANN_CPU : MonoBehaviour {
 
 			for (int i = 0; i < 60; i++) {
 
-				//set the input values from the database - first 9 columns
-				for (int a = 0; a < 9; a++) {
+				//set the input values from the database - first 15 columns
+				for (int a = 0; a < 15; a++) {
 					ANN.SetInput (a, ANNTrainingData [i, a]);
 				}
 
 				//set the output values from the database - last 4 columns
 				for (int a = 0; a < 4; a++) {
-					ANN.SetDesiredOutput(a, ANNTrainingData[i, (a+9)]);
+					ANN.SetDesiredOutput(a, ANNTrainingData[i, (a+15)]);
 				}
 
 				ANN.FeedForward ();
@@ -46,7 +46,7 @@ public class ANN_CPU : MonoBehaviour {
 	}
 
 	private static void TestANN() {
-		for (int i = 0; i < 9; i++)
+		for (int i = 0; i < 15; i++)
 			ANN.SetInput (i, trackedSkeletalPoints [i]);
 
 		ANN.FeedForward ();
