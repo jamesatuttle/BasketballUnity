@@ -8,6 +8,8 @@ public class KinectController : MonoBehaviour
 	Vector3 HandRight;
 	Vector3 Head;
 	Vector3 HipCenter;
+	Vector3 ShoulderLeft;
+	Vector3 ShoulderRight;
 
 	bool ballIsHeld;
 
@@ -41,6 +43,8 @@ public class KinectController : MonoBehaviour
 					HandRight = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight);
 					Head = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.Head);
 					HipCenter = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HipCenter);
+					ShoulderLeft = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ShoulderLeft);
+					ShoulderRight = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ShoulderRight);
 
 					BasketballController ();
 
@@ -161,5 +165,13 @@ public class KinectController : MonoBehaviour
 		newCameraPosition.z = Cameras.MainCameraPosition.z - (ZMovement * movementSensitivity);
 
 		Cameras.UpdateCameraPosition (newCameraPosition.x, newCameraPosition.y, newCameraPosition.z, 34);
+	}
+
+	/*
+	 * Temp method to add the required skeletal differences to the database
+	 */
+	private void collectSkeletalDifferences(Vector3 HandLeft, Vector3 HandRight, Vector3 HipCentre)
+	{
+
 	}
 }
