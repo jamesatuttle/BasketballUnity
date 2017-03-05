@@ -10,6 +10,10 @@ public class KinectController : MonoBehaviour
 	Vector3 HipCenter;
 	Vector3 ShoulderLeft;
 	Vector3 ShoulderRight;
+	Vector3 WristLeft;
+	Vector3 WristRight;
+	Vector3 ElbowLeft;
+	Vector3 ElbowRight;
 
 	bool ballIsHeld;
 
@@ -26,7 +30,7 @@ public class KinectController : MonoBehaviour
 		ballIsHeld = false;
 		GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "";
 	}
-
+		
 	void Update ()
 	{ 
 		try {
@@ -41,10 +45,14 @@ public class KinectController : MonoBehaviour
 
 					HandLeft = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft);
 					HandRight = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight);
+					WristLeft = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.WristLeft);
+					WristRight = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.WristRight);
 					Head = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.Head);
 					HipCenter = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HipCenter);
 					ShoulderLeft = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ShoulderLeft);
 					ShoulderRight = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ShoulderRight);
+					ElbowLeft = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ElbowLeft);
+					ElbowRight = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ElbowRight);
 
 					BasketballController ();
 
@@ -69,6 +77,7 @@ public class KinectController : MonoBehaviour
 			if (IsBallDropped()) { //check they haven't dropped the ball
 				dropBall ();
 			} else {
+				collectSkeletalDifferences ();
 				moveBall ();
 				moveMainCamera ();
 			}
@@ -170,8 +179,104 @@ public class KinectController : MonoBehaviour
 	/*
 	 * Temp method to add the required skeletal differences to the database
 	 */
-	private void collectSkeletalDifferences(Vector3 HandLeft, Vector3 HandRight, Vector3 HipCentre)
+
+	//Vector3 HandLeft, Vector3 HandRight, Vector3 HipCenter, Vector3 ShoulderLeft, Vector3 ShoulderRight
+
+
+	private void collectSkeletalDifferences()
 	{
+
+		double RightHand_HipX = HandRight.x - HipCenter.x;
+		double RightHand_HipY = HandRight.y - HipCenter.y;
+		double RightHand_HipZ = HandRight.z - HipCenter.z;
+		double RightHand_RightWristX = HandRight.x - WristRight.x;
+		double RightHand_RightWristY = HandRight.y - WristRight.y;
+		double RightHand_RightWristZ = HandRight.z - WristRight.z;
+		double RightWrist_RightElbowX = WristRight.x - ElbowRight.x;
+		double RightWrist_RightElbowY = WristRight.y - ElbowRight.y;
+		double RightWrist_RightElbowZ = WristRight.z - ElbowRight.z;
+		double RightElbow_RightShoulderX = ElbowRight.x - ShoulderRight.x;
+		double RightElbow_RightShoulderY = ElbowRight.y - ShoulderRight.y;
+		double RightElbow_RightShoulderZ = ElbowRight.z - ShoulderRight.z;
+		double RightHand_RightShoulderX = HandRight.x - ShoulderRight.x;
+		double RightHand_RightShoulderY = HandRight.y - ShoulderRight.y;
+		double RightHand_RightShoulderZ = HandRight.z - ShoulderRight.z;
+
+		double LeftHand_HipX = HandLeft.x - HipCenter.x;
+		double LeftHand_HipY = HandLeft.y - HipCenter.y;
+		double LeftHand_HipZ = HandLeft.z - HipCenter.z;
+		double LeftHand_LeftWristX = HandLeft.x - WristLeft.x;
+		double LeftHand_LeftWristY = HandLeft.y - WristLeft.y;
+		double LeftHand_LeftWristZ = HandLeft.z - WristLeft.z;
+		double LeftWrist_LeftElbowX = WristLeft.x - ElbowLeft.x;
+		double LeftWrist_LeftElbowY = WristLeft.y - ElbowLeft.y;
+		double LeftWrist_LeftElbowZ = WristLeft.z - ElbowLeft.z;
+		double LeftElbow_LeftShoulderX = ElbowLeft.x - ShoulderLeft.x;
+		double LeftElbow_LeftShoulderY = ElbowLeft.y - ShoulderLeft.y;
+		double LeftElbow_LeftShoulderZ = ElbowLeft.z - ShoulderLeft.z;
+		double LeftHand_LeftShoulderX = HandLeft.x - ShoulderLeft.x;
+		double LeftHand_LeftShoulderY = HandLeft.y - ShoulderLeft.y;
+		double LeftHand_LeftShoulderZ = HandLeft.z - ShoulderLeft.z;
+
+
+		double[] trackedSkeletalPoints = new double[30];
+
+		trackedSkeletalPoints [0] = RightHand_HipX;
+		trackedSkeletalPoints [1] = RightHand_HipY;
+		trackedSkeletalPoints [2] = RightHand_HipZ;
+		trackedSkeletalPoints [3] = RightHand_RightWristX;
+		trackedSkeletalPoints [4] = RightHand_RightWristY;
+		trackedSkeletalPoints [5] = RightHand_RightWristZ;
+		trackedSkeletalPoints [6] = RightWrist_RightElbowY;
+		trackedSkeletalPoints [7] = RightWrist_RightElbowY;
+		trackedSkeletalPoints [8] = RightWrist_RightElbowZ;
+		trackedSkeletalPoints [9] = RightElbow_RightShoulderX;
+		trackedSkeletalPoints [10] = RightElbow_RightShoulderY;
+		trackedSkeletalPoints [11] = RightElbow_RightShoulderZ;
+		trackedSkeletalPoints [12] = RightHand_RightShoulderX;
+		trackedSkeletalPoints [13] = RightHand_RightShoulderY;
+		trackedSkeletalPoints [14] = RightHand_RightShoulderZ;
+		trackedSkeletalPoints [15] = LeftHand_HipX;
+		trackedSkeletalPoints [16] = LeftHand_HipY;
+		trackedSkeletalPoints [17] = LeftHand_HipZ;
+		trackedSkeletalPoints [18] = LeftHand_LeftWristX;
+		trackedSkeletalPoints [19] = LeftHand_LeftWristY;
+		trackedSkeletalPoints [20] = LeftHand_LeftWristZ;
+		trackedSkeletalPoints [21] = LeftWrist_LeftElbowY;
+		trackedSkeletalPoints [22] = LeftWrist_LeftElbowY;
+		trackedSkeletalPoints [23] = LeftWrist_LeftElbowZ;
+		trackedSkeletalPoints [24] = LeftElbow_LeftShoulderX;
+		trackedSkeletalPoints [25] = LeftElbow_LeftShoulderY;
+		trackedSkeletalPoints [26] = LeftElbow_LeftShoulderZ;
+		trackedSkeletalPoints [27] = LeftHand_LeftShoulderX;
+		trackedSkeletalPoints [28] = LeftHand_LeftShoulderY;
+		trackedSkeletalPoints [29] = LeftHand_LeftShoulderZ;
+
+		/*
+		 * Stationary
+		 * Professional
+		 * Chest
+		 * Low
+		 */
+		//string gesture = "Professional";
+
+		/*AddToDatabase.addToANNTrainingData (
+			RightHand_HipX, RightHand_HipY, RightHand_HipZ,
+			RightHand_RightWristX, RightHand_RightWristY, RightHand_RightWristZ,
+			RightWrist_RightElbowX, RightWrist_RightElbowY, RightWrist_RightElbowZ,
+			RightElbow_RightShoulderX, RightElbow_RightShoulderY, RightElbow_RightShoulderZ,
+			RightHand_RightShoulderX, RightHand_RightShoulderY, RightHand_RightShoulderZ,
+
+			LeftHand_HipX, LeftHand_HipY, LeftHand_HipZ,
+			LeftHand_LeftWristX, LeftHand_LeftWristY, LeftHand_LeftWristZ,
+			LeftWrist_LeftElbowX, LeftWrist_LeftElbowY, LeftWrist_LeftElbowZ,
+			LeftElbow_LeftShoulderX, LeftElbow_LeftShoulderY, LeftElbow_LeftShoulderZ,
+			LeftHand_LeftShoulderX, LeftHand_LeftShoulderY, LeftHand_LeftShoulderZ,
+
+			gesture
+		);*/
+
+		ANN_CPU.StartANN (trackedSkeletalPoints);
 
 	}
 }
