@@ -13,6 +13,9 @@ public class Database {
 	private static IDbCommand dbCommand;
 	private static IDataReader dataReader;
 	public static bool ANNTrainingDataRetrieved = false;
+	private static int noRows = 60;
+	private static int noInputs = 30;
+	private static int noOutputs = 4;
 
 	public static double[,] ANNTrainingData() {
 		string tableName = "ANNTrainingData";
@@ -24,7 +27,7 @@ public class Database {
 		dataReader = dbCommand.ExecuteReader ();
 
 		int rowCount = 0;
-		double[,] TrainingDataArray = new double[60,34];
+		double[,] TrainingDataArray = new double[noRows,noInputs + noOutputs];
 
 		while(dataReader.Read()) {
 
@@ -115,8 +118,8 @@ public class Database {
 	public static void printTrainingData() {
 		double[,] TrainingData = ANNTrainingData ();
 
-		int rowMax = 60;
-		int colMax = 34;
+		int rowMax = noRows;
+		int colMax = noInputs + noOutputs;
 
 		Debug.Log ("");
 
@@ -126,6 +129,22 @@ public class Database {
 				Debug.Log (TrainingData [row, col].ToString ());
 			}
 		}
+	}
+
+	public static int ReturnNoRows() {
+		return noRows;
+	}
+
+	public static int ReturnNoCols() {
+		return noInputs + noOutputs;
+	}
+
+	public static int ReturnNoInputs() {
+		return noInputs;
+	}
+
+	public static int ReturnNoOutputs() {
+		return noOutputs;
 	}
 		
 }
