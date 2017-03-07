@@ -7,12 +7,47 @@ using System;
 public class ANN_CPU : MonoBehaviour {
 
 	public static NeuralNetwork ANN = new NeuralNetwork ();
-	public static double[,] ANNTrainingData = new double[40 ,34];
-	//public static double[] trackedSkeletalPoints = new double[15];
+	public static double[,] ANNTrainingData = new double[60 ,34];
 
 	void Awake() {
 		if (!Database.ANNTrainingDataRetrieved)
 			ANNTrainingData = Database.ANNTrainingData();
+		}
+
+	public static void TestANNClassifier() {
+		double[] testGesture = new double[30];
+		testGesture [0] = 0.0681107267737389;
+		testGesture [1] = 0.0527109540998936;
+		testGesture [2] = -0.40911591053009;
+		testGesture [3] = -0.0343372523784637;
+		testGesture [4] = -0.0308329351246357; 
+		testGesture [5] = -0.111732840538025; 
+		testGesture [6] = -0.0809760242700577; 
+		testGesture [7] = -0.0612036883831024; 
+		testGesture [8] = -0.269070029258728; 
+		testGesture [9] = 0.0221923142671585; 
+		testGesture [10] = -0.180041216313839; 
+		testGesture [11] = -0.145070791244507; 
+		testGesture [12] = -0.0931209623813629; 
+		testGesture [13] = -0.272077839821577; 
+		testGesture [14] = -0.52587366104126; 
+		testGesture [15] = -0.102569233626127; 
+		testGesture [16] = 0.0636158566921949; 
+		testGesture [17] = -0.406136989593506; 
+		testGesture [18] = 0.0235675945878029; 
+		testGesture [19] = 0.0380370188504457; 
+		testGesture [20] = -0.10601866245269; 
+		testGesture [21] = 	0.069388885051012; 
+		testGesture [22] = -0.098872072994709; 
+		testGesture [23] = -0.188705563545227; 
+		testGesture [24] = -0.031746372580528; 
+		testGesture [25] = -0.207168068736792; 
+		testGesture [26] = -0.209166646003723; 
+		testGesture [27] = 0.0612101070582867; 
+		testGesture [28] = -0.268003122881055; 
+		testGesture [29] = -0.503890872001648;
+
+		StartANN (testGesture);
 	}
 
 	public static void StartANN(double[] trackedSkeletalPoints) {
@@ -38,7 +73,7 @@ public class ANN_CPU : MonoBehaviour {
 
 				for (int i = 0; i < 40; i++) {
 
-					//set the input values from the database - first 15 columns
+					//set the input values from the database - first 30 columns
 					for (int a = 0; a < 30; a++) {
 						ANN.SetInput (a, ANNTrainingData [i, a]);
 					}
@@ -61,6 +96,7 @@ public class ANN_CPU : MonoBehaviour {
 
 	private static void TestANN(double[] trackedSkeletalPoints) {
 		try {
+
 			for (int i = 0; i < 30; i++)
 				ANN.SetInput (i, trackedSkeletalPoints [i]);
 
@@ -111,6 +147,7 @@ public class ANN_CPU : MonoBehaviour {
 			}
 
 			GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Gesture: " + Gesture;
+
 
 		} catch (Exception e) {
 			Debug.Log ("An error occurred when testing ANN: " + e.Message);
