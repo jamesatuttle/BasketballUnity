@@ -24,7 +24,7 @@ public class Database {
 		dataReader = dbCommand.ExecuteReader ();
 
 		int rowCount = 0;
-		double[,] TrainingDataArray = new double[40,34];
+		double[,] TrainingDataArray = new double[60,34];
 
 		while(dataReader.Read()) {
 
@@ -115,7 +115,7 @@ public class Database {
 	public static void printTrainingData() {
 		double[,] TrainingData = ANNTrainingData ();
 
-		int rowMax = 40;
+		int rowMax = 60;
 		int colMax = 34;
 
 		Debug.Log ("");
