@@ -6,12 +6,17 @@ public class KinectController : MonoBehaviour
 {
 	Vector3 HandLeft;
 	Vector3 HandRight;
+
 	Vector3 Head;
+
 	Vector3 HipCenter;
+
 	Vector3 ShoulderLeft;
 	Vector3 ShoulderRight;
+
 	Vector3 WristLeft;
 	Vector3 WristRight;
+
 	Vector3 ElbowLeft;
 	Vector3 ElbowRight;
 
@@ -179,7 +184,6 @@ public class KinectController : MonoBehaviour
 
 	private void collectSkeletalDifferences()
 	{
-
 		double RightHand_HipX = HandRight.x - HipCenter.x;
 		double RightHand_HipY = HandRight.y - HipCenter.y;
 		double RightHand_HipZ = HandRight.z - HipCenter.z;
@@ -213,7 +217,7 @@ public class KinectController : MonoBehaviour
 		double LeftHand_LeftShoulderZ = HandLeft.z - ShoulderLeft.z;
 
 
-		double[] trackedSkeletalPoints = new double[30];
+		double[] trackedSkeletalPoints = new double[Database.ReturnNoInputs()];
 
 		trackedSkeletalPoints [0] = RightHand_HipX;
 		trackedSkeletalPoints [1] = RightHand_HipY;
