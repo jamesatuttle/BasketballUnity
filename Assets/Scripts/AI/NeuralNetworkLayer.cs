@@ -85,7 +85,7 @@ public class NeuralNetworkLayer {
 		}
 
 		if (ChildLayer != null)
-			for (j = 0; j < NumberOfChildNodes; j++)
+			for (int j = 0; j < NumberOfChildNodes; j++)
 			{
 				BiasValues[j] = -1;
 				BiasWeights[j] = 0;
