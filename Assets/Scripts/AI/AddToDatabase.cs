@@ -162,17 +162,4 @@ public class AddToDatabase {
 	
 	}
 
-	/*public static double formatData(double value) {
-
-		int length = 10;
-
-		float floatVal = (float)value;
-
-		float val = Mathf.Pow (10.0f, (float)length);
-
-		float newVal = Mathf.Round (floatVal * val) / val;
-
-		return (double)newVal;
-	}*/
-
 }
