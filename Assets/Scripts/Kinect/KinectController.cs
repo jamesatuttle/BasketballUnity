@@ -29,6 +29,7 @@ public class KinectController : MonoBehaviour
 	{  
 		ballIsHeld = false;
 		GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "";
+		ANN_CPU.TestANNClassifier ();
 	}
 		
 	void Update ()
@@ -258,9 +259,9 @@ public class KinectController : MonoBehaviour
 		 * Chest
 		 * Low
 		 */
-		//string gesture = "Professional";
+		/*string gesture = "Stationary";
 
-		/*AddToDatabase.addToANNTrainingData (
+		AddToDatabase.addToANNTrainingData (
 			RightHand_HipX, RightHand_HipY, RightHand_HipZ,
 			RightHand_RightWristX, RightHand_RightWristY, RightHand_RightWristZ,
 			RightWrist_RightElbowX, RightWrist_RightElbowY, RightWrist_RightElbowZ,
