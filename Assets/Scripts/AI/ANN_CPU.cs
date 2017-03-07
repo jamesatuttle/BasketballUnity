@@ -7,7 +7,7 @@ using System;
 public class ANN_CPU : MonoBehaviour {
 
 	public static NeuralNetwork ANN = new NeuralNetwork ();
-	public static double[,] ANNTrainingData = new double[60 ,34];
+	public static double[,] ANNTrainingData = new double[Database.ReturnNoRows(), Database.ReturnNoCols()];
 
 	void Awake() {
 		if (!Database.ANNTrainingDataRetrieved)
@@ -52,7 +52,7 @@ public class ANN_CPU : MonoBehaviour {
 
 	public static void StartANN(double[] trackedSkeletalPoints) {
 		try {
-			ANN.Initialise (30, 4, 4);
+			ANN.Initialise (Database.ReturnNoInputs(), 4, Database.ReturnNoOutputs());
 			ANN.SetLearningRate (0.2);
 			ANN.SetMomentum (true, 0.9);
 			TrainANN ();
@@ -74,13 +74,13 @@ public class ANN_CPU : MonoBehaviour {
 				for (int i = 0; i < 40; i++) {
 
 					//set the input values from the database - first 30 columns
-					for (int a = 0; a < 30; a++) {
+					for (int a = 0; a < Database.ReturnNoInputs(); a++) {
 						ANN.SetInput (a, ANNTrainingData [i, a]);
 					}
 
 					//set the output values from the database - last 4 columns
-					for (int a = 0; a < 4; a++) {
-						ANN.SetDesiredOutput(a, ANNTrainingData[i, (a+30)]);
+					for (int a = 0; a < Database.ReturnNoOutputs(); a++) {
+						ANN.SetDesiredOutput(a, ANNTrainingData[i, (Database.ReturnNoInputs() + a)]);
 					}
 
 					ANN.FeedForward ();
@@ -97,7 +97,7 @@ public class ANN_CPU : MonoBehaviour {
 	private static void TestANN(double[] trackedSkeletalPoints) {
 		try {
 
-			for (int i = 0; i < 30; i++)
+			for (int i = 0; i < Database.ReturnNoInputs(); i++)
 				ANN.SetInput (i, trackedSkeletalPoints [i]);
 
 			ANN.FeedForward ();
