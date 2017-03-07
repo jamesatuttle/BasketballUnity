@@ -177,13 +177,6 @@ public class KinectController : MonoBehaviour
 		Cameras.UpdateCameraPosition (newCameraPosition.x, newCameraPosition.y, newCameraPosition.z, 34);
 	}
 
-	/*
-	 * Temp method to add the required skeletal differences to the database
-	 */
-
-	//Vector3 HandLeft, Vector3 HandRight, Vector3 HipCenter, Vector3 ShoulderLeft, Vector3 ShoulderRight
-
-
 	private void collectSkeletalDifferences()
 	{
 
