@@ -17,7 +17,7 @@ public class AddToDatabase {
 		double RightHand_HipX,
 		double RightHand_HipY,
 		double RightHand_HipZ,
-		double RightHand_RightWristX,
+		/*double RightHand_RightWristX,
 		double RightHand_RightWristY,
 		double RightHand_RightWristZ,
 		double RightWrist_RightElbowX,
@@ -28,11 +28,11 @@ public class AddToDatabase {
 		double RightElbow_RightShoulderZ,
 		double RightHand_RightShoulderX,
 		double RightHand_RightShoulderY,
-		double RightHand_RightShoulderZ,
+		double RightHand_RightShoulderZ,*/
 		double LeftHand_HipX,
 		double LeftHand_HipY,
 		double LeftHand_HipZ,
-		double LeftHand_LeftWristX,
+		/*double LeftHand_LeftWristX,
 		double LeftHand_LeftWristY,
 		double LeftHand_LeftWristZ,
 		double LeftWrist_LeftElbowX,
@@ -43,7 +43,7 @@ public class AddToDatabase {
 		double LeftElbow_LeftShoulderZ,
 		double LeftHand_LeftShoulderX,
 		double LeftHand_LeftShoulderY,
-		double LeftHand_LeftShoulderZ,
+		double LeftHand_LeftShoulderZ,*/
 		string throwType
 	) {
 		
@@ -112,32 +112,32 @@ public class AddToDatabase {
 
 			dbCommand.CommandText = "insert into ANNTrainingData(" +
 				"RightHand_HipX, RightHand_HipY, RightHand_HipZ, " +
-				"RightHand_RightWristX, RightHand_RightWristY, RightHand_RightWristZ, " +
+				/*"RightHand_RightWristX, RightHand_RightWristY, RightHand_RightWristZ, " +
 				"RightWrist_RightElbowX, RightWrist_RightElbowY, RightWrist_RightElbowZ, " +
 				"RightElbow_RightShoulderX, RightElbow_RightShoulderY, RightElbow_RightShoulderZ, " +
-				"RightHand_RightShoulderX, RightHand_RightShoulderY, RightHand_RightShoulderZ, " +
+				"RightHand_RightShoulderX, RightHand_RightShoulderY, RightHand_RightShoulderZ, " +*/
 
 				"LeftHand_HipX, LeftHand_HipY, LeftHand_HipZ, " +
-				"LeftHand_LeftWristX, LeftHand_LeftWristY, LeftHand_LeftWristZ, " +
+				/*"LeftHand_LeftWristX, LeftHand_LeftWristY, LeftHand_LeftWristZ, " +
 				"LeftWrist_LeftElbowX, LeftWrist_LeftElbowY, LeftWrist_LeftElbowZ, " +
 				"LeftElbow_LeftShoulderX, LeftElbow_LeftShoulderY, LeftElbow_LeftShoulderZ, " +
-				"LeftHand_LeftShoulderX, LeftHand_LeftShoulderY, LeftHand_LeftShoulderZ, " +
+				"LeftHand_LeftShoulderX, LeftHand_LeftShoulderY, LeftHand_LeftShoulderZ, " +*/
 
 				"Stationary, Professional_Throw, Chest_Throw, Low_Throw " +
 
 				") values (" + 
 
 				RightHand_HipX + ", " + RightHand_HipY + ", " + RightHand_HipZ + ", " +
-				RightHand_RightWristX + ", " + RightHand_RightWristY + ", " + RightHand_RightWristZ + ", " +
+				/*RightHand_RightWristX + ", " + RightHand_RightWristY + ", " + RightHand_RightWristZ + ", " +
 				RightWrist_RightElbowX + ", " + RightWrist_RightElbowY + ", " + RightWrist_RightElbowZ + ", " +
 				RightElbow_RightShoulderX + ", " + RightElbow_RightShoulderY + ", " + RightElbow_RightShoulderZ + ", " +
-				RightHand_RightShoulderX + ", " + RightHand_RightShoulderY + ", " + RightHand_RightShoulderZ + ", " +
+				RightHand_RightShoulderX + ", " + RightHand_RightShoulderY + ", " + RightHand_RightShoulderZ + ", " +*/
 
 				LeftHand_HipX + ", " + LeftHand_HipY + ", " + LeftHand_HipZ + ", " +
-				LeftHand_LeftWristX + ", " + LeftHand_LeftWristY + ", " + LeftHand_LeftWristZ + ", " +
+				/*LeftHand_LeftWristX + ", " + LeftHand_LeftWristY + ", " + LeftHand_LeftWristZ + ", " +
 				LeftWrist_LeftElbowX + ", " + LeftWrist_LeftElbowY + ", " + LeftWrist_LeftElbowZ + ", " +
 				LeftElbow_LeftShoulderX + ", " + LeftElbow_LeftShoulderY + ", " + LeftElbow_LeftShoulderZ + ", " +
-				LeftHand_LeftShoulderX + ", " + LeftHand_LeftShoulderY + ", " + LeftHand_LeftShoulderZ + ", " +
+				LeftHand_LeftShoulderX + ", " + LeftHand_LeftShoulderY + ", " + LeftHand_LeftShoulderZ + ", " +*/
 
 				Stationary + ", " + Professional_Throw + ", " + Chest_Throw + ", " + Low_Throw + ")";
 
