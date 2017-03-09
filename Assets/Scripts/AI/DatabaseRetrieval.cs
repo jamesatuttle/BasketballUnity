@@ -12,7 +12,7 @@ public class Database {
 	private static IDbConnection dbConnection;
 	private static IDbCommand dbCommand;
 	private static IDataReader dataReader;
-	public static bool ANNTrainingDataRetrieved = false;
+	//public static bool ANNTrainingDataRetrieved = false;
 	private static int noRows = 60;
 	private static int noInputs = 6;
 	private static int noOutputs = 4;
@@ -116,7 +116,7 @@ public class Database {
 
 		dbConnection.Close ();
 
-		ANNTrainingDataRetrieved = true;
+		//ANNTrainingDataRetrieved = true;
 		return TrainingDataArray;
 	}
 

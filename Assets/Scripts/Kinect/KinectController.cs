@@ -35,7 +35,9 @@ public class KinectController : MonoBehaviour
 		ballIsHeld = false;
 		GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "";
 		//ANN_CPU.TestANNClassifier ();
-		ANN_CPU.PrintTrainingData();
+		//ANN_CPU.PrintTrainingData();
+		//Database.printTrainingData ();
+		ANN_CPU.StartANN();
 	}
 		
 	void Update ()
