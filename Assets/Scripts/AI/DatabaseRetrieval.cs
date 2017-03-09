@@ -32,9 +32,9 @@ public class Database {
 
 		while(dataReader.Read()) {
 
-			double HandsX = Convert.ToDouble (dataReader ["HandsX"]);
-			double HandsY = Convert.ToDouble (dataReader ["HandsY"]);
-			double HandsZ = Convert.ToDouble (dataReader ["HandsZ"]);
+			//double HandsX = Convert.ToDouble (dataReader ["RightHand_HipX"]);
+			//double HandsY = Convert.ToDouble (dataReader ["RightHand_HipY"]);
+			//double HandsZ = Convert.ToDouble (dataReader ["RightHand_HipZ"]);
 			/*double RightHand_RightWristX = Convert.ToDouble(dataReader["RightHand_RightWristX"]);
 			double RightHand_RightWristY = Convert.ToDouble(dataReader["RightHand_RightWristY"]);
 			double RightHand_RightWristZ = Convert.ToDouble(dataReader["RightHand_RightWristZ"]);
@@ -48,13 +48,13 @@ public class Database {
 			double RightHand_RightShoulderY = Convert.ToDouble(dataReader["RightHand_RightShoulderY"]);
 			double RightHand_RightShoulderZ = Convert.ToDouble(dataReader["RightHand_RightShoulderZ"]);*/
 
-			double RightHand_HipX = Convert.ToDouble (dataReader ["RHandHipX"]);
-			double RightHand_HipY = Convert.ToDouble (dataReader ["RHandHipY"]);
-			double RightHand_HipZ = Convert.ToDouble (dataReader ["RHandHipZ"]);
+			double RightHand_HipX = Convert.ToDouble (dataReader ["RightHand_HipX"]);
+			double RightHand_HipY = Convert.ToDouble (dataReader ["RightHand_HipY"]);
+			double RightHand_HipZ = Convert.ToDouble (dataReader ["RightHand_HipZ"]);
 
-			double LeftHand_HipX = Convert.ToDouble (dataReader ["LHandHipX"]);
-			double LeftHand_HipY = Convert.ToDouble (dataReader ["LHandHipY"]);
-			double LeftHand_HipZ = Convert.ToDouble (dataReader ["LHandHipZ"]);
+			double LeftHand_HipX = Convert.ToDouble (dataReader ["LeftHand_HipX"]);
+			double LeftHand_HipY = Convert.ToDouble (dataReader ["LeftHand_HipY"]);
+			double LeftHand_HipZ = Convert.ToDouble (dataReader ["LeftHand_HipZ"]);
 			/*double LeftHand_LeftWristX = Convert.ToDouble(dataReader["LeftHand_LeftWristX"]);
 			double LeftHand_LeftWristY = Convert.ToDouble(dataReader["LeftHand_LeftWristY"]);
 			double LeftHand_LeftWristZ = Convert.ToDouble(dataReader["LeftHand_LeftWristZ"]);
@@ -68,18 +68,15 @@ public class Database {
 			double LeftHand_LeftShoulderY = Convert.ToDouble(dataReader["LeftHand_LeftShoulderY"]);
 			double LeftHand_LeftShoulderZ = Convert.ToDouble(dataReader["LeftHand_LeftShoulderZ"]);*/
 
-			double Stationary = Convert.ToDouble (dataReader ["A"]);
-			double Professional_Throw = Convert.ToDouble (dataReader ["B"]);
-			double Chest_Throw = Convert.ToDouble (dataReader ["C"]);
-			double Low_Throw = Convert.ToDouble (dataReader ["D"]);
+			double Stationary = Convert.ToDouble (dataReader ["Stationary"]);
+			double Professional_Throw = Convert.ToDouble (dataReader ["Professional_Throw"]);
+			double Chest_Throw = Convert.ToDouble (dataReader ["Chest_Throw"]);
+			double Low_Throw = Convert.ToDouble (dataReader ["Low_Throw"]);
 
-			TrainingDataArray [rowCount, 0] = HandsX;
-			TrainingDataArray [rowCount, 1] = HandsY;
-			TrainingDataArray [rowCount, 2] = HandsZ;
 
-			TrainingDataArray [rowCount, 3] = RightHand_HipX;
-			TrainingDataArray [rowCount, 4] = RightHand_HipY;
-			TrainingDataArray [rowCount, 5] = RightHand_HipZ;
+			TrainingDataArray [rowCount, 0] = RightHand_HipX;
+			TrainingDataArray [rowCount, 1] = RightHand_HipY;
+			TrainingDataArray [rowCount, 2] = RightHand_HipZ;
 			/*TrainingDataArray [rowCount, 3] = RightHand_RightWristX;
 			TrainingDataArray [rowCount, 4] = RightHand_RightWristY;
 			TrainingDataArray [rowCount, 5] = RightHand_RightWristZ;
@@ -93,9 +90,9 @@ public class Database {
 			TrainingDataArray [rowCount, 13] = RightHand_RightShoulderY;
 			TrainingDataArray [rowCount, 14] = RightHand_RightShoulderZ;*/
 
-			TrainingDataArray [rowCount, 6] = LeftHand_HipX;
-			TrainingDataArray [rowCount, 7] = LeftHand_HipY;
-			TrainingDataArray [rowCount, 8] = LeftHand_HipZ;
+			TrainingDataArray [rowCount, 3] = LeftHand_HipX;
+			TrainingDataArray [rowCount, 4] = LeftHand_HipY;
+			TrainingDataArray [rowCount, 5] = LeftHand_HipZ;
 			/*TrainingDataArray [rowCount, 18] = LeftHand_LeftWristX;
 			TrainingDataArray [rowCount, 19] = LeftHand_LeftWristY;
 			TrainingDataArray [rowCount, 20] = LeftHand_LeftWristZ;
@@ -109,10 +106,10 @@ public class Database {
 			TrainingDataArray [rowCount, 28] = LeftHand_LeftShoulderY;
 			TrainingDataArray [rowCount, 29] = LeftHand_LeftShoulderZ;*/
 
-			TrainingDataArray [rowCount, 9] = Stationary;
-			TrainingDataArray [rowCount, 10] = Professional_Throw;
-			TrainingDataArray [rowCount, 11] = Chest_Throw;
-			TrainingDataArray [rowCount, 12] = Low_Throw;
+			TrainingDataArray [rowCount, 6] = Stationary;
+			TrainingDataArray [rowCount, 7] = Professional_Throw;
+			TrainingDataArray [rowCount, 8] = Chest_Throw;
+			TrainingDataArray [rowCount, 9] = Low_Throw;
 
 			rowCount++;
 		}

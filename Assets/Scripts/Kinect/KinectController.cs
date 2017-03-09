@@ -35,6 +35,7 @@ public class KinectController : MonoBehaviour
 		ballIsHeld = false;
 		GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "";
 		//ANN_CPU.TestANNClassifier ();
+		ANN_CPU.PrintTrainingData();
 	}
 		
 	void Update ()
@@ -294,7 +295,7 @@ public class KinectController : MonoBehaviour
 			/*gesture
 		);*/
 
-		ANN_CPU.StartANN (trackedSkeletalPoints);
+		//ANN_CPU.StartANN (trackedSkeletalPoints);
 	}
 
 	private double formatSkelValue(double value) {
