@@ -62,6 +62,8 @@ public class KinectController : MonoBehaviour
 
 					BasketballController ();
 
+					//collectSkeletalDifferences();
+
 				} else {
 					GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Stand in front of sensor";
 				}
@@ -184,9 +186,18 @@ public class KinectController : MonoBehaviour
 
 	private void collectSkeletalDifferences()
 	{
+		/*double HandsX = HandRight.x - HandLeft.x;
+		double HandsY = HandLeft.y - HandRight.y;
+		double HandsZ = HandLeft.z - HandRight.z;*/
+
+		/*double RightHand_HipX = HandRight.x - HipCenter.x;
+		double RightHand_HipY = HandRight.y - HipCenter.y;
+		double RightHand_HipZ = HipCenter.z - HandRight.z;*/
+
 		double RightHand_HipX = HandRight.x - HipCenter.x;
 		double RightHand_HipY = HandRight.y - HipCenter.y;
 		double RightHand_HipZ = HandRight.z - HipCenter.z;
+
 		/*double RightHand_RightWristX = HandRight.x - WristRight.x;
 		double RightHand_RightWristY = HandRight.y - WristRight.y;
 		double RightHand_RightWristZ = HandRight.z - WristRight.z;
@@ -203,6 +214,12 @@ public class KinectController : MonoBehaviour
 		double LeftHand_HipX = HandLeft.x - HipCenter.x;
 		double LeftHand_HipY = HandLeft.y - HipCenter.y;
 		double LeftHand_HipZ = HandLeft.z - HipCenter.z;
+
+		/*double LeftHand_HipX = HipCenter.x - HandLeft.x;
+		double LeftHand_HipY = HandLeft.y - HipCenter.y;
+		double LeftHand_HipZ = HipCenter.z - HandLeft.z;*/
+
+
 		/*double LeftHand_LeftWristX = HandLeft.x - WristLeft.x;
 		double LeftHand_LeftWristY = HandLeft.y - WristLeft.y;
 		double LeftHand_LeftWristZ = HandLeft.z - WristLeft.z;
@@ -216,8 +233,11 @@ public class KinectController : MonoBehaviour
 		double LeftHand_LeftShoulderY = HandLeft.y - ShoulderLeft.y;
 		double LeftHand_LeftShoulderZ = HandLeft.z - ShoulderLeft.z;*/
 
+		double[] trackedSkeletalPoints = new double[Database.GetNoInputs()];
 
-		double[] trackedSkeletalPoints = new double[Database.ReturnNoInputs()];
+		/*trackedSkeletalPoints [0] = HandsX;
+		trackedSkeletalPoints [1] = HandsY;
+		trackedSkeletalPoints [2] = HandsZ;*/
 
 		trackedSkeletalPoints [0] = RightHand_HipX;
 		trackedSkeletalPoints [1] = RightHand_HipY;
@@ -256,25 +276,28 @@ public class KinectController : MonoBehaviour
 		 * Chest
 		 * Low
 		 */
-		/*string gesture = "Professional";
+		//string gesture = "Professional";
 
-		AddToDatabase.addToANNTrainingData (
-			RightHand_HipX, RightHand_HipY, RightHand_HipZ,
+		//AddToDatabase.addToANNTrainingData (
+		//	formatSkelValue(RightHand_HipX), formatSkelValue(RightHand_HipY), formatSkelValue(RightHand_HipZ),
 			/*RightHand_RightWristX, RightHand_RightWristY, RightHand_RightWristZ,
 			RightWrist_RightElbowX, RightWrist_RightElbowY, RightWrist_RightElbowZ,
 			RightElbow_RightShoulderX, RightElbow_RightShoulderY, RightElbow_RightShoulderZ,
 			RightHand_RightShoulderX, RightHand_RightShoulderY, RightHand_RightShoulderZ,*/
 
-		//	LeftHand_HipX, LeftHand_HipY, LeftHand_HipZ,
+		//	formatSkelValue(LeftHand_HipX), formatSkelValue(LeftHand_HipY), formatSkelValue(LeftHand_HipZ),
 			/*LeftHand_LeftWristX, LeftHand_LeftWristY, LeftHand_LeftWristZ,
 			LeftWrist_LeftElbowX, LeftWrist_LeftElbowY, LeftWrist_LeftElbowZ,
 			LeftElbow_LeftShoulderX, LeftElbow_LeftShoulderY, LeftElbow_LeftShoulderZ,
 			LeftHand_LeftShoulderX, LeftHand_LeftShoulderY, LeftHand_LeftShoulderZ,*/
 
-		/*	gesture
+			/*gesture
 		);*/
 
 		ANN_CPU.StartANN (trackedSkeletalPoints);
+	}
 
+	private double formatSkelValue(double value) {
+		return value * 100;
 	}
 }

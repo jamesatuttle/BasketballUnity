@@ -7,14 +7,14 @@ using System;
 public class ANN_CPU : MonoBehaviour {
 
 	public static NeuralNetwork ANN = new NeuralNetwork ();
-	public static double[,] ANNTrainingData = new double[Database.ReturnNoRows(), Database.ReturnNoCols()];
+	public static double[,] ANNTrainingData = new double[Database.GetNoRows(), Database.GetNoCols()];
 
 	void Awake() {
 		if (!Database.ANNTrainingDataRetrieved)
 			ANNTrainingData = Database.ANNTrainingData();
 		}
 
-	public static void TestANNClassifier() {
+	/*public static void TestANNClassifier() {
 		double[] testGesture = new double[30];
 		testGesture [0] = 0.0681107267737389;
 		testGesture [1] = 0.0527109540998936;
@@ -48,15 +48,21 @@ public class ANN_CPU : MonoBehaviour {
 		testGesture [29] = -0.503890872001648;
 
 		StartANN (testGesture);
-	}
+	}*/
 
 	public static void StartANN(double[] trackedSkeletalPoints) {
 		try {
-			ANN.Initialise (Database.ReturnNoInputs(), 4, Database.ReturnNoOutputs());
+			ANN.Initialise(6, 4, 4);
+			ANN.SetLearningRate(0.8);
+			ANN.SetMomentum(true, 0.9);
+			TrainANN();
+			TestANN(trackedSkeletalPoints);
+
+			/*ANN.Initialise (Database.GetNoInputs(), 2, Database.GetNoOutputs());
 			ANN.SetLearningRate (0.2);
 			ANN.SetMomentum (true, 0.9);
 			TrainANN ();
-			TestANN (trackedSkeletalPoints);
+			TestANN (trackedSkeletalPoints);*/
 		} catch (Exception e) {
 			Debug.Log ("An error occurred when starting ANN: " + e.Message);
 		}
@@ -71,17 +77,32 @@ public class ANN_CPU : MonoBehaviour {
 				error = 0;
 				c++;
 
-				for (int i = 0; i < 40; i++) {
+				for (int i = 0; i < Database.GetNoRows(); i++) {
 
-					//set the input values from the database - first 30 columns
-					for (int a = 0; a < Database.ReturnNoInputs(); a++) {
+					//set the input values from the database - first 6 columns
+					/*for (int a = 0; a < Database.GetNoInputs(); a++) {
 						ANN.SetInput (a, ANNTrainingData [i, a]);
 					}
 
 					//set the output values from the database - last 4 columns
-					for (int a = 0; a < Database.ReturnNoOutputs(); a++) {
-						ANN.SetDesiredOutput(a, ANNTrainingData[i, (Database.ReturnNoInputs() + a)]);
-					}
+					for (int a = 0; a < Database.GetNoOutputs(); a++) {
+						ANN.SetDesiredOutput(a, ANNTrainingData[i, (Database.GetNoInputs() + a)]);
+					}*/
+
+					ANN.SetInput(0, ANNTrainingData[i, 0]);
+					ANN.SetInput(1, ANNTrainingData[i, 1]);
+					ANN.SetInput(2, ANNTrainingData[i, 2]);
+					ANN.SetInput(3, ANNTrainingData[i, 3]);
+					ANN.SetInput(4, ANNTrainingData[i, 4]);
+					ANN.SetInput(5, ANNTrainingData[i, 5]);
+					//ANN.SetInput(6, ANNTrainingData[i, 6]);
+					//ANN.SetInput(7, ANNTrainingData[i, 7]);
+					//ANN.SetInput(8, ANNTrainingData[i, 8]);
+
+					ANN.SetDesiredOutput(0, ANNTrainingData[i, 6]);
+					ANN.SetDesiredOutput(1, ANNTrainingData[i, 7]);
+					ANN.SetDesiredOutput(2, ANNTrainingData[i, 8]);
+					ANN.SetDesiredOutput(3, ANNTrainingData[i, 9]);
 
 					ANN.FeedForward ();
 					error += ANN.CalculateError ();
@@ -97,8 +118,9 @@ public class ANN_CPU : MonoBehaviour {
 	private static void TestANN(double[] trackedSkeletalPoints) {
 		try {
 
-			for (int i = 0; i < Database.ReturnNoInputs(); i++)
+			for (int i = 0; i < 6; i++) {
 				ANN.SetInput (i, trackedSkeletalPoints [i]);
+			}
 
 			ANN.FeedForward ();
 
@@ -106,21 +128,29 @@ public class ANN_CPU : MonoBehaviour {
 			int index = -1000;
 
 			for (int j = 0; j < 4; j++) {
-				switch (j) {
+				/*switch (j) {
 				case 0:
-					Debug.Log ("Stationary / Null Gesture: " + ANN.GetOutput (j));
+					Debug.Log ("Stationary / Null Gesture: " + formatOutputValue (j));
 					break;
 				case 1:
-					Debug.Log ("Professional Throw: " + ANN.GetOutput (j));
+					Debug.Log ("Professional Throw: " + formatOutputValue (j));
 					break;
 				case 2:
-					Debug.Log ("Chest Throw: " + ANN.GetOutput (j));
+					Debug.Log ("Chest Throw: " + formatOutputValue (j));
 					break;
 				case 3:
-					Debug.Log ("Low Throw: " + ANN.GetOutput (j));
+					Debug.Log ("Low Throw: " + formatOutputValue (j));
 					break;
-				}
+				}*/
 
+				string gesture = "";
+
+				if (j==0) gesture = "stationary: ";
+				else if (j==1) gesture = "professional: ";
+				else if (j==2) gesture = "chest: ";
+				else if (j==3) gesture = "low: ";
+
+				Debug.Log(gesture + ANN.GetOutput(j) + "; ");
 				if (max < ANN.GetOutput (j)) {
 					max = ANN.GetOutput (j);
 					index = j;
@@ -133,24 +163,31 @@ public class ANN_CPU : MonoBehaviour {
 
 			switch (index) {
 			case 0:
-				Gesture = "Stationary / Null";
+				Gesture = "Stationary";
 				break;
 			case 1:
-				Gesture = "Professional Throw";
+				Gesture = "Professional";
 				break;
 			case 2:
-				Gesture = "Chest Throw";
+				Gesture = "Chest";
 				break;
 			case 3:
-				Gesture = "Low Throw";
+				Gesture = "Low";
 				break;
 			}
 
-			GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Gesture: " + Gesture;
+			GameObject.Find ("GestureInfo").GetComponent<Text> ().text = Gesture + ": " + ANN.GetOutput(index); //formatOutputValue (index);
 
 
 		} catch (Exception e) {
 			Debug.Log ("An error occurred when testing ANN: " + e.Message);
 		}
+	}
+
+	private static string formatOutputValue(int index)
+	{
+		double initialVal = ANN.GetOutput(index);
+
+		return Math.Round((initialVal * 100), 3) + "%";
 	}
 }
