@@ -17,7 +17,7 @@ public class Basketball : MonoBehaviour {
 		try {
 			var collision = col.gameObject.name;
 
-			Debug.Log (col.relativeVelocity.magnitude / 21 * 100 + "%");
+			//Debug.Log (col.relativeVelocity.magnitude / 21 * 100 + "%");
 
 			if (collision == "Floor" || collision == "wall" || collision == "wall (1)" || collision == "wall (2)" || collision == "wall (3)" || collision == "Ceiling" ) {
 				GetComponent<AudioSource> ().volume = col.relativeVelocity.magnitude/100;
@@ -37,18 +37,27 @@ public class Basketball : MonoBehaviour {
 
 	public static void ResetBall() {
 		UpdateFixedBasketballPosition(InitialBallPosition.x, InitialBallPosition.y, InitialBallPosition.z);
+		//KinectController.ballThrown = false;
 	}
 
 	public static void UpdateFixedBasketballPosition(float x, float y, float z)
 	{
 		GameObject basketball = GameObject.Find ("Basketball");
 
-		basketball.GetComponent<Rigidbody> ().constraints = RigidbodyConstraints.FreezeAll;
-		setBallGravity(false); //turn gravity off
+		LockBasketballPosition (true);
+		SetBallGravity(false); //turn gravity off
 		basketball.transform.position = new Vector3 (x, y, z);
 	}
 
-	public static void setBallGravity(bool gravity) {
+	public static void LockBasketballPosition(bool locked) 
+	{
+		if (locked)
+			GameObject.Find ("Basketball").GetComponent<Rigidbody> ().constraints = RigidbodyConstraints.FreezeAll;
+		else
+			GameObject.Find ("Basketball").GetComponent<Rigidbody> ().constraints = RigidbodyConstraints.None;
+	}
+
+	public static void SetBallGravity(bool gravity) {
 		GameObject.Find("Basketball").GetComponent<Rigidbody>().useGravity = gravity;
 	}
 }

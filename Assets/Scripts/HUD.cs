@@ -30,12 +30,12 @@ public class HUD : MonoBehaviour {
 	{
 		GameObject.Find ("PracticeText").GetComponent<Text> ().text = "";
 
-		Debug.Log ("CountdownFromThree: " + countdown + ", " + timer);
+		//Debug.Log ("CountdownFromThree: " + countdown + ", " + timer);
 		timer--;
-		Debug.Log (timer);
+		//Debug.Log (timer);
 		if (timer == 44) {
 			GameObject.Find ("Countdown").GetComponent<Text> ().text = "3";
-			Debug.Log ("3 COUNTDOWN");
+			//Debug.Log ("3 COUNTDOWN");
 		}
 		else if (timer == 33)
 			GameObject.Find ("Countdown").GetComponent<Text> ().text = "2";

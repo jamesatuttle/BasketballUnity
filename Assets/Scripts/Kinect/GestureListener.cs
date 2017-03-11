@@ -43,7 +43,7 @@ public class GestureListener : MonoBehaviour, KinectGestures.GestureListenerInte
 	public void UserDetected (uint userId, int userIndex)
 	{
 		GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "User detected";
-		Debug.Log ("User detected in GestureListener");
+		//Debug.Log ("User detected in GestureListener");
 
 		// detect these user specific gestures
 		KinectManager manager = KinectManager.Instance;
@@ -87,8 +87,8 @@ public class GestureListener : MonoBehaviour, KinectGestures.GestureListenerInte
 
 		//if (LeftHand.x 
 
-		Debug.Log ("LeftHand: x-" + LeftHand.x + ", y-" + LeftHand.y + ", z-" + LeftHand.z);
-		Debug.Log ("RightHand: x-" + RightHand.x + ", y-" + RightHand.y + ", z-" + RightHand.z);
+		//Debug.Log ("LeftHand: x-" + LeftHand.x + ", y-" + LeftHand.y + ", z-" + LeftHand.z);
+		//Debug.Log ("RightHand: x-" + RightHand.x + ", y-" + RightHand.y + ", z-" + RightHand.z);
 	}
 
 	public void UserLost (uint userId, int userIndex)
