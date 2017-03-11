@@ -45,7 +45,7 @@ public class Database {
 			double RightElbow_RightShoulderZ = Convert.ToDouble(dataReader["RightElbow_RightShoulderZ"]);
 			double RightHand_RightShoulderX = Convert.ToDouble(dataReader["RightHand_RightShoulderX"]);
 			double RightHand_RightShoulderY = Convert.ToDouble(dataReader["RightHand_RightShoulderY"]);
-			double RightHand_RightShoulderZ = Convert.ToDouble(dataReader["RightHand_RightShoulderZ"]);
+			double RightHand_RightShoulderZ = Convert.ToDouble (dataReader ["RightHand_RightShoulderZ"]);
 
 			//Left hand input values
 			double LeftHand_HipX = Convert.ToDouble (dataReader ["LeftHand_HipX"]);
