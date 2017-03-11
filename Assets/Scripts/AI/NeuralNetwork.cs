@@ -9,14 +9,6 @@ public class NeuralNetwork {
 	public NeuralNetworkLayer HiddenLayer = new NeuralNetworkLayer();
 	public NeuralNetworkLayer OutputLayer = new NeuralNetworkLayer();
 
-
-	public NeuralNetwork()
-	{
-		NeuralNetworkLayer InputLayer = new NeuralNetworkLayer();
-		NeuralNetworkLayer HiddenLayer = new NeuralNetworkLayer();
-		NeuralNetworkLayer OutputLayer = new NeuralNetworkLayer();
-	}
-
 	public void Initialise(int nNodesInput, int nNodesHidden, int nNodesOutput)
 	{
 		InputLayer.NumberOfNodes = nNodesInput;
