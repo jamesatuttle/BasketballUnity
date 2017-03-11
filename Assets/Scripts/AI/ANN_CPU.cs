@@ -100,8 +100,6 @@ public class ANN_CPU : MonoBehaviour {
 
 		int NoOutputs = Database.GetNoOutputs ();
 
-		double ClassificationThreshold = 0.4;
-
 		for (int i = 0; i < NoOutputs; i++) {
 			/*if (i == (int)Gestures.none) Debug.Log ("Stationary " + ANN.GetOutput (i));
 			else if (i == (int)Gestures.professional) Debug.Log ("Professional: " + ANN.GetOutput (i));
@@ -113,10 +111,6 @@ public class ANN_CPU : MonoBehaviour {
 				index = i;
 			}
 		}
-
-		/*if (max < ClassificationThreshold) {
-			index = (int)Gestures.none;
-		}*/
 
 		string actualOutput = "";
 
@@ -243,8 +237,6 @@ public class ANN_CPU : MonoBehaviour {
 		int index = -1000;
 
 		int NoOutputs = Database.GetNoOutputs ();
-
-		double ClassificationThreshold = 0.4;
 
 		Debug.Log ("** " + desiredOutput);
 		for (int i = 0; i < NoOutputs; i++) {
