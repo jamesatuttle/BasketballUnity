@@ -82,7 +82,7 @@ public class KinectController : MonoBehaviour
 			} else {
 				collectSkeletalDifferences ();
 				moveBall ();
-				//moveMainCamera ();
+				moveMainCamera ();
 			}
 
 		} else {
@@ -114,11 +114,6 @@ public class KinectController : MonoBehaviour
 	}
 
 	private void callibrateUser () {
-		
-		KinectManager manager = KinectManager.Instance;
-
-		uint userId = manager.GetPlayer1ID ();
-
 		HandsCallibratedPosition.x = (HandLeft.x + HandRight.x) / 2;
 		HandsCallibratedPosition.y = (HandLeft.y + HandRight.y) / 2;
 		HandsCallibratedPosition.z = (HandLeft.z + HandRight.z) / 2;
