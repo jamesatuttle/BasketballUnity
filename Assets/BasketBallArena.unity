@@ -4769,6 +4769,18 @@ Transform:
 GameObject:
   m_PrefabParentObject: {fileID: 100000, guid: 5092fc3e6ac351d4f82fa0590e8871b7, type: 3}
   m_PrefabInternal: {fileID: 1002122309}
+--- !u!135 &1177572892
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1177572891}
+  m_Material: {fileID: 13400000, guid: 4cc4f1c5e58a0460facb100618404a82, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.05
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &1177572894
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4783,7 +4795,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!82 &1177572895
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4875,7 +4887,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a29b0b63ed41c4c31a18392944fecd99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bounce: {fileID: 0}
+  bounce: {fileID: 8300000, guid: e62920a3613c24756b31ca5a75e77165, type: 3}
 --- !u!114 &1177572897
 MonoBehaviour:
   m_ObjectHideFlags: 0
