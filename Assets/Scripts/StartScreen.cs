@@ -73,7 +73,7 @@ public class StartScreen : MonoBehaviour {
 		GameObject.Find ("View Leaderboard").GetComponent<Text> ().text = "LEADERBOARD";
 		GameObject.Find ("How to play").GetComponent<Text> ().text = "HOW TO PLAY";
 
-		GameObject.Find ("spotlights").active = false;
+		//GameObject.Find ("spotlights").active = false;
 		GameObject.Find ("Leaderboard Title").GetComponent<Text> ().text = "";
 		GameObject.Find ("Leaderboard").GetComponent<Text> ().text = "";
 
