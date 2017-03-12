@@ -143,6 +143,7 @@ public class KinectController : MonoBehaviour
 		float HandsZ = (HandLeft.z + HandRight.z) / 2;
 
 		// average the hands movement here
+		Vector3 HandsXYZ = new Vector3(HandsX, HandsY, HandsZ);
 
 		var XMovement = HandsX - HandsCallibratedPosition.x;
 		var YMovement = HandsY - HandsCallibratedPosition.y;
@@ -154,7 +155,7 @@ public class KinectController : MonoBehaviour
 
 		Basketball.LockBasketballPosition (false);
 
-		GameObject.Find ("Basketball").transform.position = new Vector3 (newBallPosition.x, newBallPosition.y, newBallPosition.z);
+		GameObject.Find ("Basketball").transform.position = newBallPosition;
 	}
 
 	private void moveMainCamera() {
