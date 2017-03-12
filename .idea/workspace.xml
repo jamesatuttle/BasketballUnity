@@ -2,6 +2,45 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6a982743-40a5-435d-8413-09db1e1bb970" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Maya/basketball.fbx" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Maya/hoop.fbx" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Maya/spotlights.fbx" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Maya/basketball.fbx.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Maya/hoop.fbx.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Assets/Maya/spotlights.fbx.meta" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Basketballfinished.ma" afterPath="$PROJECT_DIR$/Assets/Maya/Basketballfinished.ma" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Basketballfinished.ma.meta" afterPath="$PROJECT_DIR$/Assets/Maya/Basketballfinished.ma.meta" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials.meta" afterPath="$PROJECT_DIR$/Assets/Maya/Materials.meta" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials/Basketball_flooring_with_hoops.mat" afterPath="$PROJECT_DIR$/Assets/Maya/Materials/Basketball_flooring_with_hoops.mat" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials/Basketball_flooring_with_hoops.mat.meta" afterPath="$PROJECT_DIR$/Assets/Maya/Materials/Basketball_flooring_with_hoops.mat.meta" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials/Basketball_flooring_without_hoops.mat" afterPath="$PROJECT_DIR$/Assets/Maya/Materials/Basketball_flooring_without_hoops.mat" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials/Basketball_flooring_without_hoops.mat.meta" afterPath="$PROJECT_DIR$/Assets/Maya/Materials/Basketball_flooring_without_hoops.mat.meta" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials/Basketballv1_basketballindents.mat" afterPath="$PROJECT_DIR$/Assets/Maya/Materials/Basketballv1_basketballindents.mat" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials/Basketballv1_basketballindents.mat.meta" afterPath="$PROJECT_DIR$/Assets/Maya/Materials/Basketballv1_basketballindents.mat.meta" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials/backboard_black_transparent.mat" afterPath="$PROJECT_DIR$/Assets/Maya/Materials/backboard_black_transparent.mat" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials/backboard_black_transparent.mat.meta" afterPath="$PROJECT_DIR$/Assets/Maya/Materials/backboard_black_transparent.mat.meta" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials/backboard_outer.mat" afterPath="$PROJECT_DIR$/Assets/Maya/Materials/backboard_outer.mat" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials/backboard_outer.mat.meta" afterPath="$PROJECT_DIR$/Assets/Maya/Materials/backboard_outer.mat.meta" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials/backboard_white.mat" afterPath="$PROJECT_DIR$/Assets/Maya/Materials/backboard_white.mat" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials/backboard_white.mat.meta" afterPath="$PROJECT_DIR$/Assets/Maya/Materials/backboard_white.mat.meta" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials/base.mat" afterPath="$PROJECT_DIR$/Assets/Maya/Materials/base.mat" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials/base.mat.meta" afterPath="$PROJECT_DIR$/Assets/Maya/Materials/base.mat.meta" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials/blinn43.mat" afterPath="$PROJECT_DIR$/Assets/Maya/Materials/blinn43.mat" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials/blinn43.mat.meta" afterPath="$PROJECT_DIR$/Assets/Maya/Materials/blinn43.mat.meta" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials/blinn45.mat" afterPath="$PROJECT_DIR$/Assets/Maya/Materials/blinn45.mat" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials/blinn45.mat.meta" afterPath="$PROJECT_DIR$/Assets/Maya/Materials/blinn45.mat.meta" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials/lambert1.mat" afterPath="$PROJECT_DIR$/Assets/Maya/Materials/lambert1.mat" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials/lambert1.mat.meta" afterPath="$PROJECT_DIR$/Assets/Maya/Materials/lambert1.mat.meta" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials/painted brick texture wall white grey gym stock photo.mat" afterPath="$PROJECT_DIR$/Assets/Maya/Materials/painted brick texture wall white grey gym stock photo.mat" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials/painted brick texture wall white grey gym stock photo.mat.meta" afterPath="$PROJECT_DIR$/Assets/Maya/Materials/painted brick texture wall white grey gym stock photo.mat.meta" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials/pasted__lights.mat" afterPath="$PROJECT_DIR$/Assets/Maya/Materials/pasted__lights.mat" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials/pasted__lights.mat.meta" afterPath="$PROJECT_DIR$/Assets/Maya/Materials/pasted__lights.mat.meta" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials/typeBlinn6.mat" afterPath="$PROJECT_DIR$/Assets/Maya/Materials/typeBlinn6.mat" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/Materials/typeBlinn6.mat.meta" afterPath="$PROJECT_DIR$/Assets/Maya/Materials/typeBlinn6.mat.meta" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/singleHoop.ma" afterPath="$PROJECT_DIR$/Assets/Maya/singleHoop.ma" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/singleHoop.ma.meta" afterPath="$PROJECT_DIR$/Assets/Maya/singleHoop.ma.meta" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/spotlights.ma" afterPath="$PROJECT_DIR$/Assets/Maya/spotlights.ma" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Assets/Maya Models/spotlights.ma.meta" afterPath="$PROJECT_DIR$/Assets/Maya/spotlights.ma.meta" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -21,8 +60,8 @@
       <file leaf-file-name="BasketBallArena.unity" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Assets/BasketBallArena.unity">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="15" column="22" lean-forward="true" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="22" />
+            <state relative-caret-position="299">
+              <caret line="10399" column="14" lean-forward="true" selection-start-line="10399" selection-start-column="14" selection-end-line="10399" selection-end-column="14" />
               <folding />
             </state>
           </provider>
@@ -43,6 +82,7 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/Assets/Kinect/GesturesDemo/Scripts/PresentationScript.cs" />
+        <option value="$PROJECT_DIR$/Assets/BasketBallArena.unity" />
       </list>
     </option>
   </component>
@@ -68,8 +108,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -98,7 +138,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -328,7 +368,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-11" y="-11" width="2582" height="1562" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -336,10 +376,10 @@
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3295129" sideWeight="0.5046875" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3295129" sideWeight="0.50625" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3295129" sideWeight="0.4953125" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3295129" sideWeight="0.49375" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -405,6 +445,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/BasketBallArena.unity">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Assets/Kinect/GesturesDemo/Scripts/PresentationScript.cs" />
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
@@ -417,14 +465,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Assets/BasketBallArena.unity">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="15" column="22" lean-forward="true" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="22" />
+        <state relative-caret-position="299">
+          <caret line="10399" column="14" lean-forward="true" selection-start-line="10399" selection-start-column="14" selection-end-line="10399" selection-end-column="14" />
           <folding />
         </state>
       </provider>
