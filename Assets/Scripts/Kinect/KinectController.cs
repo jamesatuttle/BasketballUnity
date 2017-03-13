@@ -34,16 +34,25 @@ public class KinectController : MonoBehaviour
 	private int _handTrackingCount;
 	private static Vector3[] _handCollection = new Vector3[15];
 	private static Vector3[] _handMovementDifferences = new Vector3[_handCollection.Length - 1];
+	private double _handXAverage;
+	private double _handYAverage;
+	private double _handZAverage;
 
 	//Head smoothing
 	private int _headTrackingCount;
 	private static Vector3[] _headCollection = new Vector3[15];
 	private static Vector3[] _headMovementDifferences = new Vector3[_headCollection.Length - 1];
+	private double _headXAverage;
+	private double _headYAverage;
+	private double _headZAverage;
 
 	//Test smoothing
 	private int _testTrackingCount;
 	private static Vector3[] _testCollection = new Vector3[15];
 	private static Vector3[] _testMovementDifferences = new Vector3[_testCollection.Length - 1];
+	private double _testXAverage;
+	private double _testYAverage;
+	private double _testZAverage;
 
 	enum Tracking {
 		hands = 0,
@@ -56,6 +65,17 @@ public class KinectController : MonoBehaviour
 		GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "";
 		//ANN_CPU.InitialiseANN ();
 		_handTrackingCount = 0;
+		_headTrackingCount = 0;
+		_testTrackingCount = 0;
+		_handXAverage = 0.0;
+		_handYAverage = 0.0;
+		_handZAverage = 0.0;
+		_headXAverage = 0.0;
+		_headYAverage = 0.0;
+		_headZAverage = 0.0;
+		_testXAverage = 0.0;
+		_testYAverage = 0.0;
+		_testZAverage = 0.0;
 
 		TestSmoothing ();
 	}
@@ -195,29 +215,46 @@ public class KinectController : MonoBehaviour
 		int count = 0;
 		Vector3[] collection = new Vector3[15];
 		Vector3[] differences = new Vector3[collection.Length - 1];
+		double xAverage = 0.0;
+		double yAverage = 0.0;
+		double zAverage = 0.0;
+
+		double xTotal = 0.0;
+		double yTotal = 0.0;
+		double zTotal = 0.0;
 
 		switch (tracking) {
 		case Tracking.hands:
 			count = _handTrackingCount;
 			collection = _handCollection;
 			differences = _handMovementDifferences;
+			xAverage = _handXAverage;
+			yAverage = _handYAverage;
+			zAverage = _handZAverage;
 			break;
 		case Tracking.head:
 			count = _headTrackingCount;
 			collection = _headCollection;
 			differences = _headMovementDifferences;
+			xAverage = _headXAverage;
+			yAverage = _headYAverage;
+			zAverage = _headZAverage;
 			break;
 		case Tracking.testing:
 			count = _testTrackingCount;
 			collection = _testCollection;
 			differences = _testMovementDifferences;
+			xAverage = _testXAverage;
+			yAverage = _testYAverage;
+			zAverage = _testZAverage;
 			break;
 		}
 
+
 		if (count == 0) {
 			collection [count] = rawValues;
-
 			count++;
+
 		} else if (count < collection.Length) {
 			collection [count] = rawValues;
 
@@ -230,12 +267,23 @@ public class KinectController : MonoBehaviour
 				differences [i-1].y = collection [i].y - collection [i - 1].y;
 				differences [i-1].z = collection [i].z - collection [i - 1].z;
 			}
-
+				
 			//eliminate extraneous values
 
-			for (int i = 0; i < differences.Length; i++)
-				print ("differences " + i + ": " + differences [i].ToString ());
+			for (int i = 0; i < differences.Length; i++) {
+				if (differences [i].x != 0.0 && differences [i].y != 0.0 && differences [i].z != 0.0) {
+					print ("differences " + i + ": " + differences [i].ToString ());
 
+					xTotal += differences [i].x;
+					yTotal += differences [i].y;
+					zTotal += differences [i].z;
+
+					print ("Total: " + xTotal + ", " + yTotal + ", " + zTotal);
+
+					print ("Average: " + xTotal / (i + 1) + ", " + yTotal / (i + 1) + ", " + zTotal / (i + 1));
+				}
+			}
+				
 			count++;
 
 		} else {
@@ -253,16 +301,25 @@ public class KinectController : MonoBehaviour
 			_handTrackingCount = count;
 			_handCollection = collection;
 			_handMovementDifferences = differences;
+			_handXAverage = xAverage;
+			_handYAverage = yAverage;
+			_handZAverage = zAverage;
 			break;
 		case Tracking.head:
 			_headTrackingCount = count;
 			_headCollection = collection;
 			_headMovementDifferences = differences;
+			_headXAverage = xAverage;
+			_headYAverage = yAverage;
+			_headZAverage = zAverage;
 			break;
 		case Tracking.testing:
 			_testTrackingCount = count;
 			_testCollection = collection;
 			_testMovementDifferences = differences;
+			_testXAverage = xAverage;
+			_testYAverage = yAverage;
+			_testZAverage = zAverage;
 			break;
 		}
 
@@ -273,7 +330,7 @@ public class KinectController : MonoBehaviour
 		print ("TestSmoothing");
 
 		Vector3[] test = new Vector3[] {
-			new Vector3 (1, 1, 1),
+			new Vector3 (1, 1, 1), 
 			new Vector3 (2, 2, 2),
 			new Vector3 (3, 3, 3), 
 			new Vector3 (4, 4, 4), 
