@@ -30,10 +30,34 @@ public class KinectController : MonoBehaviour
 
 	private float HandDifference;
 
+	//Hand smoothing
+	private int _handTrackingCount;
+	private static Vector3[] _handCollection = new Vector3[15];
+	private static Vector3[] _handMovementDifferences = new Vector3[_handCollection.Length - 1];
+
+	//Head smoothing
+	private int _headTrackingCount;
+	private static Vector3[] _headCollection = new Vector3[15];
+	private static Vector3[] _headMovementDifferences = new Vector3[_headCollection.Length - 1];
+
+	//Test smoothing
+	private int _testTrackingCount;
+	private static Vector3[] _testCollection = new Vector3[15];
+	private static Vector3[] _testMovementDifferences = new Vector3[_testCollection.Length - 1];
+
+	enum Tracking {
+		hands = 0,
+		head = 1,
+		testing = 3
+	}
+
 	void Start () {  
 		BallIsHeld = false;
 		GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "";
-		ANN_CPU.InitialiseANN ();
+		//ANN_CPU.InitialiseANN ();
+		_handTrackingCount = 0;
+
+		TestSmoothing ();
 	}
 		
 	void Update () { 
@@ -138,24 +162,129 @@ public class KinectController : MonoBehaviour
 
 		Vector3 newBallPosition;
 
-		float HandsX = (HandLeft.x + HandRight.x) / 2;
-		float HandsY = (HandLeft.y + HandRight.y) / 2;
-		float HandsZ = (HandLeft.z + HandRight.z) / 2;
+		float handsX = (HandLeft.x + HandRight.x) / 2;
+		float handsY = (HandLeft.y + HandRight.y) / 2;
+		float handsZ = (HandLeft.z + HandRight.z) / 2;
+
+		Vector3 hands = new Vector3 (handsX, handsY, handsZ);
 
 		// average the hands movement here
-		Vector3 HandsXYZ = new Vector3(HandsX, HandsY, HandsZ);
+		SmoothValues(hands, Tracking.hands);
 
-		var XMovement = HandsX - HandsCallibratedPosition.x;
-		var YMovement = HandsY - HandsCallibratedPosition.y;
-		var ZMovement = HandsZ - HandsCallibratedPosition.z;
+		/*var xMovement = handsX - HandsCallibratedPosition.x;
+		var yMovement = handsY - HandsCallibratedPosition.y; 
+		var zMovement = handsZ - HandsCallibratedPosition.z;*/
 
-		newBallPosition.x = Basketball.InitialBallPosition.x + (XMovement * movementSensitivity);
-		newBallPosition.y = Basketball.InitialBallPosition.y + (YMovement * movementSensitivity);
-		newBallPosition.z = Basketball.InitialBallPosition.z - (ZMovement * movementSensitivity);
+		Vector3 movement = new Vector3 (handsX - HandsCallibratedPosition.x, handsY - HandsCallibratedPosition.y, handsZ - HandsCallibratedPosition.z);
+
+		/*newBallPosition.x = Basketball.InitialBallPosition.x + (xMovement * movementSensitivity);
+		newBallPosition.y = Basketball.InitialBallPosition.y + (yMovement * movementSensitivity);
+		newBallPosition.z = Basketball.InitialBallPosition.z - (zMovement * movementSensitivity); //minus to move ball in the correct view of the user*/
+
+		newBallPosition.x = Basketball.InitialBallPosition.x + (movement.x * movementSensitivity);
+		newBallPosition.y = Basketball.InitialBallPosition.y + (movement.y * movementSensitivity);
+		newBallPosition.z = Basketball.InitialBallPosition.z - (movement.z * movementSensitivity); //minus to move ball in the correct view of the user
 
 		Basketball.LockBasketballPosition (false);
 
 		GameObject.Find ("Basketball").transform.position = newBallPosition;
+	}
+
+	private void SmoothValues(Vector3 rawValues, Tracking tracking) {
+
+		int count = 0;
+		Vector3[] collection = new Vector3[15];
+		Vector3[] differences = new Vector3[collection.Length - 1];
+
+		switch (tracking) {
+		case Tracking.hands:
+			count = _handTrackingCount;
+			collection = _handCollection;
+			differences = _handMovementDifferences;
+			break;
+		case Tracking.head:
+			count = _headTrackingCount;
+			collection = _headCollection;
+			differences = _headMovementDifferences;
+			break;
+		case Tracking.testing:
+			count = _testTrackingCount;
+			collection = _testCollection;
+			differences = _testMovementDifferences;
+			break;
+		}
+
+		if (count == 0) {
+			collection [count] = rawValues;
+
+			count++;
+		} else if (count < collection.Length) {
+			collection [count] = rawValues;
+
+			for (int i = 0; i < collection.Length; i++) {
+				print ("collection " + i + ": " + collection [i].ToString ());
+			}
+
+			for (int i = 1; i < count + 1; i++) {
+				differences [i-1].x = collection [i].x - collection [i - 1].x;
+				differences [i-1].y = collection [i].y - collection [i - 1].y;
+				differences [i-1].z = collection [i].z - collection [i - 1].z;
+			}
+
+			//eliminate extraneous values
+
+			for (int i = 0; i < differences.Length; i++)
+				print ("differences " + i + ": " + differences [i].ToString ());
+
+			count++;
+
+		} else {
+			count = 0;
+
+			for (int i = 0; i < collection.Length; i++)
+				collection [i] = new Vector3 (0, 0, 0);
+
+			for (int i = 0; i < differences.Length; i++)
+				differences [i] = new Vector3 (0, 0, 0);
+		}
+
+		switch (tracking) {
+		case Tracking.hands:
+			_handTrackingCount = count;
+			_handCollection = collection;
+			_handMovementDifferences = differences;
+			break;
+		case Tracking.head:
+			_headTrackingCount = count;
+			_headCollection = collection;
+			_headMovementDifferences = differences;
+			break;
+		case Tracking.testing:
+			_testTrackingCount = count;
+			_testCollection = collection;
+			_testMovementDifferences = differences;
+			break;
+		}
+
+	}
+
+	private void TestSmoothing() {
+
+		print ("TestSmoothing");
+
+		Vector3[] test = new Vector3[] {
+			new Vector3 (1, 1, 1),
+			new Vector3 (2, 2, 2),
+			new Vector3 (3, 3, 3), 
+			new Vector3 (4, 4, 4), 
+			new Vector3 (5, 5, 5),
+			new Vector3 (10, 6, 6),
+			new Vector3 (1, 3, 4),
+			new Vector3 (8, 8, 8)};
+
+		for (int i = 0; i < test.Length; i++) {
+			SmoothValues (test [i], Tracking.testing);
+		}
 	}
 
 	private void moveMainCamera() {
@@ -169,7 +298,7 @@ public class KinectController : MonoBehaviour
 
 		newCameraPosition.x = Cameras.MainCameraPosition.x + (xMovement * movementSensitivity);
 		newCameraPosition.y = Cameras.MainCameraPosition.y + (yMovement * movementSensitivity);
-		newCameraPosition.z = Cameras.MainCameraPosition.z - (zMovement * movementSensitivity);
+		newCameraPosition.z = Cameras.MainCameraPosition.z - (zMovement * movementSensitivity); //minus to move camera in the correct view of the user
 
 		Cameras.UpdateCameraPosition (newCameraPosition.x, newCameraPosition.y, newCameraPosition.z, 34);
 	}
