@@ -63,7 +63,7 @@ public class KinectController : MonoBehaviour
 	void Start () {  
 		BallIsHeld = false;
 		GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "";
-		//ANN_CPU.InitialiseANN ();
+		ANN_CPU.InitialiseANN ();
 		_handTrackingCount = 0;
 		_headTrackingCount = 0;
 		_testTrackingCount = 0;
@@ -77,7 +77,7 @@ public class KinectController : MonoBehaviour
 		_testYAverage = 0.0;
 		_testZAverage = 0.0;
 
-		TestSmoothing ();
+		//TestSmoothing ();
 	}
 		
 	void Update () { 
@@ -189,7 +189,7 @@ public class KinectController : MonoBehaviour
 		Vector3 hands = new Vector3 (handsX, handsY, handsZ);
 
 		// average the hands movement here
-		hands = SmoothValues(hands, Tracking.hands);
+		//hands = SmoothValues(hands, Tracking.hands);
 
 		/*var xMovement = handsX - HandsCallibratedPosition.x;
 		var yMovement = handsY - HandsCallibratedPosition.y; 
