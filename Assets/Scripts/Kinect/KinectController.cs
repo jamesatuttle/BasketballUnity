@@ -1,93 +1,104 @@
 using UnityEngine;
 using System;
 using UnityEngine.UI;
+using Common;
 
 public class KinectController : MonoBehaviour
 {
-	private Vector3 HandLeft;
-	private Vector3 HandRight;
+	private Vector3 _handLeft;
+	private Vector3 _handRight;
+	private Vector3 _head;
+	private Vector3 _hipCenter;
+	private Vector3 _shoulderLeft;
+	private Vector3 _shoulderRight;
+	private Vector3 _wristLeft;
+	private Vector3 _wristRight;
+	private Vector3 _elbowLeft;
+	private Vector3 _elbowRight;
 
-	private Vector3 Head;
+	private bool _ballIsHeld;
 
-	private Vector3 HipCenter;
+	private Vector3 _handsCallibratedPosition;
+	private Vector3 _headCallibratedPosition;
 
-	private Vector3 ShoulderLeft;
-	private Vector3 ShoulderRight;
-
-	private Vector3 WristLeft;
-	private Vector3 WristRight;
-
-	private Vector3 ElbowLeft;
-	private Vector3 ElbowRight;
-
-	private bool BallIsHeld;
-
-	private float BallWidth = 0.26f; //Ball Width is 0.26 cm
-	private float Inch = 0.0254f; //1 inch equals 2.5 cm.
-
-	private Vector3 HandsCallibratedPosition;
-	private Vector3 HeadCallibratedPosition;
-
-	private float HandDifference;
+	private float _handDifference;
 
 	/*
 	 * Smoothing global variables
 	 */
 	private static int _collectionSize = 10;
 
-	//Hand smoothing
-	private int _handTrackingCount;
-	private static Vector3[] _handCollection = new Vector3[_collectionSize];
-	private static Vector3[] _handMovementDifferences = new Vector3[_handCollection.Length- 1];
-	private double _handXAverage;
-	private double _handYAverage;
-	private double _handZAverage;
+	private int _handLeftTrackingCount;
+	private static Vector3[] _handLeftCollection = new Vector3[_collectionSize];
+	private static Vector3[] _handLeftDifferences = new Vector3[_collectionSize - 1];
 
-	//Head smoothing
+	private int _handRightTrackingCount;
+	private static Vector3[] _handRightCollection = new Vector3[_collectionSize];
+	private static Vector3[] _handRightDifferences = new Vector3[_collectionSize - 1];
+
+	private int _wristLeftTrackingCount;
+	private static Vector3[] _wristLeftCollection = new Vector3[_collectionSize];
+	private static Vector3[] _wristLeftDifferences = new Vector3[_collectionSize - 1];
+
+	private int _wristRightTrackingCount;
+	private static Vector3[] _wristRightCollection = new Vector3[_collectionSize];
+	private static Vector3[] _wristRightDifferences = new Vector3[_collectionSize - 1];
+
 	private int _headTrackingCount;
 	private static Vector3[] _headCollection = new Vector3[_collectionSize];
-	private static Vector3[] _headMovementDifferences = new Vector3[_headCollection.Length - 1];
-	private double _headXAverage;
-	private double _headYAverage;
-	private double _headZAverage;
+	private static Vector3[] _headDifferences = new Vector3[_collectionSize - 1];
 
-	//Test smoothing
-	private int _testTrackingCount;
-	private static Vector3[] _testCollection = new Vector3[_collectionSize];
-	private static Vector3[] _testMovementDifferences = new Vector3[_testCollection.Length - 1];
-	private double _testXAverage;
-	private double _testYAverage;
-	private double _testZAverage;
+	private int _hipCenterTrackingCount;
+	private static Vector3[] _hipCenterCollection = new Vector3[_collectionSize];
+	private static Vector3[] _hipCenterDifferences = new Vector3[_collectionSize - 1];
 
-	enum Tracking {
-		hands = 0,
-		head = 1,
-		testing = 3
+	private int _shoulderLeftTrackingCount;
+	private static Vector3[] _shoulderLeftCollection = new Vector3[_collectionSize];
+	private static Vector3[] _shoulderLeftDifferences = new Vector3[_collectionSize - 1];
+
+	private int _shoulderRightTrackingCount;
+	private static Vector3[] _shoulderRightCollection = new Vector3[_collectionSize];
+	private static Vector3[] _shoulderRightDifferences = new Vector3[_collectionSize - 1];
+
+	private int _elbowLeftTrackingCount;
+	private static Vector3[] _elbowLeftCollection = new Vector3[_collectionSize];
+	private static Vector3[] _elbowLeftDifferences = new Vector3[_collectionSize - 1];
+
+	private int _elbowRightTrackingCount;
+	private static Vector3[] _elbowRightCollection = new Vector3[_collectionSize];
+	private static Vector3[] _elbowRightDifferences = new Vector3[_collectionSize - 1];
+
+	enum Joints {
+		HandLeft = 0,
+		HandRight = 1,
+		WristLeft = 2,
+		WristRight = 3,
+		Head = 4,
+		HipCenter = 5,
+		ShoulderLeft = 6,
+		ShoulderRight = 7,
+		ElbowLeft = 8,
+		ElbowRight = 9
 	}
 
 	void Start () {  
-		BallIsHeld = false;
+		_ballIsHeld = false;
 		GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "";
 		ANN_CPU.InitialiseANN ();
-		_handTrackingCount = 0;
+		_handLeftTrackingCount = 0;
+		_handRightTrackingCount = 0;
+		_wristLeftTrackingCount = 0;
+		_wristRightTrackingCount = 0;
 		_headTrackingCount = 0;
-		_testTrackingCount = 0;
-		_handXAverage = 0.0;
-		_handYAverage = 0.0;
-		_handZAverage = 0.0;
-		_headXAverage = 0.0;
-		_headYAverage = 0.0;
-		_headZAverage = 0.0;
-		_testXAverage = 0.0;
-		_testYAverage = 0.0;
-		_testZAverage = 0.0;
-
-		//TestSmoothing ();
+		_hipCenterTrackingCount = 0;
+		_shoulderLeftTrackingCount = 0;
+		_shoulderRightTrackingCount = 0;
+		_elbowLeftTrackingCount = 0;
+		_elbowRightTrackingCount = 0;
 	}
 		
 	void Update () { 
 		try {
-
 			if (GamePlay.GameIsPlayable) {
 
 				KinectManager manager = KinectManager.Instance;
@@ -96,16 +107,16 @@ public class KinectController : MonoBehaviour
 
 					uint userId = manager.GetPlayer1ID ();
 
-					HandLeft = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft);
-					HandRight = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight);
-					WristLeft = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.WristLeft);
-					WristRight = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.WristRight);
-					Head = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.Head);
-					HipCenter = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HipCenter);
-					ShoulderLeft = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ShoulderLeft);
-					ShoulderRight = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ShoulderRight);
-					ElbowLeft = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ElbowLeft);
-					ElbowRight = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ElbowRight);
+					_handLeft = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft), Joints.HandLeft);
+					_handRight = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight), Joints.HandRight);
+					_wristLeft = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.WristLeft), Joints.WristLeft);
+					_wristRight = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.WristRight), Joints.WristRight);
+					_head = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.Head), Joints.Head);
+					_hipCenter = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HipCenter), Joints.HipCenter);
+					_shoulderLeft = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ShoulderLeft), Joints.ShoulderLeft);
+					_shoulderRight = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ShoulderRight), Joints.ShoulderRight);
+					_elbowLeft = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ElbowLeft), Joints.ElbowLeft);
+					_elbowRight = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ElbowRight), Joints.ElbowRight);
 
 					BasketballController ();
 
@@ -120,9 +131,9 @@ public class KinectController : MonoBehaviour
 	}
 
 	private void BasketballController () {
-		HandDifference = -HandLeft.x - -HandRight.x;  //These x values are negative, the minus sets them positive
+		_handDifference = -_handLeft.x - -_handRight.x;  //These x values are negative, the minus sets them positive
 
-		if (BallIsHeld) {
+		if (_ballIsHeld) {
 
 			GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Picked up ball";
 
@@ -138,15 +149,15 @@ public class KinectController : MonoBehaviour
 
 			if (IsBallPickedUp()) {
 				callibrateUser ();
-				BallIsHeld = true;
+				_ballIsHeld = true;
 			}
 		}
 	}
 
 	private bool IsBallPickedUp() {
 		
-		bool handsInDistanceToPickUpBall = HandDifference > (BallWidth - (Inch * 2)) && HandDifference < (BallWidth + (Inch * 2));
-		bool handsInFrontOfBody = HipCenter.z > HandLeft.z && HipCenter.z > HandRight.z;
+		bool handsInDistanceToPickUpBall = _handDifference > (CommonValues._ballWidth - (CommonValues._inch * 2)) && _handDifference < (CommonValues._ballWidth + (CommonValues._inch * 2));
+		bool handsInFrontOfBody = _hipCenter.z > _handLeft.z && _hipCenter.z > _handRight.z;
 
 		if (handsInDistanceToPickUpBall && handsInFrontOfBody)
 			return true;
@@ -156,20 +167,20 @@ public class KinectController : MonoBehaviour
 
 	private bool IsBallDropped() {
 		
-		if (HandDifference > (BallWidth + (Inch * 3)))
+		if (_handDifference > (CommonValues._ballWidth + (CommonValues._inch * 3)))
 			return true;
 		else
 			return false;
 	}
 
 	private void callibrateUser () {
-		HandsCallibratedPosition.x = (HandLeft.x + HandRight.x) / 2;
-		HandsCallibratedPosition.y = (HandLeft.y + HandRight.y) / 2;
-		HandsCallibratedPosition.z = (HandLeft.z + HandRight.z) / 2;
+		_handsCallibratedPosition.x = (_handLeft.x + _handRight.x) / 2;
+		_handsCallibratedPosition.y = (_handLeft.y + _handRight.y) / 2;
+		_handsCallibratedPosition.z = (_handLeft.z + _handRight.z) / 2;
 
-		HeadCallibratedPosition.x = Head.x;
-		HeadCallibratedPosition.y = Head.y;
-		HeadCallibratedPosition.z = Head.z;
+		_headCallibratedPosition.x = _head.x;
+		_headCallibratedPosition.y = _head.y;
+		_headCallibratedPosition.z = _head.z;
 	}
 
 	private void dropBall() {
@@ -178,7 +189,7 @@ public class KinectController : MonoBehaviour
 
 		Basketball.SetBallGravity (true); //turn gravity on
 
-		BallIsHeld = false;
+		_ballIsHeld = false;
 	}
 
 	private void moveBall () {
@@ -187,24 +198,11 @@ public class KinectController : MonoBehaviour
 
 		Vector3 newBallPosition;
 
-		float handsX = (HandLeft.x + HandRight.x) / 2;
-		float handsY = (HandLeft.y + HandRight.y) / 2;
-		float handsZ = (HandLeft.z + HandRight.z) / 2;
+		float handsX = (_handLeft.x + _handRight.x) / 2;
+		float handsY = (_handLeft.y + _handRight.y) / 2;
+		float handsZ = (_handLeft.z + _handRight.z) / 2;
 
-		Vector3 hands = new Vector3 (handsX, handsY, handsZ);
-
-		// average the hands movement here
-		//hands = SmoothValues(hands, Tracking.hands);
-
-		/*var xMovement = handsX - HandsCallibratedPosition.x;
-		var yMovement = handsY - HandsCallibratedPosition.y; 
-		var zMovement = handsZ - HandsCallibratedPosition.z;*/
-
-		Vector3 movement = new Vector3 (handsX - HandsCallibratedPosition.x, handsY - HandsCallibratedPosition.y, handsZ - HandsCallibratedPosition.z);
-
-		/*newBallPosition.x = Basketball.InitialBallPosition.x + (xMovement * movementSensitivity);
-		newBallPosition.y = Basketball.InitialBallPosition.y + (yMovement * movementSensitivity);
-		newBallPosition.z = Basketball.InitialBallPosition.z - (zMovement * movementSensitivity); //minus to move ball in the correct view of the user*/
+		Vector3 movement = new Vector3 (handsX - _handsCallibratedPosition.x, handsY - _handsCallibratedPosition.y, handsZ - _handsCallibratedPosition.z);
 
 		newBallPosition.x = Basketball.InitialBallPosition.x + (movement.x * movementSensitivity);
 		newBallPosition.y = Basketball.InitialBallPosition.y + (movement.y * movementSensitivity);
@@ -215,169 +213,67 @@ public class KinectController : MonoBehaviour
 		GameObject.Find ("Basketball").transform.position = newBallPosition;
 	}
 
-	private Vector3 SmoothValues(Vector3 rawValues, Tracking tracking) {
-
+	private Vector3 SmoothRawSkeletalData(Vector3 rawVector, Joints joints) {
 		int count = 0;
 		Vector3[] collection = new Vector3[_collectionSize];
-		Vector3[] differences = new Vector3[collection.Length - 1];
-		double xAverage = 0.0;
-		double yAverage = 0.0;
-		double zAverage = 0.0;
+		Vector3[] differences = new Vector3[_collectionSize - 1];
 
-		double xTotal = 0.0;
-		double yTotal = 0.0;
-		double zTotal = 0.0;
-
-		switch (tracking) {
-		case Tracking.hands:
-			count = _handTrackingCount;
-			collection = _handCollection;
-			differences = _handMovementDifferences;
-			xAverage = _handXAverage;
-			yAverage = _handYAverage;
-			zAverage = _handZAverage;
+		switch (joints) {
+		case Joints.HandRight:
+			count = _handRightTrackingCount;
+			collection = _handRightCollection;
+			differences = _handRightDifferences;
 			break;
-		case Tracking.head:
+		case Joints.HandLeft:
+			count = _handLeftTrackingCount;
+			collection = _handLeftCollection;
+			differences = _handLeftDifferences;
+			break;
+		case Joints.WristRight:
+			count = _wristRightTrackingCount;
+			collection = _wristRightCollection;
+			differences = _wristRightDifferences;
+			break;
+		case Joints.WristLeft:
+			count = _wristLeftTrackingCount;
+			collection = _wristLeftCollection;
+			differences = _wristLeftDifferences;
+			break;
+		case Joints.Head:
 			count = _headTrackingCount;
 			collection = _headCollection;
-			differences = _headMovementDifferences;
-			xAverage = _headXAverage;
-			yAverage = _headYAverage;
-			zAverage = _headZAverage;
+			differences = _headDifferences;
 			break;
-		case Tracking.testing:
-			count = _testTrackingCount;
-			collection = _testCollection;
-			differences = _testMovementDifferences;
-			xAverage = _testXAverage;
-			yAverage = _testYAverage;
-			zAverage = _testZAverage;
+		case Joints.HipCenter:
+			count = _hipCenterTrackingCount;
+			collection = _hipCenterCollection;
+			differences = _hipCenterDifferences;
+			break;
+		case Joints.ShoulderRight:
+			count = _shoulderRightTrackingCount;
+			collection = _shoulderRightCollection;
+			differences = _shoulderRightDifferences;
+			break;
+		case Joints.ShoulderLeft:
+			count = _shoulderLeftTrackingCount;
+			collection = _shoulderLeftCollection;
+			differences = _shoulderLeftDifferences;
+			break;
+		case Joints.ElbowRight:
+			count = _elbowRightTrackingCount;
+			collection = _elbowRightCollection;
+			differences = _elbowRightDifferences;
+			break;
+		case Joints.ElbowLeft:
+			count = _elbowLeftTrackingCount;
+			collection = _elbowLeftCollection;
+			differences = _elbowLeftDifferences;
 			break;
 		}
 
-		print ("count: " + count);
-
-		if (count <= 1) {
-			collection [count] = rawValues;
-			//count++;
-		} else if (count > 1 && count < collection.Length) {
-			
-			//collection [count] = rawValues;
-
-			Vector3[] secondDiffs = new Vector3[count];
-			Vector3 secondDiffsTotal = new Vector3 (0, 0, 0);
-			Vector3 secondDiffsAverage = new Vector3 (0, 0, 0);
-			//Vector3 difference = new Vector3[0, 0, 0];
-
-			for (int i = 0; i < count; i++) {
-				differences [i].x = collection [i + 1].x - collection [i].x;
-				differences [i].y = collection [i + 1].y - collection [i].y;
-				differences [i].z = collection [i + 1].z - collection [i].z;
-			}
-
-			for (int i = 0; i < count; i++) {
-				secondDiffs [i].x = differences [i + 1].x - differences [i].x;
-				secondDiffs [i].y = differences [i + 1].y - differences [i].y;
-				secondDiffs [i].z = differences [i + 1].z - differences [i].z;
-			}
-
-			for (int i = 0; i < count; i++) {
-				secondDiffsTotal.x += secondDiffs [i].x;
-				secondDiffsTotal.y += secondDiffs [i].y;
-				secondDiffsTotal.z += secondDiffs [i].z;
-			}
-
-			secondDiffsAverage.x = secondDiffsTotal.x / secondDiffs.Length;
-			secondDiffsAverage.y = secondDiffsTotal.y / secondDiffs.Length;
-			secondDiffsAverage.z = secondDiffsTotal.z / secondDiffs.Length;
-
-			if (WithinBoundaryOfAverage (collection [count - 1].x, rawValues.x)) {
-				collection [count].x = rawValues.x;
-			} else {
-
-			}
-			if (WithinBoundaryOfAverage (collection [count - 1].y, rawValues.y)) {
-				collection [count].y = rawValues.y;
-			} else {
-
-			}
-			if (WithinBoundaryOfAverage (collection [count - 1].z, rawValues.z)) {
-				collection [count].z = rawValues.z;
-			} else {
-
-			}
-		}
-
-		/*if (count == 0) {
-			collection [count] = rawValues;
-			count++;
-
-		} else if (count < collection.Length) {
-			collection [count] = rawValues;
-
-			/*for (int i = 0; i < collection.Length; i++) {
-				print ("collection " + i + ": " + collection [i].ToString ());
-			}
-
-			print ("");*/
-
-			/*for (int i = 1; i < count + 1; i++) {
-				differences [i-1].x = collection [i].x - collection [i - 1].x;
-				differences [i-1].y = collection [i].y - collection [i - 1].y;
-				differences [i-1].z = collection [i].z - collection [i - 1].z;
-			}
-				
-			//eliminate extraneous values
-
-			for (int i = 0; i < differences.Length; i++) {
-				if (differences [i].x != 0.0 && differences [i].y != 0.0 && differences [i].z != 0.0) {
-					//print ("differences " + i + ": " + differences [i].ToString ());
-
-					Vector3 previousTotals = new Vector3 ((float)xTotal, (float)yTotal, (float)zTotal);
-					Vector3 previousAverage = new Vector3 ((float)xTotal / i, (float)yTotal / i, (float)zTotal / i);
-
-					xTotal += differences [i].x;
-					yTotal += differences [i].y;
-					zTotal += differences [i].z;
-
-					//print ("Total: " + xTotal + ", " + yTotal + ", " + zTotal);
-
-					Vector3 newAverages = new Vector3 ((float)xTotal / (i + 1), (float)yTotal / (i + 1), (float)zTotal / (i + 1));
-
-					//print ("Average: " + newAverages.x + ", " + newAverages.y + ", " + newAverages.z);
-
-					if (!WithinBoundaryOfAverage (previousAverage.x, newAverages.x)) {
-						xTotal -= differences [i].x;
-						xTotal += previousAverage.x;
-						collection [count].x = collection [count - 1].x + previousAverage.x;
-					}
-					if (!WithinBoundaryOfAverage (previousAverage.y, newAverages.y)) {
-						yTotal -= differences [i].y;
-						yTotal += previousAverage.y;
-						collection [count].y = collection [count - 1].y + previousAverage.y;
-					}
-					if (!WithinBoundaryOfAverage (previousAverage.z, newAverages.z)) {
-						zTotal -= differences [i].z;
-						zTotal += previousAverage.z;
-						collection [count].z = collection [count - 1].z + previousAverage.z;
-					}
-
-					Vector3 processedAverages = new Vector3 ((float)xTotal / (i + 1), (float)yTotal / (i + 1), (float)zTotal / (i + 1));
-
-					//print ("processedAverages: " + processedAverages.x + ", " + processedAverages.y + ", " + processedAverages.z);
-				}
-			}
-
-			/*for (int i = 0; i < collection.Length; i++) {
-				print ("filtered collection " + i + ": " + collection [i].ToString ());
-			}
-
-			print ("");
-			print ("");*/
-				
-			/*count++;
-
-		} else {
+		//empty the collection if full
+		if (count == _collectionSize-1) {
+			//print ("clear collection");
 			count = 0;
 
 			for (int i = 0; i < collection.Length; i++)
@@ -385,46 +281,125 @@ public class KinectController : MonoBehaviour
 
 			for (int i = 0; i < differences.Length; i++)
 				differences [i] = new Vector3 (0, 0, 0);
-		} */
+		}
 
-		switch (tracking) {
-		case Tracking.hands:
-			_handTrackingCount = count;
-			_handCollection = collection;
-			_handMovementDifferences = differences;
-			_handXAverage = xAverage;
-			_handYAverage = yAverage;
-			_handZAverage = zAverage;
-			return _handCollection[_handTrackingCount];
+		//print ("count: " + count);
+			
+		if (count == 0) {
+			//print ("one of first two counts");
+			collection [count] = rawVector;
+		} else if (count == 1) {
+			collection [count] = rawVector;
+			/*differences [count - 1].x = collection [count].x - collection [count - 1].x;
+			differences [count - 1].y = collection [count].y - collection [count - 1].y;
+			differences [count - 1].z = collection [count].z - collection [count - 1].z;*/
+			differences [count - 1] = collection [count] - collection [count - 1];
+		} else if (count < _collectionSize-1) {
+			//print ("smoothing new point");
+			/*differences [count - 1].x = collection [count].x - collection [count - 1].x;
+			differences [count - 1].y = collection [count].y - collection [count - 1].y;
+			differences [count - 1].z = collection [count].z - collection [count - 1].z;*/
+
+			differences [count - 1] = collection [count] - collection [count - 1];
+			//print ("1");
+
+			Vector3 newVectorDifference = collection [count - 1] - rawVector;
+			//print ("2");
+
+			/*double newVectorDifferenceX = collection [count - 1].x - rawVector.x;
+			double newVectorDifferenceY = collection [count - 1].y - rawVector.y;
+			double newVectorDifferenceZ = collection [count - 1].z - rawVector.z;
+
+			if (newVectorDifferenceX != differences [count - 1].x) {
+				rawVector.x = collection [count - 1].x + differences [count - 1].x;
+			}
+			if (newVectorDifferenceY != differences [count - 1].y) {
+				rawVector.y = collection [count - 1].y + differences [count - 1].y;
+			}
+			if (newVectorDifferenceZ != differences [count - 1].z) {
+				rawVector.z = collection [count - 1].z + differences [count - 1].z;
+			}*/
+
+			if (newVectorDifference.x != differences [count - 1].x) {
+				rawVector.x = collection [count - 1].x + differences [count - 1].x;
+			}
+			//print ("3");
+
+			if (newVectorDifference.y != differences [count - 1].y) {
+				rawVector.y = collection [count - 1].y + differences [count - 1].y;
+			}
+			//print ("4");
+
+			if (newVectorDifference.z != differences [count - 1].z) {
+				rawVector.z = collection [count - 1].z + differences [count - 1].z;
+			}
+			//print ("5");
+
+
+			collection [count] = rawVector;
+			//print ("6");
+
+			differences [count] = collection [count] - collection [count - 1];
+			//print ("7");
+
+		}
+
+		count++;
+
+		switch (joints) {
+		case Joints.HandRight:
+			_handRightTrackingCount = count;
+			_handRightCollection = collection;
+			_handRightDifferences = differences;
 			break;
-		case Tracking.head:
+		case Joints.HandLeft:
+			_handLeftTrackingCount = count;
+			_handLeftCollection = collection;
+			_handLeftDifferences = differences;
+			break;
+		case Joints.WristRight:
+			_wristRightTrackingCount = count;
+			_wristRightCollection = collection;
+			_wristRightDifferences = differences;
+			break;
+		case Joints.WristLeft:
+			_wristLeftTrackingCount = count;
+			_wristLeftCollection = collection;
+			_wristLeftDifferences = differences;
+			break;
+		case Joints.Head:
 			_headTrackingCount = count;
 			_headCollection = collection;
-			_headMovementDifferences = differences;
-			_headXAverage = xAverage;
-			_headYAverage = yAverage;
-			_headZAverage = zAverage;
-			return _headCollection [_headTrackingCount];
+			_headDifferences = differences;
 			break;
-		case Tracking.testing:
-			_testTrackingCount = count;
-			_testCollection = collection;
-			_testMovementDifferences = differences;
-			_testXAverage = xAverage;
-			_testYAverage = yAverage;
-			_testZAverage = zAverage;
-			return _testCollection [_testTrackingCount];
+		case Joints.HipCenter:
+			_hipCenterTrackingCount = count;
+			_hipCenterCollection = collection;
+			_hipCenterDifferences = differences;
+			break;
+		case Joints.ShoulderRight:
+			_shoulderRightTrackingCount = count;
+			_shoulderRightCollection = collection;
+			_shoulderRightDifferences = differences;
+			break;
+		case Joints.ShoulderLeft:
+			_shoulderLeftTrackingCount = count;
+			_shoulderLeftCollection = collection;
+			_shoulderLeftDifferences = differences;
+			break;
+		case Joints.ElbowRight:
+			_elbowRightTrackingCount = count;
+			_elbowRightCollection = collection;
+			_elbowRightDifferences = differences;
+			break;
+		case Joints.ElbowLeft:
+			_elbowLeftTrackingCount = count;
+			_elbowLeftCollection = collection;
+			_elbowLeftDifferences = differences;
 			break;
 		}
 
-		if (count <= 1) {
-			return rawValues;
-		} else if (count > 1 && count < collection.Length) {
-			return rawValues;
-		} else {
-			return rawValues;
-		}
-
+		return rawVector;
 	}
 
 	private bool WithinBoundaryOfAverage(double oldAverage, double newAverage) {
@@ -442,48 +417,14 @@ public class KinectController : MonoBehaviour
 			return true;
 	}
 
-	private void TestSmoothing() {
-
-		print ("TestSmoothing");
-
-		Vector3[] test = new Vector3[] {
-			new Vector3 (1, 1, 1), 
-			new Vector3 (2, 2, 2),
-			new Vector3 (3, 3, 3), 
-			new Vector3 (4, 4, 4), 
-			new Vector3 (5, 5, 5),
-			new Vector3 (10, 6, 6),
-			new Vector3 (1, 3, 4),
-			new Vector3 (8, 8, 8),
-			new Vector3 (9.1f, 9, 9),
-			new Vector3 (12, 12, 12),
-			new Vector3 (12, 12, 12),
-			new Vector3 (12, 12, 12)
-		};
-
-		for (int i = 0; i < test.Length; i++) {
-			print ("Before smoothing " + i + ": " + test [i].ToString ());
-		}
-
-		Vector3[] testValues = new Vector3[test.Length];
-			
-		for (int i = 0; i < test.Length; i++) {
-			testValues[i] = SmoothValues (test [i], Tracking.testing);
-		}
-
-		for (int i = 0; i < testValues.Length; i++) {
-			print ("After smoothing " + i + ": " + testValues [i].ToString ());
-		}
-	}
-
 	private void moveMainCamera() {
 		int movementSensitivity = 3;
 
 		Vector3 newCameraPosition;
 
-		var xMovement = Head.x - HeadCallibratedPosition.x;
-		var yMovement = Head.y - HeadCallibratedPosition.y;
-		var zMovement = Head.z - HeadCallibratedPosition.z;
+		var xMovement = _head.x - _headCallibratedPosition.x;
+		var yMovement = _head.y - _headCallibratedPosition.y;
+		var zMovement = _head.z - _headCallibratedPosition.z;
 
 		newCameraPosition.x = Cameras.MainCameraPosition.x + (xMovement * movementSensitivity);
 		newCameraPosition.y = Cameras.MainCameraPosition.y + (yMovement * movementSensitivity);
@@ -494,45 +435,45 @@ public class KinectController : MonoBehaviour
 
 	private void collectSkeletalDifferences() {
 
-		double rightHand_HipX = HandRight.x - HipCenter.x;
-		double rightHand_HipY = HandRight.y - HipCenter.y;
-		double rightHand_HipZ = HandRight.z - HipCenter.z;
+		double rightHand_HipX = _handRight.x - _hipCenter.x;
+		double rightHand_HipY = _handRight.y - _hipCenter.y;
+		double rightHand_HipZ = _handRight.z - _hipCenter.z;
 
-		double rightHand_RightWristX = HandRight.x - WristRight.x;
-		double rightHand_RightWristY = HandRight.y - WristRight.y;
-		double rightHand_RightWristZ = HandRight.z - WristRight.z;
+		double rightHand_RightWristX = _handRight.x - _wristRight.x;
+		double rightHand_RightWristY = _handRight.y - _wristRight.y;
+		double rightHand_RightWristZ = _handRight.z - _wristRight.z;
 
-		double rightWrist_RightElbowX = WristRight.x - ElbowRight.x;
-		double rightWrist_RightElbowY = WristRight.y - ElbowRight.y;
-		double rightWrist_RightElbowZ = WristRight.z - ElbowRight.z;
+		double rightWrist_RightElbowX = _wristRight.x - _elbowRight.x;
+		double rightWrist_RightElbowY = _wristRight.y - _elbowRight.y;
+		double rightWrist_RightElbowZ = _wristRight.z - _elbowRight.z;
 
-		double rightElbow_RightShoulderX = ElbowRight.x - ShoulderRight.x;
-		double rightElbow_RightShoulderY = ElbowRight.y - ShoulderRight.y;
-		double rightElbow_RightShoulderZ = ElbowRight.z - ShoulderRight.z;
+		double rightElbow_RightShoulderX = _elbowRight.x - _shoulderRight.x;
+		double rightElbow_RightShoulderY = _elbowRight.y - _shoulderRight.y;
+		double rightElbow_RightShoulderZ = _elbowRight.z - _shoulderRight.z;
 
-		double rightHand_RightShoulderX = HandRight.x - ShoulderRight.x;
-		double rightHand_RightShoulderY = HandRight.y - ShoulderRight.y;
-		double rightHand_RightShoulderZ = HandRight.z - ShoulderRight.z;
+		double rightHand_RightShoulderX = _handRight.x - _shoulderRight.x;
+		double rightHand_RightShoulderY = _handRight.y - _shoulderRight.y;
+		double rightHand_RightShoulderZ = _handRight.z - _shoulderRight.z;
 
-		double leftHand_HipX = HandLeft.x - HipCenter.x;
-		double leftHand_HipY = HandLeft.y - HipCenter.y;
-		double leftHand_HipZ = HandLeft.z - HipCenter.z;
+		double leftHand_HipX = _handLeft.x - _hipCenter.x;
+		double leftHand_HipY = _handLeft.y - _hipCenter.y;
+		double leftHand_HipZ = _handLeft.z - _hipCenter.z;
 
-		double leftHand_LeftWristX = HandLeft.x - WristLeft.x;
-		double leftHand_LeftWristY = HandLeft.y - WristLeft.y;
-		double leftHand_LeftWristZ = HandLeft.z - WristLeft.z;
+		double leftHand_LeftWristX = _handLeft.x - _wristLeft.x;
+		double leftHand_LeftWristY = _handLeft.y - _wristLeft.y;
+		double leftHand_LeftWristZ = _handLeft.z - _wristLeft.z;
 
-		double leftWrist_LeftElbowX = WristLeft.x - ElbowLeft.x;
-		double leftWrist_LeftElbowY = WristLeft.y - ElbowLeft.y;
-		double leftWrist_LeftElbowZ = WristLeft.z - ElbowLeft.z;
+		double leftWrist_LeftElbowX = _wristLeft.x - _elbowLeft.x;
+		double leftWrist_LeftElbowY = _wristLeft.y - _elbowLeft.y;
+		double leftWrist_LeftElbowZ = _wristLeft.z - _elbowLeft.z;
 
-		double leftElbow_LeftShoulderX = ElbowLeft.x - ShoulderLeft.x;
-		double leftElbow_LeftShoulderY = ElbowLeft.y - ShoulderLeft.y;
-		double leftElbow_LeftShoulderZ = ElbowLeft.z - ShoulderLeft.z;
+		double leftElbow_LeftShoulderX = _elbowLeft.x - _shoulderLeft.x;
+		double leftElbow_LeftShoulderY = _elbowLeft.y - _shoulderLeft.y;
+		double leftElbow_LeftShoulderZ = _elbowLeft.z - _shoulderLeft.z;
 
-		double leftHand_LeftShoulderX = HandLeft.x - ShoulderLeft.x;
-		double leftHand_LeftShoulderY = HandLeft.y - ShoulderLeft.y;
-		double leftHand_LeftShoulderZ = HandLeft.z - ShoulderLeft.z;
+		double leftHand_LeftShoulderX = _handLeft.x - _shoulderLeft.x;
+		double leftHand_LeftShoulderY = _handLeft.y - _shoulderLeft.y;
+		double leftHand_LeftShoulderZ = _handLeft.z - _shoulderLeft.z;
 
 		double[] trackedSkeletalPoints = new double[30] 
 		{ 
