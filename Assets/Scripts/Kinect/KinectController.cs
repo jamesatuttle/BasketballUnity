@@ -1,62 +1,62 @@
 using UnityEngine;
 using System;
 using UnityEngine.UI;
+using Common;
 
 public class KinectController : MonoBehaviour
 {
-	private Vector3 HandLeft;
-	private Vector3 HandRight;
+	private Vector3 _handLeft;
+	private Vector3 _handRight;
+	private Vector3 _head;
+	private Vector3 _hipCenter;
+	private Vector3 _shoulderLeft;
+	private Vector3 _shoulderRight;
+	private Vector3 _wristLeft;
+	private Vector3 _wristRight;
+	private Vector3 _elbowLeft;
+	private Vector3 _elbowRight;
 
-	private Vector3 Head;
+	private bool _ballIsHeld;
 
-	private Vector3 HipCenter;
+	private Vector3 _handsCallibratedPosition;
+	private Vector3 _headCallibratedPosition;
 
-	private Vector3 ShoulderLeft;
-	private Vector3 ShoulderRight;
+	private float _handDifference;
 
-	private Vector3 WristLeft;
-	private Vector3 WristRight;
+	private Vector3 _previousBallPosition;
+	private Vector3 _previousCameraPosition;
 
-	private Vector3 ElbowLeft;
-	private Vector3 ElbowRight;
-
-	private bool BallIsHeld;
-
-	private float BallWidth = 0.26f; //Ball Width is 0.26 cm
-	private float Inch = 0.0254f; //1 inch equals 2.5 cm.
-
-	private Vector3 HandsCallibratedPosition;
-	private Vector3 HeadCallibratedPosition;
-
-	private float HandDifference;
+	enum Smoothing {
+		ball = 0,
+		camera = 1
+	};
 
 	void Start () {  
-		BallIsHeld = false;
+		_ballIsHeld = false;
 		GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "";
 		ANN_CPU.InitialiseANN ();
 	}
 		
 	void Update () { 
 		try {
-
 			if (GamePlay.GameIsPlayable) {
 
 				KinectManager manager = KinectManager.Instance;
 
 				if (manager.IsUserDetected ()) {
 
-					uint userId = manager.GetPlayer1ID ();
+					uint userId = manager.GetPlayer1ID ();  
 
-					HandLeft = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft);
-					HandRight = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight);
-					WristLeft = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.WristLeft);
-					WristRight = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.WristRight);
-					Head = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.Head);
-					HipCenter = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HipCenter);
-					ShoulderLeft = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ShoulderLeft);
-					ShoulderRight = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ShoulderRight);
-					ElbowLeft = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ElbowLeft);
-					ElbowRight = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ElbowRight);
+					_handLeft = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft);
+					_handRight = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight);
+					_wristLeft = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.WristLeft);
+					_wristRight = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.WristRight);
+					_head = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.Head);
+					_hipCenter = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HipCenter);
+					_shoulderLeft = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ShoulderLeft);
+					_shoulderRight = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ShoulderRight);
+					_elbowLeft = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ElbowLeft);
+					_elbowRight = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ElbowRight);
 
 					BasketballController ();
 
@@ -71,9 +71,9 @@ public class KinectController : MonoBehaviour
 	}
 
 	private void BasketballController () {
-		HandDifference = -HandLeft.x - -HandRight.x;  //These x values are negative, the minus sets them positive
+		_handDifference = -_handLeft.x - -_handRight.x;  //These x values are negative, the minus sets them positive
 
-		if (BallIsHeld) {
+		if (_ballIsHeld) {
 
 			GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Picked up ball";
 
@@ -89,15 +89,15 @@ public class KinectController : MonoBehaviour
 
 			if (IsBallPickedUp()) {
 				callibrateUser ();
-				BallIsHeld = true;
+				_ballIsHeld = true;
 			}
 		}
 	}
 
 	private bool IsBallPickedUp() {
 		
-		bool handsInDistanceToPickUpBall = HandDifference > (BallWidth - (Inch * 2)) && HandDifference < (BallWidth + (Inch * 2));
-		bool handsInFrontOfBody = HipCenter.z > HandLeft.z && HipCenter.z > HandRight.z;
+		bool handsInDistanceToPickUpBall = _handDifference > (CommonValues.BallWidth - (CommonValues.Inch * 2)) && _handDifference < (CommonValues.BallWidth + (CommonValues.Inch * 2));
+		bool handsInFrontOfBody = _hipCenter.z > _handLeft.z && _hipCenter.z > _handRight.z;
 
 		if (handsInDistanceToPickUpBall && handsInFrontOfBody)
 			return true;
@@ -107,20 +107,23 @@ public class KinectController : MonoBehaviour
 
 	private bool IsBallDropped() {
 		
-		if (HandDifference > (BallWidth + (Inch * 3)))
+		if (_handDifference > (CommonValues.BallWidth + (CommonValues.Inch * 3)))
 			return true;
 		else
 			return false;
 	}
 
 	private void callibrateUser () {
-		HandsCallibratedPosition.x = (HandLeft.x + HandRight.x) / 2;
-		HandsCallibratedPosition.y = (HandLeft.y + HandRight.y) / 2;
-		HandsCallibratedPosition.z = (HandLeft.z + HandRight.z) / 2;
+		_handsCallibratedPosition.x = (_handLeft.x + _handRight.x) / 2;
+		_handsCallibratedPosition.y = (_handLeft.y + _handRight.y) / 2;
+		_handsCallibratedPosition.z = (_handLeft.z + _handRight.z) / 2;
 
-		HeadCallibratedPosition.x = Head.x;
-		HeadCallibratedPosition.y = Head.y;
-		HeadCallibratedPosition.z = Head.z;
+		_headCallibratedPosition.x = _head.x;
+		_headCallibratedPosition.y = _head.y;
+		_headCallibratedPosition.z = _head.z;
+
+		_previousBallPosition = Basketball.InitialBallPosition;
+		_previousCameraPosition = Cameras.MainCameraPosition;
 	}
 
 	private void dropBall() {
@@ -129,7 +132,7 @@ public class KinectController : MonoBehaviour
 
 		Basketball.SetBallGravity (true); //turn gravity on
 
-		BallIsHeld = false;
+		_ballIsHeld = false;
 	}
 
 	private void moveBall () {
@@ -138,23 +141,79 @@ public class KinectController : MonoBehaviour
 
 		Vector3 newBallPosition;
 
-		float HandsX = (HandLeft.x + HandRight.x) / 2;
-		float HandsY = (HandLeft.y + HandRight.y) / 2;
-		float HandsZ = (HandLeft.z + HandRight.z) / 2;
+		float handsX = (_handLeft.x + _handRight.x) / 2;
+		float handsY = (_handLeft.y + _handRight.y) / 2;
+		float handsZ = (_handLeft.z + _handRight.z) / 2;
 
-		// average the hands movement here
+		Vector3 movement = new Vector3 (handsX - _handsCallibratedPosition.x, handsY - _handsCallibratedPosition.y, handsZ - _handsCallibratedPosition.z);
 
-		var XMovement = HandsX - HandsCallibratedPosition.x;
-		var YMovement = HandsY - HandsCallibratedPosition.y;
-		var ZMovement = HandsZ - HandsCallibratedPosition.z;
-
-		newBallPosition.x = Basketball.InitialBallPosition.x + (XMovement * movementSensitivity);
-		newBallPosition.y = Basketball.InitialBallPosition.y + (YMovement * movementSensitivity);
-		newBallPosition.z = Basketball.InitialBallPosition.z - (ZMovement * movementSensitivity);
+		newBallPosition.x = Basketball.InitialBallPosition.x + (movement.x * movementSensitivity);
+		newBallPosition.y = Basketball.InitialBallPosition.y + (movement.y * movementSensitivity);
+		newBallPosition.z = Basketball.InitialBallPosition.z - (movement.z * movementSensitivity); //minus to move ball in the correct view of the user
 
 		Basketball.LockBasketballPosition (false);
 
-		GameObject.Find ("Basketball").transform.position = new Vector3 (newBallPosition.x, newBallPosition.y, newBallPosition.z);
+		GameObject.Find ("Basketball").transform.position = SmoothBasketball(newBallPosition);
+	}
+
+	private Vector3 SmoothBasketball(Vector3 ballPosition) {
+		return SmoothValues (ballPosition, Smoothing.ball);
+	}
+
+	private Vector3 SmoothCameraMovement(Vector3 cameraPosition) {
+		return SmoothValues (cameraPosition, Smoothing.camera);
+	}
+
+	private Vector3 SmoothValues(Vector3 newPosition, Smoothing smoothing) {
+
+		float threshold = 0.3f;
+		Vector3 previousPosition = new Vector3(0f, 0f, 0f);
+
+		switch (smoothing) {
+		case Smoothing.ball:
+			threshold = 0.3f;
+			previousPosition = _previousBallPosition;
+			break;
+		case Smoothing.camera:
+			threshold = 0.2f;
+			previousPosition = _previousCameraPosition;
+			break;
+		}
+
+		if (!isWithinBoundary (previousPosition.x, newPosition.x, threshold)) {
+			newPosition.x = previousPosition.x;
+		}
+		if (!isWithinBoundary (previousPosition.y, newPosition.y, threshold)) {
+			newPosition.y = previousPosition.y;
+		}
+		if (!isWithinBoundary (previousPosition.z, newPosition.z, threshold)) {
+			newPosition.z = previousPosition.z;
+		}
+
+		previousPosition = newPosition;
+
+		switch (smoothing) {
+		case Smoothing.ball:
+			_previousBallPosition = previousPosition;
+			break;
+		case Smoothing.camera:
+			_previousCameraPosition = previousPosition;
+			break;
+		}
+
+		return newPosition;
+
+	}
+
+	private bool isWithinBoundary(float oldPosition, float newPosition, float threshold) {
+		float upperBoundary = oldPosition + threshold;
+		float lowerBoudary = oldPosition - threshold;
+
+		if (newPosition > upperBoundary || newPosition < lowerBoudary) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	private void moveMainCamera() {
@@ -162,58 +221,60 @@ public class KinectController : MonoBehaviour
 
 		Vector3 newCameraPosition;
 
-		var xMovement = Head.x - HeadCallibratedPosition.x;
-		var yMovement = Head.y - HeadCallibratedPosition.y;
-		var zMovement = Head.z - HeadCallibratedPosition.z;
+		var xMovement = _head.x - _headCallibratedPosition.x;
+		var yMovement = _head.y - _headCallibratedPosition.y;
+		var zMovement = _head.z - _headCallibratedPosition.z;
 
 		newCameraPosition.x = Cameras.MainCameraPosition.x + (xMovement * movementSensitivity);
 		newCameraPosition.y = Cameras.MainCameraPosition.y + (yMovement * movementSensitivity);
-		newCameraPosition.z = Cameras.MainCameraPosition.z - (zMovement * movementSensitivity);
+		newCameraPosition.z = Cameras.MainCameraPosition.z - (zMovement * movementSensitivity); //minus to move camera in the correct view of the user
 
-		Cameras.UpdateCameraPosition (newCameraPosition.x, newCameraPosition.y, newCameraPosition.z, 34);
+		Vector3 smoothedCameraPosition = SmoothCameraMovement (newCameraPosition);
+
+		Cameras.UpdateCameraPosition (smoothedCameraPosition.x, smoothedCameraPosition.y, smoothedCameraPosition.z, 34);
 	}
 
 	private void collectSkeletalDifferences() {
 
-		double rightHand_HipX = HandRight.x - HipCenter.x;
-		double rightHand_HipY = HandRight.y - HipCenter.y;
-		double rightHand_HipZ = HandRight.z - HipCenter.z;
+		double rightHand_HipX = _handRight.x - _hipCenter.x;
+		double rightHand_HipY = _handRight.y - _hipCenter.y;
+		double rightHand_HipZ = _handRight.z - _hipCenter.z;
 
-		double rightHand_RightWristX = HandRight.x - WristRight.x;
-		double rightHand_RightWristY = HandRight.y - WristRight.y;
-		double rightHand_RightWristZ = HandRight.z - WristRight.z;
+		double rightHand_RightWristX = _handRight.x - _wristRight.x;
+		double rightHand_RightWristY = _handRight.y - _wristRight.y;
+		double rightHand_RightWristZ = _handRight.z - _wristRight.z;
 
-		double rightWrist_RightElbowX = WristRight.x - ElbowRight.x;
-		double rightWrist_RightElbowY = WristRight.y - ElbowRight.y;
-		double rightWrist_RightElbowZ = WristRight.z - ElbowRight.z;
+		double rightWrist_RightElbowX = _wristRight.x - _elbowRight.x;
+		double rightWrist_RightElbowY = _wristRight.y - _elbowRight.y;
+		double rightWrist_RightElbowZ = _wristRight.z - _elbowRight.z;
 
-		double rightElbow_RightShoulderX = ElbowRight.x - ShoulderRight.x;
-		double rightElbow_RightShoulderY = ElbowRight.y - ShoulderRight.y;
-		double rightElbow_RightShoulderZ = ElbowRight.z - ShoulderRight.z;
+		double rightElbow_RightShoulderX = _elbowRight.x - _shoulderRight.x;
+		double rightElbow_RightShoulderY = _elbowRight.y - _shoulderRight.y;
+		double rightElbow_RightShoulderZ = _elbowRight.z - _shoulderRight.z;
 
-		double rightHand_RightShoulderX = HandRight.x - ShoulderRight.x;
-		double rightHand_RightShoulderY = HandRight.y - ShoulderRight.y;
-		double rightHand_RightShoulderZ = HandRight.z - ShoulderRight.z;
+		double rightHand_RightShoulderX = _handRight.x - _shoulderRight.x;
+		double rightHand_RightShoulderY = _handRight.y - _shoulderRight.y;
+		double rightHand_RightShoulderZ = _handRight.z - _shoulderRight.z;
 
-		double leftHand_HipX = HandLeft.x - HipCenter.x;
-		double leftHand_HipY = HandLeft.y - HipCenter.y;
-		double leftHand_HipZ = HandLeft.z - HipCenter.z;
+		double leftHand_HipX = _handLeft.x - _hipCenter.x;
+		double leftHand_HipY = _handLeft.y - _hipCenter.y;
+		double leftHand_HipZ = _handLeft.z - _hipCenter.z;
 
-		double leftHand_LeftWristX = HandLeft.x - WristLeft.x;
-		double leftHand_LeftWristY = HandLeft.y - WristLeft.y;
-		double leftHand_LeftWristZ = HandLeft.z - WristLeft.z;
+		double leftHand_LeftWristX = _handLeft.x - _wristLeft.x;
+		double leftHand_LeftWristY = _handLeft.y - _wristLeft.y;
+		double leftHand_LeftWristZ = _handLeft.z - _wristLeft.z;
 
-		double leftWrist_LeftElbowX = WristLeft.x - ElbowLeft.x;
-		double leftWrist_LeftElbowY = WristLeft.y - ElbowLeft.y;
-		double leftWrist_LeftElbowZ = WristLeft.z - ElbowLeft.z;
+		double leftWrist_LeftElbowX = _wristLeft.x - _elbowLeft.x;
+		double leftWrist_LeftElbowY = _wristLeft.y - _elbowLeft.y;
+		double leftWrist_LeftElbowZ = _wristLeft.z - _elbowLeft.z;
 
-		double leftElbow_LeftShoulderX = ElbowLeft.x - ShoulderLeft.x;
-		double leftElbow_LeftShoulderY = ElbowLeft.y - ShoulderLeft.y;
-		double leftElbow_LeftShoulderZ = ElbowLeft.z - ShoulderLeft.z;
+		double leftElbow_LeftShoulderX = _elbowLeft.x - _shoulderLeft.x;
+		double leftElbow_LeftShoulderY = _elbowLeft.y - _shoulderLeft.y;
+		double leftElbow_LeftShoulderZ = _elbowLeft.z - _shoulderLeft.z;
 
-		double leftHand_LeftShoulderX = HandLeft.x - ShoulderLeft.x;
-		double leftHand_LeftShoulderY = HandLeft.y - ShoulderLeft.y;
-		double leftHand_LeftShoulderZ = HandLeft.z - ShoulderLeft.z;
+		double leftHand_LeftShoulderX = _handLeft.x - _shoulderLeft.x;
+		double leftHand_LeftShoulderY = _handLeft.y - _shoulderLeft.y;
+		double leftHand_LeftShoulderZ = _handLeft.z - _shoulderLeft.z;
 
 		double[] trackedSkeletalPoints = new double[30] 
 		{ 

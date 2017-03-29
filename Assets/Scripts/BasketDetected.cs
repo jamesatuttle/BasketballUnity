@@ -6,7 +6,7 @@ public class BasketDetected : MonoBehaviour {
 	private bool scored = false;
 	private int bonusSetting = 2;
 
-    Scoreboard scoreboard = new Scoreboard();
+	Scoreboard scoreboard;
 
     public void Start () {
 		basketCount = 0;
