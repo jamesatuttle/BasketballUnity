@@ -109,14 +109,25 @@ public class KinectController : MonoBehaviour
 
 					_handLeft = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft), Joints.HandLeft);
 					_handRight = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight), Joints.HandRight);
-					_wristLeft = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.WristLeft), Joints.WristLeft);
-					_wristRight = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.WristRight), Joints.WristRight);
+					//_wristLeft = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.WristLeft), Joints.WristLeft);
+					//_wristRight = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.WristRight), Joints.WristRight);
+
+					_wristLeft = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.WristLeft);
+					_wristRight = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.WristRight);
+
 					_head = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.Head), Joints.Head);
-					_hipCenter = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HipCenter), Joints.HipCenter);
+
+					/*_hipCenter = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HipCenter), Joints.HipCenter);
 					_shoulderLeft = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ShoulderLeft), Joints.ShoulderLeft);
 					_shoulderRight = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ShoulderRight), Joints.ShoulderRight);
 					_elbowLeft = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ElbowLeft), Joints.ElbowLeft);
-					_elbowRight = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ElbowRight), Joints.ElbowRight);
+					_elbowRight = SmoothRaw SkeletalData(manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ElbowRight), Joints.ElbowRight);*/
+
+					_hipCenter = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HipCenter);
+					_shoulderLeft = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ShoulderLeft);
+					_shoulderRight = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ShoulderRight);
+					_elbowLeft = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ElbowLeft);
+					_elbowRight = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ElbowRight);
 
 					BasketballController ();
 
@@ -142,7 +153,7 @@ public class KinectController : MonoBehaviour
 			} else {
 				collectSkeletalDifferences ();
 				moveBall ();
-				moveMainCamera ();
+				//moveMainCamera ();
 			}
 
 		} else {
@@ -271,6 +282,8 @@ public class KinectController : MonoBehaviour
 			break;
 		}
 
+		//print (joints.ToString () + " " + count + ": " + rawVector.ToString ());
+
 		//empty the collection if full
 		if (count == _collectionSize-1) {
 			//print ("clear collection");
@@ -290,57 +303,38 @@ public class KinectController : MonoBehaviour
 			collection [count] = rawVector;
 		} else if (count == 1) {
 			collection [count] = rawVector;
-			/*differences [count - 1].x = collection [count].x - collection [count - 1].x;
-			differences [count - 1].y = collection [count].y - collection [count - 1].y;
-			differences [count - 1].z = collection [count].z - collection [count - 1].z;*/
+
 			differences [count - 1] = collection [count] - collection [count - 1];
 		} else if (count < _collectionSize-1) {
 			//print ("smoothing new point");
-			/*differences [count - 1].x = collection [count].x - collection [count - 1].x;
-			differences [count - 1].y = collection [count].y - collection [count - 1].y;
-			differences [count - 1].z = collection [count].z - collection [count - 1].z;*/
-
-			differences [count - 1] = collection [count] - collection [count - 1];
-			//print ("1");
-
-			Vector3 newVectorDifference = collection [count - 1] - rawVector;
-			//print ("2");
-
-			/*double newVectorDifferenceX = collection [count - 1].x - rawVector.x;
-			double newVectorDifferenceY = collection [count - 1].y - rawVector.y;
-			double newVectorDifferenceZ = collection [count - 1].z - rawVector.z;
-
-			if (newVectorDifferenceX != differences [count - 1].x) {
-				rawVector.x = collection [count - 1].x + differences [count - 1].x;
-			}
-			if (newVectorDifferenceY != differences [count - 1].y) {
-				rawVector.y = collection [count - 1].y + differences [count - 1].y;
-			}
-			if (newVectorDifferenceZ != differences [count - 1].z) {
-				rawVector.z = collection [count - 1].z + differences [count - 1].z;
-			}*/
-
-			if (newVectorDifference.x != differences [count - 1].x) {
-				rawVector.x = collection [count - 1].x + differences [count - 1].x;
-			}
-			//print ("3");
-
-			if (newVectorDifference.y != differences [count - 1].y) {
-				rawVector.y = collection [count - 1].y + differences [count - 1].y;
-			}
-			//print ("4");
-
-			if (newVectorDifference.z != differences [count - 1].z) {
-				rawVector.z = collection [count - 1].z + differences [count - 1].z;
-			}
-			//print ("5");
-
 
 			collection [count] = rawVector;
-			//print ("6");
 
-			differences [count] = collection [count] - collection [count - 1];
-			//print ("7");
+			differences [count - 1] = collection [count] - collection [count - 1];
+
+			if (differences [count - 1].x > differences [count - 2].x) {
+				differences [count - 1].x = differences [count - 2].x * 1.1f;
+				collection [count].x = collection [count - 1].x + differences [count - 1].x;
+			} else if (differences [count - 1].x < differences [count - 2].x) {
+				differences [count - 1].x = differences [count - 2].x * 0.9f;
+				collection [count].x = collection [count - 1].x + differences [count - 1].x;
+			}
+
+			if (differences [count - 1].y > differences [count - 2].y) {
+				differences [count - 1].y = differences [count - 2].y * 1.1f;
+				collection [count].y = collection [count - 1].y + differences [count - 1].y;
+			} else if (differences [count - 1].y < differences [count - 2].y) {
+				differences [count - 1].y = differences [count - 2].y * 0.9f;
+				collection [count].y = collection [count - 1].y + differences [count - 1].y;
+			}
+
+			if (differences [count - 1].z > differences [count - 2].z) {
+				differences [count - 1].z = differences [count - 2].z * 1.1f;
+				collection [count].z = collection [count - 1].z + differences [count - 1].z;
+			} else if (differences [count - 1].z < differences [count - 2].z) {
+				differences [count - 1].z = differences [count - 2].z * 0.9f;
+				collection [count].z = collection [count - 1].z + differences [count - 1].z;
+			}
 
 		}
 
@@ -399,7 +393,9 @@ public class KinectController : MonoBehaviour
 			break;
 		}
 
-		return rawVector;
+		//print ("*" + joints.ToString () + " " + count + ": " + collection[count - 1].ToString ());
+
+		return collection[count - 1];
 	}
 
 	private bool WithinBoundaryOfAverage(double oldAverage, double newAverage) {
