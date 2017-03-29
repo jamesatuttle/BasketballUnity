@@ -30,38 +30,43 @@ public class StartScreen : MonoBehaviour {
 		GamePlay.GameIsPlayable = false;
 	}
 
-	void Start ()
-	{
-		Debug.Log (GamePlay.ViewingStartScreen);
-		if (GamePlay.ViewingStartScreen)
+	void Start () {
+		//if (GamePlay.ViewingStartScreen)
 			SetUpStartScreen ();
-		else 
-			ClearStartScreen ();
+		//else 
+		//	ClearStartScreen ();
 	}
 		
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown ("down") && GamePlay.ViewingStartScreen) {
-			if (StartGameText.color == Color.yellow)
-				ScoreboardTextActive ();
-			else if (ViewScoreboardText.color == Color.yellow)
-				LeaderboardTextActive ();
-			else if (ViewLeaderboardText.color == Color.yellow)
-				HowToPlayTextActive();
-			else if (HowToPlayText.color == Color.yellow)
-				StartGameTextActive ();
-		}
-
-		if (Input.GetKeyDown ("return")) {
-			Debug.Log ("return key was pressed");
-
-			if (StartGame)
-				GamePlay.SetUpPregame (); //SetUpGame (); 
-			else if (ViewScoreboard)
-				SetUpScoreboardView ();
-			else if (ViewLeaderboard) {
-
+		if (GamePlay.ViewingStartScreen) {
+			if (Input.GetKeyDown ("down") && GamePlay.ViewingStartScreen) {
+				if (StartGameText.color == Color.yellow)
+					ScoreboardTextActive ();
+				else if (ViewScoreboardText.color == Color.yellow)
+					LeaderboardTextActive ();
+				else if (ViewLeaderboardText.color == Color.yellow)
+					HowToPlayTextActive ();
+				else if (HowToPlayText.color == Color.yellow)
+					StartGameTextActive ();
 			}
+
+			if (Input.GetKeyDown ("return")) {
+				Debug.Log ("return key was pressed");
+
+				if (StartGame) {
+					Login.SetupLogin ();//GamePlay.LoginStarted = true;
+					GamePlay.ViewingStartScreen = false;
+				//GamePlay.SetUpPregame (); //SetUpGame (); 
+				}
+				else if (ViewScoreboard)
+					SetUpScoreboardView ();
+				else if (ViewLeaderboard) {
+
+				}
+			}
+		} else {
+			ClearStartScreen ();
 		}
 	}
 
@@ -91,7 +96,7 @@ public class StartScreen : MonoBehaviour {
 
 	public void StartGameTextActive()
 	{
-		StartGameText.color = Color.yellow;;
+		StartGameText.color = Color.yellow;
 		ViewScoreboardText.color = Color.white;
 		ViewLeaderboardText.color = Color.white;
 		HowToPlayText.color = Color.white;

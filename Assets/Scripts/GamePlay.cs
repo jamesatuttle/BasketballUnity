@@ -6,6 +6,7 @@ public class GamePlay : MonoBehaviour {
 	public static bool ViewingStartScreen;
 	public bool ViewScoreboard;
 	public bool ViewLeaderboard;
+	public static bool ViewingLoginInitial;
 
 	void Start()
 	{
