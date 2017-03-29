@@ -23,20 +23,13 @@ public class KinectController : MonoBehaviour
 
 	private float _handDifference;
 
-	private Vector3 previousBallPosition;
+	private Vector3 _previousBallPosition;
+	private Vector3 _previousCameraPosition;
 
-	enum Joints {
-		HandLeft = 0,
-		HandRight = 1,
-		WristLeft = 2,
-		WristRight = 3,
-		Head = 4,
-		HipCenter = 5,
-		ShoulderLeft = 6,
-		ShoulderRight = 7,
-		ElbowLeft = 8,
-		ElbowRight = 9
-	}
+	enum Smoothing {
+		ball = 0,
+		camera = 1
+	};
 
 	void Start () {  
 		_ballIsHeld = false;
@@ -89,7 +82,7 @@ public class KinectController : MonoBehaviour
 			} else {
 				collectSkeletalDifferences ();
 				moveBall ();
-				//moveMainCamera ();
+				moveMainCamera ();
 			}
 
 		} else {
@@ -103,7 +96,7 @@ public class KinectController : MonoBehaviour
 
 	private bool IsBallPickedUp() {
 		
-		bool handsInDistanceToPickUpBall = _handDifference > (CommonValues._ballWidth - (CommonValues._inch * 2)) && _handDifference < (CommonValues._ballWidth + (CommonValues._inch * 2));
+		bool handsInDistanceToPickUpBall = _handDifference > (CommonValues.BallWidth - (CommonValues.Inch * 2)) && _handDifference < (CommonValues.BallWidth + (CommonValues.Inch * 2));
 		bool handsInFrontOfBody = _hipCenter.z > _handLeft.z && _hipCenter.z > _handRight.z;
 
 		if (handsInDistanceToPickUpBall && handsInFrontOfBody)
@@ -114,7 +107,7 @@ public class KinectController : MonoBehaviour
 
 	private bool IsBallDropped() {
 		
-		if (_handDifference > (CommonValues._ballWidth + (CommonValues._inch * 3)))
+		if (_handDifference > (CommonValues.BallWidth + (CommonValues.Inch * 3)))
 			return true;
 		else
 			return false;
@@ -129,7 +122,8 @@ public class KinectController : MonoBehaviour
 		_headCallibratedPosition.y = _head.y;
 		_headCallibratedPosition.z = _head.z;
 
-		previousBallPosition = Basketball.InitialBallPosition;
+		_previousBallPosition = Basketball.InitialBallPosition;
+		_previousCameraPosition = Cameras.MainCameraPosition;
 	}
 
 	private void dropBall() {
@@ -163,29 +157,55 @@ public class KinectController : MonoBehaviour
 	}
 
 	private Vector3 SmoothBasketball(Vector3 ballPosition) {
-		if (isWithinBoundary (previousBallPosition.x, ballPosition.x)) {
-			ballPosition.x = ballPosition.x;
-		} else {
-			ballPosition.x = previousBallPosition.x;
-		}
-		if (isWithinBoundary (previousBallPosition.y, ballPosition.y)) {
-			ballPosition.y = ballPosition.y;
-		} else {
-			ballPosition.y = previousBallPosition.y;
-		}
-		if (isWithinBoundary (previousBallPosition.z, ballPosition.z)) {
-			ballPosition.z = ballPosition.z;
-		} else {
-			ballPosition.z = previousBallPosition.z;
-		}
-
-		previousBallPosition = ballPosition;
-
-		return ballPosition;
+		return SmoothValues (ballPosition, Smoothing.ball);
 	}
 
-	private bool isWithinBoundary(float oldPosition, float newPosition) {
+	private Vector3 SmoothCameraMovement(Vector3 cameraPosition) {
+		return SmoothValues (cameraPosition, Smoothing.camera);
+	}
+
+	private Vector3 SmoothValues(Vector3 newPosition, Smoothing smoothing) {
+
 		float threshold = 0.3f;
+		Vector3 previousPosition = new Vector3(0f, 0f, 0f);
+
+		switch (smoothing) {
+		case Smoothing.ball:
+			threshold = 0.3f;
+			previousPosition = _previousBallPosition;
+			break;
+		case Smoothing.camera:
+			threshold = 0.2f;
+			previousPosition = _previousCameraPosition;
+			break;
+		}
+
+		if (!isWithinBoundary (previousPosition.x, newPosition.x, threshold)) {
+			newPosition.x = previousPosition.x;
+		}
+		if (!isWithinBoundary (previousPosition.y, newPosition.y, threshold)) {
+			newPosition.y = previousPosition.y;
+		}
+		if (!isWithinBoundary (previousPosition.z, newPosition.z, threshold)) {
+			newPosition.z = previousPosition.z;
+		}
+
+		previousPosition = newPosition;
+
+		switch (smoothing) {
+		case Smoothing.ball:
+			_previousBallPosition = previousPosition;
+			break;
+		case Smoothing.camera:
+			_previousCameraPosition = previousPosition;
+			break;
+		}
+
+		return newPosition;
+
+	}
+
+	private bool isWithinBoundary(float oldPosition, float newPosition, float threshold) {
 		float upperBoundary = oldPosition + threshold;
 		float lowerBoudary = oldPosition - threshold;
 
@@ -209,7 +229,9 @@ public class KinectController : MonoBehaviour
 		newCameraPosition.y = Cameras.MainCameraPosition.y + (yMovement * movementSensitivity);
 		newCameraPosition.z = Cameras.MainCameraPosition.z - (zMovement * movementSensitivity); //minus to move camera in the correct view of the user
 
-		Cameras.UpdateCameraPosition (newCameraPosition.x, newCameraPosition.y, newCameraPosition.z, 34);
+		Vector3 smoothedCameraPosition = SmoothCameraMovement (newCameraPosition);
+
+		Cameras.UpdateCameraPosition (smoothedCameraPosition.x, smoothedCameraPosition.y, smoothedCameraPosition.z, 34);
 	}
 
 	private void collectSkeletalDifferences() {
