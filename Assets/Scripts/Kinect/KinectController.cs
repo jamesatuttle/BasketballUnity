@@ -23,50 +23,7 @@ public class KinectController : MonoBehaviour
 
 	private float _handDifference;
 
-	/*
-	 * Smoothing global variables
-	 */
-	private static int _collectionSize = 10;
-
-	private int _handLeftTrackingCount;
-	private static Vector3[] _handLeftCollection = new Vector3[_collectionSize];
-	private static Vector3[] _handLeftDifferences = new Vector3[_collectionSize - 1];
-
-	private int _handRightTrackingCount;
-	private static Vector3[] _handRightCollection = new Vector3[_collectionSize];
-	private static Vector3[] _handRightDifferences = new Vector3[_collectionSize - 1];
-
-	private int _wristLeftTrackingCount;
-	private static Vector3[] _wristLeftCollection = new Vector3[_collectionSize];
-	private static Vector3[] _wristLeftDifferences = new Vector3[_collectionSize - 1];
-
-	private int _wristRightTrackingCount;
-	private static Vector3[] _wristRightCollection = new Vector3[_collectionSize];
-	private static Vector3[] _wristRightDifferences = new Vector3[_collectionSize - 1];
-
-	private int _headTrackingCount;
-	private static Vector3[] _headCollection = new Vector3[_collectionSize];
-	private static Vector3[] _headDifferences = new Vector3[_collectionSize - 1];
-
-	private int _hipCenterTrackingCount;
-	private static Vector3[] _hipCenterCollection = new Vector3[_collectionSize];
-	private static Vector3[] _hipCenterDifferences = new Vector3[_collectionSize - 1];
-
-	private int _shoulderLeftTrackingCount;
-	private static Vector3[] _shoulderLeftCollection = new Vector3[_collectionSize];
-	private static Vector3[] _shoulderLeftDifferences = new Vector3[_collectionSize - 1];
-
-	private int _shoulderRightTrackingCount;
-	private static Vector3[] _shoulderRightCollection = new Vector3[_collectionSize];
-	private static Vector3[] _shoulderRightDifferences = new Vector3[_collectionSize - 1];
-
-	private int _elbowLeftTrackingCount;
-	private static Vector3[] _elbowLeftCollection = new Vector3[_collectionSize];
-	private static Vector3[] _elbowLeftDifferences = new Vector3[_collectionSize - 1];
-
-	private int _elbowRightTrackingCount;
-	private static Vector3[] _elbowRightCollection = new Vector3[_collectionSize];
-	private static Vector3[] _elbowRightDifferences = new Vector3[_collectionSize - 1];
+	private Vector3 previousBallPosition;
 
 	enum Joints {
 		HandLeft = 0,
@@ -85,16 +42,6 @@ public class KinectController : MonoBehaviour
 		_ballIsHeld = false;
 		GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "";
 		ANN_CPU.InitialiseANN ();
-		_handLeftTrackingCount = 0;
-		_handRightTrackingCount = 0;
-		_wristLeftTrackingCount = 0;
-		_wristRightTrackingCount = 0;
-		_headTrackingCount = 0;
-		_hipCenterTrackingCount = 0;
-		_shoulderLeftTrackingCount = 0;
-		_shoulderRightTrackingCount = 0;
-		_elbowLeftTrackingCount = 0;
-		_elbowRightTrackingCount = 0;
 	}
 		
 	void Update () { 
@@ -105,24 +52,13 @@ public class KinectController : MonoBehaviour
 
 				if (manager.IsUserDetected ()) {
 
-					uint userId = manager.GetPlayer1ID ();
+					uint userId = manager.GetPlayer1ID ();  
 
-					_handLeft = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft), Joints.HandLeft);
-					_handRight = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight), Joints.HandRight);
-					//_wristLeft = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.WristLeft), Joints.WristLeft);
-					//_wristRight = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.WristRight), Joints.WristRight);
-
+					_handLeft = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft);
+					_handRight = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight);
 					_wristLeft = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.WristLeft);
 					_wristRight = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.WristRight);
-
-					_head = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.Head), Joints.Head);
-
-					/*_hipCenter = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HipCenter), Joints.HipCenter);
-					_shoulderLeft = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ShoulderLeft), Joints.ShoulderLeft);
-					_shoulderRight = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ShoulderRight), Joints.ShoulderRight);
-					_elbowLeft = SmoothRawSkeletalData(manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ElbowLeft), Joints.ElbowLeft);
-					_elbowRight = SmoothRaw SkeletalData(manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ElbowRight), Joints.ElbowRight);*/
-
+					_head = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.Head);
 					_hipCenter = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HipCenter);
 					_shoulderLeft = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ShoulderLeft);
 					_shoulderRight = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ShoulderRight);
@@ -192,6 +128,8 @@ public class KinectController : MonoBehaviour
 		_headCallibratedPosition.x = _head.x;
 		_headCallibratedPosition.y = _head.y;
 		_headCallibratedPosition.z = _head.z;
+
+		previousBallPosition = Basketball.InitialBallPosition;
 	}
 
 	private void dropBall() {
@@ -221,196 +159,42 @@ public class KinectController : MonoBehaviour
 
 		Basketball.LockBasketballPosition (false);
 
-		GameObject.Find ("Basketball").transform.position = newBallPosition;
+		GameObject.Find ("Basketball").transform.position = SmoothBasketball(newBallPosition);
 	}
 
-	private Vector3 SmoothRawSkeletalData(Vector3 rawVector, Joints joints) {
-		int count = 0;
-		Vector3[] collection = new Vector3[_collectionSize];
-		Vector3[] differences = new Vector3[_collectionSize - 1];
-
-		switch (joints) {
-		case Joints.HandRight:
-			count = _handRightTrackingCount;
-			collection = _handRightCollection;
-			differences = _handRightDifferences;
-			break;
-		case Joints.HandLeft:
-			count = _handLeftTrackingCount;
-			collection = _handLeftCollection;
-			differences = _handLeftDifferences;
-			break;
-		case Joints.WristRight:
-			count = _wristRightTrackingCount;
-			collection = _wristRightCollection;
-			differences = _wristRightDifferences;
-			break;
-		case Joints.WristLeft:
-			count = _wristLeftTrackingCount;
-			collection = _wristLeftCollection;
-			differences = _wristLeftDifferences;
-			break;
-		case Joints.Head:
-			count = _headTrackingCount;
-			collection = _headCollection;
-			differences = _headDifferences;
-			break;
-		case Joints.HipCenter:
-			count = _hipCenterTrackingCount;
-			collection = _hipCenterCollection;
-			differences = _hipCenterDifferences;
-			break;
-		case Joints.ShoulderRight:
-			count = _shoulderRightTrackingCount;
-			collection = _shoulderRightCollection;
-			differences = _shoulderRightDifferences;
-			break;
-		case Joints.ShoulderLeft:
-			count = _shoulderLeftTrackingCount;
-			collection = _shoulderLeftCollection;
-			differences = _shoulderLeftDifferences;
-			break;
-		case Joints.ElbowRight:
-			count = _elbowRightTrackingCount;
-			collection = _elbowRightCollection;
-			differences = _elbowRightDifferences;
-			break;
-		case Joints.ElbowLeft:
-			count = _elbowLeftTrackingCount;
-			collection = _elbowLeftCollection;
-			differences = _elbowLeftDifferences;
-			break;
+	private Vector3 SmoothBasketball(Vector3 ballPosition) {
+		if (isWithinBoundary (previousBallPosition.x, ballPosition.x)) {
+			ballPosition.x = ballPosition.x;
+		} else {
+			ballPosition.x = previousBallPosition.x;
+		}
+		if (isWithinBoundary (previousBallPosition.y, ballPosition.y)) {
+			ballPosition.y = ballPosition.y;
+		} else {
+			ballPosition.y = previousBallPosition.y;
+		}
+		if (isWithinBoundary (previousBallPosition.z, ballPosition.z)) {
+			ballPosition.z = ballPosition.z;
+		} else {
+			ballPosition.z = previousBallPosition.z;
 		}
 
-		//print (joints.ToString () + " " + count + ": " + rawVector.ToString ());
+		print (ballPosition.x + ", " + ballPosition.y + ", " + ballPosition.z);
 
-		//empty the collection if full
-		if (count == _collectionSize-1) {
-			//print ("clear collection");
-			count = 0;
+		previousBallPosition = ballPosition;
 
-			for (int i = 0; i < collection.Length; i++)
-				collection [i] = new Vector3 (0, 0, 0);
-
-			for (int i = 0; i < differences.Length; i++)
-				differences [i] = new Vector3 (0, 0, 0);
-		}
-
-		//print ("count: " + count);
-			
-		if (count == 0) {
-			//print ("one of first two counts");
-			collection [count] = rawVector;
-		} else if (count == 1) {
-			collection [count] = rawVector;
-
-			differences [count - 1] = collection [count] - collection [count - 1];
-		} else if (count < _collectionSize-1) {
-			//print ("smoothing new point");
-
-			collection [count] = rawVector;
-
-			differences [count - 1] = collection [count] - collection [count - 1];
-
-			if (differences [count - 1].x > differences [count - 2].x) {
-				differences [count - 1].x = differences [count - 2].x * 1.1f;
-				collection [count].x = collection [count - 1].x + differences [count - 1].x;
-			} else if (differences [count - 1].x < differences [count - 2].x) {
-				differences [count - 1].x = differences [count - 2].x * 0.9f;
-				collection [count].x = collection [count - 1].x + differences [count - 1].x;
-			}
-
-			if (differences [count - 1].y > differences [count - 2].y) {
-				differences [count - 1].y = differences [count - 2].y * 1.1f;
-				collection [count].y = collection [count - 1].y + differences [count - 1].y;
-			} else if (differences [count - 1].y < differences [count - 2].y) {
-				differences [count - 1].y = differences [count - 2].y * 0.9f;
-				collection [count].y = collection [count - 1].y + differences [count - 1].y;
-			}
-
-			if (differences [count - 1].z > differences [count - 2].z) {
-				differences [count - 1].z = differences [count - 2].z * 1.1f;
-				collection [count].z = collection [count - 1].z + differences [count - 1].z;
-			} else if (differences [count - 1].z < differences [count - 2].z) {
-				differences [count - 1].z = differences [count - 2].z * 0.9f;
-				collection [count].z = collection [count - 1].z + differences [count - 1].z;
-			}
-
-		}
-
-		count++;
-
-		switch (joints) {
-		case Joints.HandRight:
-			_handRightTrackingCount = count;
-			_handRightCollection = collection;
-			_handRightDifferences = differences;
-			break;
-		case Joints.HandLeft:
-			_handLeftTrackingCount = count;
-			_handLeftCollection = collection;
-			_handLeftDifferences = differences;
-			break;
-		case Joints.WristRight:
-			_wristRightTrackingCount = count;
-			_wristRightCollection = collection;
-			_wristRightDifferences = differences;
-			break;
-		case Joints.WristLeft:
-			_wristLeftTrackingCount = count;
-			_wristLeftCollection = collection;
-			_wristLeftDifferences = differences;
-			break;
-		case Joints.Head:
-			_headTrackingCount = count;
-			_headCollection = collection;
-			_headDifferences = differences;
-			break;
-		case Joints.HipCenter:
-			_hipCenterTrackingCount = count;
-			_hipCenterCollection = collection;
-			_hipCenterDifferences = differences;
-			break;
-		case Joints.ShoulderRight:
-			_shoulderRightTrackingCount = count;
-			_shoulderRightCollection = collection;
-			_shoulderRightDifferences = differences;
-			break;
-		case Joints.ShoulderLeft:
-			_shoulderLeftTrackingCount = count;
-			_shoulderLeftCollection = collection;
-			_shoulderLeftDifferences = differences;
-			break;
-		case Joints.ElbowRight:
-			_elbowRightTrackingCount = count;
-			_elbowRightCollection = collection;
-			_elbowRightDifferences = differences;
-			break;
-		case Joints.ElbowLeft:
-			_elbowLeftTrackingCount = count;
-			_elbowLeftCollection = collection;
-			_elbowLeftDifferences = differences;
-			break;
-		}
-
-		//print ("*" + joints.ToString () + " " + count + ": " + collection[count - 1].ToString ());
-
-		return collection[count - 1];
+		return ballPosition;
 	}
 
-	private bool WithinBoundaryOfAverage(double oldAverage, double newAverage) {
+	private bool isWithinBoundary(float oldPosition, float newPosition) {
+		float upperBoundary = oldPosition * 1.1f;
+		float lowerBoudary = oldPosition * 0.9f;
 
-		double tenPercent = oldAverage * 0.1f;
-
-		if (newAverage != oldAverage) {
-			if (newAverage > oldAverage + tenPercent) {
-				return false;
-			} else if (newAverage < oldAverage - tenPercent) {
-				return false;
-			} else
-				return true;
-		} else
+		if (newPosition > upperBoundary || newPosition < lowerBoudary) {
+			return false;
+		} else {
 			return true;
+		}
 	}
 
 	private void moveMainCamera() {
