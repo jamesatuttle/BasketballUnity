@@ -179,16 +179,15 @@ public class KinectController : MonoBehaviour
 			ballPosition.z = previousBallPosition.z;
 		}
 
-		print (ballPosition.x + ", " + ballPosition.y + ", " + ballPosition.z);
-
 		previousBallPosition = ballPosition;
 
 		return ballPosition;
 	}
 
 	private bool isWithinBoundary(float oldPosition, float newPosition) {
-		float upperBoundary = oldPosition * 1.1f;
-		float lowerBoudary = oldPosition * 0.9f;
+		float threshold = 0.3f;
+		float upperBoundary = oldPosition + threshold;
+		float lowerBoudary = oldPosition - threshold;
 
 		if (newPosition > upperBoundary || newPosition < lowerBoudary) {
 			return false;
