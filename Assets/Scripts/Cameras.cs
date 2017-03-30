@@ -6,6 +6,18 @@ public class Cameras : MonoBehaviour {
 
 	public static Vector3 MainCameraPosition = new Vector3 (0f, 6.5f, 5f);
 
+	void Update() {
+		if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.startScreen)
+			StartScreenCameraSetup ();
+			
+		else if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.scoreboard)
+			ScoreboardCameraSetUp ();
+
+		else if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.mainGame)
+			MainGameCameraSetUp ();
+		
+	}
+
 	public static void StartScreenCameraSetup()
 	{
 		UpdateCameraPosition (0f, 2.9f, -21f, 45);
