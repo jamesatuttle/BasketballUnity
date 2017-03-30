@@ -3,38 +3,33 @@
 public class GamePlay : MonoBehaviour {
 	public static bool GameIsPlayable;
 	public static bool PlayingMainGame;
-	public static bool ViewingStartScreen;
-	public bool ViewScoreboard;
-	public bool ViewLeaderboard;
-	public static bool ViewingLoginInitial;
+	public static int ActiveScreenValue;
 
-	void Start()
-	{
-		//Cameras.StartScreenCameraSetup ();
-	
-	}
-
-	void Awake()
-	{
-		//PlayGame = false;
-	}
+	public enum ActiveScreen {
+		startScreen = 0,
+		enterName = 1,
+		preGame = 2,
+		mainGame = 3,
+		scoreboard = 4,
+		leaderboard = 5,
+		howToPlay = 6
+	};
 
 	public static void SetUpMainGame()
 	{
 		Cameras.MainGameCameraSetUp ();
 		Basketball.ResetBall ();
-		StartScreen.ClearStartScreen ();
+		StartScreen.instance.ClearStartScreen ();
 		PlayingMainGame = true;
 		Scoreboard.ResetScoreboard ();
 		HUD.countdown = true;
-		//GamePlay.PlayGame = true;
 	}
 
 	public static void SetUpPregame()
 	{
 		Cameras.MainGameCameraSetUp ();
 		Basketball.ResetBall ();
-		StartScreen.ClearStartScreen ();
+		StartScreen.instance.ClearStartScreen ();
 		HUD.DisplayPreGameText ();
 		PlayingMainGame = false;
 		Scoreboard.ResetScoreboard ();
