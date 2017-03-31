@@ -12,6 +12,7 @@ public class StartScreen : MonoBehaviour {
 	Text ViewLeaderboard;
 	Text HowToPlayText;
 	Text LoginText;
+	Text LoginHelp;
 	Text LeaderboardTitle;
 	Text Leaderboard;
 
@@ -36,6 +37,7 @@ public class StartScreen : MonoBehaviour {
 		ViewLeaderboard = GameObject.Find ("View Leaderboard").GetComponent<Text> ();
 		HowToPlayText = GameObject.Find ("How to play").GetComponent<Text> ();
 		LoginText = GameObject.Find ("LoginText").GetComponent<Text> ();
+		LoginHelp = GameObject.Find ("LoginHelp").GetComponent<Text> ();
 		UserName = GameObject.Find ("UsernameInput").GetComponent<InputField> ();
 		NextButton = GameObject.Find ("NextButton").GetComponent<Button> ();
 		BackButton = GameObject.Find ("BackButton").GetComponent<Button> ();
@@ -127,6 +129,7 @@ public class StartScreen : MonoBehaviour {
 		HideButton (YesButton);
 		HideButton (NoButton);
 		HideText (LoginText);
+		HideText (LoginHelp);
 		HideText (LeaderboardTitle);
 		HideText (Leaderboard);
 
