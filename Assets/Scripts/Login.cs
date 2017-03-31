@@ -14,11 +14,12 @@ public class Login : MonoBehaviour {
 	private Text _lastNameLabel;
 	private bool _registering;
 
-	private InputField FirstName;
-	private InputField LastName;
+	private InputField UserName;
 
 	Button NextButton;
 	Button BackButton;
+	Button YesButton;
+	Button NoButton;
 
 	StartScreen startScreen;
 
@@ -34,8 +35,10 @@ public class Login : MonoBehaviour {
 		Yes = GameObject.Find ("Yes").GetComponent<Text> ();
 		No = GameObject.Find ("No").GetComponent<Text> ();
 
-		FirstName = GameObject.Find ("FirstNameInput").GetComponent<InputField> ();
-		LastName = GameObject.Find ("LastNameInput").GetComponent<InputField> ();
+		YesButton = GameObject.Find ("YesButton").GetComponent<Button> ();
+		NoButton = GameObject.Find ("NoButton").GetComponent<Button> ();
+
+		UserName = GameObject.Find ("UsernameInput").GetComponent<InputField> ();
 
 		NextButton = GameObject.Find ("NextButton").GetComponent<Button> ();
 		BackButton = GameObject.Find ("BackButton").GetComponent<Button> ();
@@ -49,9 +52,10 @@ public class Login : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.enterName) {
-			SetupLogin ();
+		if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.playedBeforeQuestion) {
+			SetupPlayedBeforeQuestion ();
 		}
+
 	}
 
 	void HideButton(Button button) {
@@ -67,6 +71,12 @@ public class Login : MonoBehaviour {
 
 		if (button.name == "BackButton")
 			button.GetComponentInChildren<Text> ().text = "BACK";
+
+		if (button.name == "YesButton")
+			button.GetComponentInChildren<Text> ().text = "YES";
+
+		if (button.name == "NoButton")
+			button.GetComponentInChildren<Text> ().text = "NO";
 	}
 
 	void HideInputField(InputField inputField) {
@@ -77,36 +87,74 @@ public class Login : MonoBehaviour {
 	public void HideAskNameScreen() {
 		HideButton (NextButton);
 		HideButton (BackButton);
-		HideInputField (FirstName);
-		HideInputField (LastName);
+		HideInputField (UserName);
 		HideText (LoginText);
 	}
 
 	void ShowInputField(InputField inputField) {
 		inputField.image.enabled = true;
-		inputField.ActivateInputField ();
+		inputField.placeholder.enabled = true;
 	}
 
 	void HideText(Text text) {
 		text.text = "";
 	}
 
-	public void BackButton_Pressed() {
+	public void BackButton_Pressed_BackToStart() {
 		GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.startScreen;
 		StartScreen.instance.SetUpStartScreen ();
 	}
 
-	public void SetupLogin() {
-		LoginText.text = "PLEASE ENTER YOUR NAME";
+	public void BackButton_Pressed_BackToPlayedBeforeQuestion() {
+		SetupPlayedBeforeQuestion ();
+	}
+
+	public void SetupPlayedBeforeQuestion() {
+		GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.playedBeforeQuestion;
+		LoginText.text = "HAVE YOU PLAYED BEFORE?";
 		HighlightText (LoginText);
 
-		ShowInputField (FirstName);
-		ShowInputField (LastName);
+		ShowButton (YesButton);
+		ShowButton (NoButton);
+		ShowButton (BackButton);
+		HideButton (NextButton);
+		BackButton.onClick.AddListener (BackButton_Pressed_BackToStart);
+		YesButton.onClick.AddListener (SetupLogin);
+		NoButton.onClick.AddListener (SetupRegister);
+	}
+
+	public void SetupLogin() {
+		GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.enterName;
+
+		LoginText.text = "PLEASE ENTER YOUR USERNAME";
+		HighlightText (LoginText);
+
+		ShowInputField (UserName);
 
 		ShowButton (NextButton);
 		ShowButton (BackButton);
 
-		BackButton.onClick.AddListener (BackButton_Pressed);
+		HideButton (YesButton);
+		HideButton (NoButton);
+
+		BackButton.onClick.AddListener (BackButton_Pressed_BackToPlayedBeforeQuestion);
+	}
+
+	public void SetupRegister() {
+		GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.registerName;
+
+		LoginText.text = "PLEASE ENTER A USERNAME";
+		HighlightText (LoginText);
+
+		ShowInputField (UserName);
+
+		ShowButton (NextButton);
+		ShowButton (BackButton);
+
+		HideButton (YesButton);
+		HideButton (NoButton);
+
+		BackButton.onClick.AddListener (BackButton_Pressed_BackToPlayedBeforeQuestion);
 	}
 
 	public void FirstNameTextChanged(string firstName) {
