@@ -11,6 +11,7 @@ public class GamePlay : MonoBehaviour {
 		enterName,
 		registerName,
 		welcome,
+		welcomeBack,
 		preGame,
 		mainGame,
 		scoreboard,
