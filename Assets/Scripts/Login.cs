@@ -22,6 +22,8 @@ public class Login : MonoBehaviour {
 	StartScreen startScreen;
 
 	private string UsernameString;
+	public static int LeaderboardID;
+	public static int UserID;
 
 	private static string construct;
 	private static IDbConnection dbConnection;
@@ -70,7 +72,6 @@ public class Login : MonoBehaviour {
 
 			HideInputField(UserName);
 		}
-
 	}
 
 	void HideButton(Button button) {
@@ -99,6 +100,8 @@ public class Login : MonoBehaviour {
 		inputField.placeholder.enabled = false;
 		inputField.text = "";
 		inputField.placeholder.enabled = false;
+		inputField.interactable = false;
+		inputField.placeholder.GetComponentInChildren<Text> ().text = "";
 	}
 
 	public void HideAskNameScreen() {
@@ -112,6 +115,8 @@ public class Login : MonoBehaviour {
 	void ShowInputField(InputField inputField) {
 		inputField.image.enabled = true;
 		inputField.placeholder.enabled = true;
+		inputField.enabled = true;
+		inputField.interactable = true;
 	}
 
 	void HideText(Text text) {
@@ -165,8 +170,10 @@ public class Login : MonoBehaviour {
 			UsernameString = UserName.text;
 			if (DoesUsernameExist ()) {
 				//LoginHelp.text = "Username found";
-				if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.enterName)
+				if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.enterName) {
 					WelcomeBack ();
+					AddNewLeaderboardRow ();
+				}
 			}
 			else
 				LoginHelp.text = "Username not found";
@@ -211,11 +218,10 @@ public class Login : MonoBehaviour {
 	}
 
 	public void WelcomeBack() {
-		GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.welcome;
+		GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.welcomeBack;
 
 		LoginText.text = "WELCOME BACK " + UsernameString.ToUpper ();
 		HighlightText (LoginText);
-		HideText (LoginHelp);
 		HideInputField (UserName);
 
 		ShowButton (NextButton);
@@ -228,6 +234,8 @@ public class Login : MonoBehaviour {
 
 		BackButton.onClick.AddListener (ReadUsernameInput);
 		NextButton.onClick.AddListener (GamePlay.SetUpPregame);
+		HideText (LoginHelp);
+		LoginHelp.enabled = false;
 	}
 
 	public void Welcome() {
@@ -246,7 +254,7 @@ public class Login : MonoBehaviour {
 		HideButton (YesButton);
 		HideButton (NoButton);
 
-		BackButton.onClick.AddListener (ReadUsernameInput);
+		BackButton.onClick.AddListener (ReadUsernameInput_Register);
 		NextButton.onClick.AddListener (GamePlay.SetUpPregame);
 	}
 
@@ -282,16 +290,69 @@ public class Login : MonoBehaviour {
 	}
 
 	private void AddNewUsername() {
+
+		int userId = 0;
+		int score = 0;
+
 		dbConnection = new SqliteConnection (construct);
 		dbConnection.Open ();
 		dbCommand = dbConnection.CreateCommand ();
 
 		dbCommand.CommandText = "INSERT INTO Users(Username) values ('" + UsernameString + "')";
-
 		dbCommand.ExecuteNonQuery ();
+
+		dbCommand.CommandText = "SELECT ID FROM Users WHERE Username = '" + UsernameString + "';";
+		dataReader = dbCommand.ExecuteReader ();
+
+		while (dataReader.Read ()) {
+			userId = (int)(dataReader ["ID"]);
+		}
+
+		UserID = userId;
+
+		dbCommand.CommandText = "INSERT INTO Leaderboard(UserID, Score) values ('" + userId + "', '" + score + "')";
+		dbCommand.ExecuteNonQuery ();
+
+		dbCommand.CommandText = "SELECT ID FROM Leaderboard WHERE UserId = '" + userId + "' AND Score = '0';";
+		dataReader = dbCommand.ExecuteReader ();
+
+		while (dataReader.Read ()) {
+			LeaderboardID = (int)(dataReader ["ID"]);
+		}
 
 		dbConnection.Close ();
 
 		usernameAdded = true;
+	}
+
+	private void AddNewLeaderboardRow() {
+
+		int userId = 0;
+		int score = 0;
+
+		dbConnection = new SqliteConnection (construct);
+		dbConnection.Open ();
+		dbCommand = dbConnection.CreateCommand ();
+
+		dbCommand.CommandText = "SELECT ID FROM Users WHERE Username = '" + UsernameString + "';";
+		dataReader = dbCommand.ExecuteReader ();
+
+		while (dataReader.Read ()) {
+			userId = (int)(dataReader ["ID"]);
+		}
+
+		UserID = userId;
+
+		dbCommand.CommandText = "INSERT INTO Leaderboard(UserID, Score) values ('" + userId + "', '" + score + "')";
+		dbCommand.ExecuteNonQuery ();
+
+		dbCommand.CommandText = "SELECT ID FROM Leaderboard WHERE UserId = '" + userId + "' AND Score = '0';";
+		dataReader = dbCommand.ExecuteReader ();
+
+		while (dataReader.Read ()) {
+			LeaderboardID = (int)(dataReader ["ID"]);
+		}
+
+		dbConnection.Close ();
 	}
 }
