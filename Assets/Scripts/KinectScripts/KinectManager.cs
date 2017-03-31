@@ -1082,14 +1082,6 @@ public class KinectManager : MonoBehaviour
 
         //if (GestureListeners.Count == 0) Debug.Log("Gesture listeners is 0");
 
-        GestureListener gl = new GestureListener();
-
-        GestureListeners.Add(gl);
-        gestureListeners.Add(gl);
-
-        Debug.Log("Gesture Listeners MonoBeh Count: " + GestureListeners.Count);
-        Debug.Log("Gesture Listeners Interface Count: " + gestureListeners.Count);
-
         /*foreach (MonoBehaviour script in GestureListeners)
 		{
             Debug.Log("GestureListeners list being created");

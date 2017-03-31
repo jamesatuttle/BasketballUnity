@@ -19,7 +19,7 @@ public class HUD : MonoBehaviour {
 
 	public static void Start () {
 		GameObject.Find ("Countdown").GetComponent<Text> ().text = "";
-		GameObject.Find("Game Over").GetComponent<Text>().text = "";
+		GameObject.Find ("Game Over").GetComponent<Text>().text = "";
 	}
 
 	void Update () {
