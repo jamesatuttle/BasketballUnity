@@ -10,6 +10,7 @@ public class GamePlay : MonoBehaviour {
 		playedBeforeQuestion,
 		enterName,
 		registerName,
+		welcome,
 		preGame,
 		mainGame,
 		scoreboard,
@@ -17,8 +18,8 @@ public class GamePlay : MonoBehaviour {
 		howToPlay,
 	};
 
-	public static void SetUpMainGame()
-	{
+	public static void SetUpMainGame() {
+		ActiveScreenValue = (int)ActiveScreen.mainGame;
 		Cameras.MainGameCameraSetUp ();
 		Basketball.ResetBall ();
 		StartScreen.instance.ClearStartScreen ();
@@ -27,8 +28,8 @@ public class GamePlay : MonoBehaviour {
 		HUD.countdown = true;
 	}
 
-	public static void SetUpPregame()
-	{
+	public static void SetUpPregame() {
+		ActiveScreenValue = (int)ActiveScreen.preGame;
 		Cameras.MainGameCameraSetUp ();
 		Basketball.ResetBall ();
 		StartScreen.instance.ClearStartScreen ();
