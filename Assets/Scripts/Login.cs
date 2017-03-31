@@ -2,17 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Data;
+using Mono.Data.SqliteClient;
 
 public class Login : MonoBehaviour {
 
 	public static Login instance;
 
 	public Text LoginText;
-	private Text Yes;
-	private Text No;
-	private Text _firstNameLabel;
-	private Text _lastNameLabel;
-	private bool _registering;
+	private Text LoginHelp;
 
 	private InputField UserName;
 
@@ -23,17 +21,24 @@ public class Login : MonoBehaviour {
 
 	StartScreen startScreen;
 
-	private string _firstName;
+	private string UsernameString;
+
+	private static string construct;
+	private static IDbConnection dbConnection;
+	private static IDbCommand dbCommand;
+	private static IDataReader dataReader;
+
+	bool usernameAdded;
 
 	void Awake() {
+		construct = "URI=file:" + Application.dataPath + "\\TrainingData.db";
 		instance = this;
 	}
 
 	// Use this for initialization
 	void Start () {
 		LoginText = GameObject.Find ("LoginText").GetComponent<Text> ();
-		Yes = GameObject.Find ("Yes").GetComponent<Text> ();
-		No = GameObject.Find ("No").GetComponent<Text> ();
+		LoginHelp = GameObject.Find ("LoginHelp").GetComponent<Text> ();
 
 		YesButton = GameObject.Find ("YesButton").GetComponent<Button> ();
 		NoButton = GameObject.Find ("NoButton").GetComponent<Button> ();
@@ -43,17 +48,27 @@ public class Login : MonoBehaviour {
 		NextButton = GameObject.Find ("NextButton").GetComponent<Button> ();
 		BackButton = GameObject.Find ("BackButton").GetComponent<Button> ();
 
-		HideText (LoginText);
-		HideText (Yes);
-		HideText (No);
+		usernameAdded = false;
 
-		_registering = false;
+		HideText (LoginText);
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.playedBeforeQuestion) {
 			SetupPlayedBeforeQuestion ();
+		}
+
+		if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.preGame || GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.mainGame) {
+			HideButton (NextButton);
+			HideButton (BackButton);
+			HideButton (YesButton);
+			HideButton (NoButton);
+
+			HideText(LoginText);
+			HideText(LoginHelp);
+
+			HideInputField(UserName);
 		}
 
 	}
@@ -82,6 +97,8 @@ public class Login : MonoBehaviour {
 	void HideInputField(InputField inputField) {
 		inputField.image.enabled = false;
 		inputField.placeholder.enabled = false;
+		inputField.text = "";
+		inputField.placeholder.enabled = false;
 	}
 
 	public void HideAskNameScreen() {
@@ -89,6 +106,7 @@ public class Login : MonoBehaviour {
 		HideButton (BackButton);
 		HideInputField (UserName);
 		HideText (LoginText);
+		HideText (LoginHelp);
 	}
 
 	void ShowInputField(InputField inputField) {
@@ -113,7 +131,7 @@ public class Login : MonoBehaviour {
 		GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.playedBeforeQuestion;
 		LoginText.text = "HAVE YOU PLAYED BEFORE?";
 		HighlightText (LoginText);
-
+		HideText (LoginHelp);
 		ShowButton (YesButton);
 		ShowButton (NoButton);
 		ShowButton (BackButton);
@@ -128,7 +146,6 @@ public class Login : MonoBehaviour {
 
 		LoginText.text = "PLEASE ENTER YOUR USERNAME";
 		HighlightText (LoginText);
-
 		ShowInputField (UserName);
 
 		ShowButton (NextButton);
@@ -137,7 +154,37 @@ public class Login : MonoBehaviour {
 		HideButton (YesButton);
 		HideButton (NoButton);
 
+		HideText (LoginHelp);
+
 		BackButton.onClick.AddListener (BackButton_Pressed_BackToPlayedBeforeQuestion);
+		NextButton.onClick.AddListener (ReadUsernameInput);
+	}
+
+	public void ReadUsernameInput() {
+		if (UserName.text != "") {
+			UsernameString = UserName.text;
+			if (DoesUsernameExist ()) {
+				//LoginHelp.text = "Username found";
+				if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.enterName)
+					WelcomeBack ();
+			}
+			else
+				LoginHelp.text = "Username not found";
+		}
+	}
+
+	public void ReadUsernameInput_Register() {
+		if (UserName.text != "") {
+			UsernameString = UserName.text;
+			if (DoesUsernameExist () && !usernameAdded)
+				LoginHelp.text = "Username already exists";
+			else if (usernameAdded) {
+				LoginHelp.text = "Username added";
+				//usernameAdded = false;
+			} else {
+				AddNewUsername ();
+			}
+		}
 	}
 
 	public void SetupRegister() {
@@ -155,26 +202,71 @@ public class Login : MonoBehaviour {
 		HideButton (NoButton);
 
 		BackButton.onClick.AddListener (BackButton_Pressed_BackToPlayedBeforeQuestion);
+		NextButton.onClick.AddListener (ReadUsernameInput_Register);
 	}
 
-	public void FirstNameTextChanged(string firstName) {
-		_firstName = firstName;
-		print (_firstName);
+	public void WelcomeBack() {
+		GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.welcome;
+
+		LoginText.text = "WELCOME BACK" + UsernameString.ToUpper ();
+		HighlightText (LoginText);
+		HideText (LoginHelp);
+		HideInputField (UserName);
+
+		ShowButton (NextButton);
+		ShowButton (BackButton);
+
+		NextButton.GetComponentInChildren<Text> ().text = "Play";
+
+		HideButton (YesButton);
+		HideButton (NoButton);
+
+		BackButton.onClick.AddListener (ReadUsernameInput);
+		NextButton.onClick.AddListener (GamePlay.SetUpPregame);
 	}
 
-	public  void HighlightText(Text text) {
+	public void HighlightText(Text text) {
 		text.color = Color.yellow;
-
-		if (text == Yes)
-			No.color = Color.white;
-		if (text == No)
-			Yes.color = Color.white;
 	}
 
-	public  bool IsHighlighted(Text text) {
+	public bool IsHighlighted(Text text) {
 		if (text.color == Color.yellow)
 			return true;
 		else
 			return false;
+	}
+
+	private bool DoesUsernameExist() {
+		dbConnection = new SqliteConnection (construct);
+		dbConnection.Open ();
+		dbCommand = dbConnection.CreateCommand ();
+		dbCommand.CommandText = "SELECT * FROM Users WHERE Username = '" + UsernameString + "';";
+		dataReader = dbCommand.ExecuteReader ();
+
+		bool usernameFound = false;
+
+		while (dataReader.Read ()) {
+			if (dataReader ["Username"].ToString () != "") {
+				usernameFound = true;
+			}
+		}
+
+		dbConnection.Close ();
+
+		return usernameFound;
+	}
+
+	private void AddNewUsername() {
+		dbConnection = new SqliteConnection (construct);
+		dbConnection.Open ();
+		dbCommand = dbConnection.CreateCommand ();
+
+		dbCommand.CommandText = "INSERT INTO Users(Username) values ('" + UsernameString + "')";
+
+		dbCommand.ExecuteNonQuery ();
+
+		dbConnection.Close ();
+
+		usernameAdded = true;
 	}
 }
