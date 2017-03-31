@@ -14,7 +14,8 @@ public class StartScreen : MonoBehaviour {
 	Text LoginText;
 	Text LoginHelp;
 	Text LeaderboardTitle;
-	Text Leaderboard;
+	Text Leaderboard_Usernames;
+	Text Leaderboard_Scores;
 
 	//public InputField FirstName;
 	//public InputField LastName;
@@ -44,7 +45,9 @@ public class StartScreen : MonoBehaviour {
 		YesButton = GameObject.Find ("YesButton").GetComponent<Button> ();
 		NoButton = GameObject.Find ("NoButton").GetComponent<Button> ();
 		LeaderboardTitle = GameObject.Find ("Leaderboard Title").GetComponent<Text> ();
-		Leaderboard = GameObject.Find ("Leaderboard").GetComponent<Text> ();
+		Leaderboard_Usernames = GameObject.Find ("Leaderboard_Usernames").GetComponent<Text> ();
+		Leaderboard_Scores = GameObject.Find ("Leaderboard_Scores").GetComponent<Text> ();
+
 	}
 
 	void Start () {
@@ -131,7 +134,8 @@ public class StartScreen : MonoBehaviour {
 		HideText (LoginText);
 		HideText (LoginHelp);
 		HideText (LeaderboardTitle);
-		HideText (Leaderboard);
+		HideText (Leaderboard_Usernames);
+		HideText (Leaderboard_Scores);
 
 		//GameObject.Find ("spotlights").active = false;
 
