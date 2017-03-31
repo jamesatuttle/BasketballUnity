@@ -7,12 +7,14 @@ public class GamePlay : MonoBehaviour {
 
 	public enum ActiveScreen {
 		startScreen = 0,
-		enterName = 1,
-		preGame = 2,
-		mainGame = 3,
-		scoreboard = 4,
-		leaderboard = 5,
-		howToPlay = 6
+		playedBeforeQuestion,
+		enterName,
+		registerName,
+		preGame,
+		mainGame,
+		scoreboard,
+		leaderboard,
+		howToPlay,
 	};
 
 	public static void SetUpMainGame()
