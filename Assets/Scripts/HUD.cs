@@ -65,12 +65,10 @@ public class HUD : MonoBehaviour {
 	{
 		PracticeText.text = "";
 
-		//Debug.Log ("CountdownFromThree: " + countdown + ", " + timer);
 		timer--;
 		//Debug.Log (timer);
 		if (timer == 44) {
 			Countdown.text = "3";
-			//Debug.Log ("3 COUNTDOWN");
 		}
 		else if (timer == 33)
 			Countdown.text = "2";
