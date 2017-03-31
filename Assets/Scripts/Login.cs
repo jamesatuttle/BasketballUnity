@@ -170,7 +170,9 @@ public class Login : MonoBehaviour {
 			}
 			else
 				LoginHelp.text = "Username not found";
-		}
+		} else
+			LoginHelp.text = "Enter a Username";
+		
 	}
 
 	public void ReadUsernameInput_Register() {
@@ -180,11 +182,14 @@ public class Login : MonoBehaviour {
 				LoginHelp.text = "Username already exists";
 			else if (usernameAdded) {
 				LoginHelp.text = "Username added";
+				NextButton.onClick.AddListener (Welcome);
+
 				//usernameAdded = false;
 			} else {
 				AddNewUsername ();
 			}
-		}
+		} else
+			LoginHelp.text = "Enter a Username";
 	}
 
 	public void SetupRegister() {
@@ -208,7 +213,27 @@ public class Login : MonoBehaviour {
 	public void WelcomeBack() {
 		GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.welcome;
 
-		LoginText.text = "WELCOME BACK" + UsernameString.ToUpper ();
+		LoginText.text = "WELCOME BACK " + UsernameString.ToUpper ();
+		HighlightText (LoginText);
+		HideText (LoginHelp);
+		HideInputField (UserName);
+
+		ShowButton (NextButton);
+		ShowButton (BackButton);
+
+		NextButton.GetComponentInChildren<Text> ().text = "Play";
+
+		HideButton (YesButton);
+		HideButton (NoButton);
+
+		BackButton.onClick.AddListener (ReadUsernameInput);
+		NextButton.onClick.AddListener (GamePlay.SetUpPregame);
+	}
+
+	public void Welcome() {
+		GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.welcome;
+
+		LoginText.text = "WELCOME " + UsernameString.ToUpper ();
 		HighlightText (LoginText);
 		HideText (LoginHelp);
 		HideInputField (UserName);
