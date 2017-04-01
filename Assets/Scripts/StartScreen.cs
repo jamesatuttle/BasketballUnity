@@ -14,16 +14,13 @@ public class StartScreen : MonoBehaviour {
 	Text LoginText;
 	Text LoginHelp;
 	Text LeaderboardTitle;
-	Text Leaderboard;
-
-	//public InputField FirstName;
-	//public InputField LastName;
+	Text Leaderboard_Usernames;
+	Text Leaderboard_Scores;
 
 	InputField UserName;
 
 	Button NextButton;
 	Button BackButton;
-
 	Button YesButton;
 	Button NoButton;
 
@@ -44,7 +41,9 @@ public class StartScreen : MonoBehaviour {
 		YesButton = GameObject.Find ("YesButton").GetComponent<Button> ();
 		NoButton = GameObject.Find ("NoButton").GetComponent<Button> ();
 		LeaderboardTitle = GameObject.Find ("Leaderboard Title").GetComponent<Text> ();
-		Leaderboard = GameObject.Find ("Leaderboard").GetComponent<Text> ();
+		Leaderboard_Usernames = GameObject.Find ("Leaderboard_Usernames").GetComponent<Text> ();
+		Leaderboard_Scores = GameObject.Find ("Leaderboard_Scores").GetComponent<Text> ();
+
 	}
 
 	void Start () {
@@ -76,8 +75,6 @@ public class StartScreen : MonoBehaviour {
 			}
 
 			if (Input.GetKeyDown (KeyCode.Return)) {
-				//Debug.Log ("return key was pressed");
-
 				if (OptionSelected(StartGame))
 					GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.playedBeforeQuestion;
 				else if (OptionSelected(ViewScoreboard))
@@ -121,8 +118,6 @@ public class StartScreen : MonoBehaviour {
 		ViewLeaderboard.text = "LEADERBOARD";
 		HowToPlayText.text = "HOW TO PLAY";
 
-		//HideInputField (FirstName);
-		//HideInputField (LastName);
 		HideInputField (UserName);
 		HideButton (NextButton);
 		HideButton (BackButton);
@@ -131,9 +126,8 @@ public class StartScreen : MonoBehaviour {
 		HideText (LoginText);
 		HideText (LoginHelp);
 		HideText (LeaderboardTitle);
-		HideText (Leaderboard);
-
-		//GameObject.Find ("spotlights").active = false;
+		HideText (Leaderboard_Usernames);
+		HideText (Leaderboard_Scores);
 
 		Basketball.UpdateFixedBasketballPosition(0f, 1.53f, -15.44f);
 		SetTextActive (StartGame);
@@ -147,7 +141,6 @@ public class StartScreen : MonoBehaviour {
 	}
 
 	private void SetTextActive(Text text) {
-
 		StartGame.color = Color.white;
 		ViewScoreboard.color = Color.white;
 		ViewLeaderboard.color = Color.white;
