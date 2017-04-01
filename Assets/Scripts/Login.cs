@@ -35,23 +35,19 @@ public class Login : MonoBehaviour {
 	void Awake() {
 		construct = "URI=file:" + Application.dataPath + "\\TrainingData.db";
 		instance = this;
+
+		LoginText = GameObject.Find ("LoginText").GetComponent<Text> ();
+		LoginHelp = GameObject.Find ("LoginHelp").GetComponent<Text> ();
+		YesButton = GameObject.Find ("YesButton").GetComponent<Button> ();
+		NoButton = GameObject.Find ("NoButton").GetComponent<Button> ();
+		UserName = GameObject.Find ("UsernameInput").GetComponent<InputField> ();
+		NextButton = GameObject.Find ("NextButton").GetComponent<Button> ();
+		BackButton = GameObject.Find ("BackButton").GetComponent<Button> ();
 	}
 
 	// Use this for initialization
 	void Start () {
-		LoginText = GameObject.Find ("LoginText").GetComponent<Text> ();
-		LoginHelp = GameObject.Find ("LoginHelp").GetComponent<Text> ();
-
-		YesButton = GameObject.Find ("YesButton").GetComponent<Button> ();
-		NoButton = GameObject.Find ("NoButton").GetComponent<Button> ();
-
-		UserName = GameObject.Find ("UsernameInput").GetComponent<InputField> ();
-
-		NextButton = GameObject.Find ("NextButton").GetComponent<Button> ();
-		BackButton = GameObject.Find ("BackButton").GetComponent<Button> ();
-
 		usernameAdded = false;
-
 		HideText (LoginText);
 	}
 	

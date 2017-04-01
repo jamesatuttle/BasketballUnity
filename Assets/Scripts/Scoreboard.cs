@@ -9,13 +9,17 @@ public class Scoreboard : MonoBehaviour {
 	float totalTime;
 	public static int availableBalls;
     public static int score;
+	Button BackButton;
+
+	void Awake () {
+		BackButton = GameObject.Find ("BackButton").GetComponent<Button> ();
+	}
 
 	// Use this for initialization
 	public void Start () {
 		totalTime = Time.time + 240;
 		SetTimerText ();
 
-		//availableBalls = 3;
 		UpdateAvailableBalls ();
 
         score = 0;
@@ -28,11 +32,16 @@ public class Scoreboard : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
+		if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.scoreboard) {
+			BackButton.image.enabled = true;
+			BackButton.GetComponentInChildren<Text> ().text = "BACK";
+			BackButton.onClick.AddListener (StartScreen.instance.SetUpStartScreen);
+		}
+
 		SetTimerText ();
 	}
 
-	void SetTimerText()
-	{
+	void SetTimerText() {
 		int timeLeft = Convert.ToInt32(totalTime) - Convert.ToInt32(Time.time);
 		if (timeLeft < 0) timeLeft = 0;
 
@@ -66,8 +75,7 @@ public class Scoreboard : MonoBehaviour {
 		}
 	}
 
-	public static void UpdateAvailableBalls()
-	{
+	public static void UpdateAvailableBalls() {
 		TextMesh Scoreboard_noOfBalls = GameObject.Find("NumberOfBalls").GetComponent<TextMesh>();
 
 		if (availableBalls >= 10)
@@ -76,8 +84,7 @@ public class Scoreboard : MonoBehaviour {
 			Scoreboard_noOfBalls.text = "00" + availableBalls.ToString ();
 	}
 
-	public static void MinusAvailableBalls()
-	{
+	public static void MinusAvailableBalls() {
 		if (availableBalls > 0)
 			availableBalls--;
 		if (availableBalls == 0) {
@@ -93,8 +100,7 @@ public class Scoreboard : MonoBehaviour {
 		UpdateAvailableBalls();
 	}
 
-	public static void ResetScoreboard()
-	{
+	public static void ResetScoreboard() {
 		//availableBalls = 3;
 		if (GamePlay.PlayingMainGame)
 			availableBalls = 10;
@@ -103,8 +109,7 @@ public class Scoreboard : MonoBehaviour {
 		UpdateAvailableBalls ();
 	}
 
-    public void updateScore()
-    {
+    public void updateScore() {
         TextMesh Scoreboard_score = GameObject.Find("Score").GetComponent<TextMesh>();
 
         if (score >= 100)
@@ -115,8 +120,7 @@ public class Scoreboard : MonoBehaviour {
             Scoreboard_score.text = "00" + score.ToString();
     }
 
-    public static void updateBonusColour(string hex)
-    {
+    public static void updateBonusColour(string hex) {
         Color bonusColour = new Color();
         ColorUtility.TryParseHtmlString(hex, out bonusColour);
         GameObject.Find("Bonus").GetComponent<TextMesh>().color = bonusColour;

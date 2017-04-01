@@ -17,14 +17,10 @@ public class StartScreen : MonoBehaviour {
 	Text Leaderboard_Usernames;
 	Text Leaderboard_Scores;
 
-	//public InputField FirstName;
-	//public InputField LastName;
-
 	InputField UserName;
 
 	Button NextButton;
 	Button BackButton;
-
 	Button YesButton;
 	Button NoButton;
 
@@ -79,8 +75,6 @@ public class StartScreen : MonoBehaviour {
 			}
 
 			if (Input.GetKeyDown (KeyCode.Return)) {
-				//Debug.Log ("return key was pressed");
-
 				if (OptionSelected(StartGame))
 					GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.playedBeforeQuestion;
 				else if (OptionSelected(ViewScoreboard))
@@ -124,8 +118,6 @@ public class StartScreen : MonoBehaviour {
 		ViewLeaderboard.text = "LEADERBOARD";
 		HowToPlayText.text = "HOW TO PLAY";
 
-		//HideInputField (FirstName);
-		//HideInputField (LastName);
 		HideInputField (UserName);
 		HideButton (NextButton);
 		HideButton (BackButton);
@@ -136,8 +128,6 @@ public class StartScreen : MonoBehaviour {
 		HideText (LeaderboardTitle);
 		HideText (Leaderboard_Usernames);
 		HideText (Leaderboard_Scores);
-
-		//GameObject.Find ("spotlights").active = false;
 
 		Basketball.UpdateFixedBasketballPosition(0f, 1.53f, -15.44f);
 		SetTextActive (StartGame);
@@ -151,7 +141,6 @@ public class StartScreen : MonoBehaviour {
 	}
 
 	private void SetTextActive(Text text) {
-
 		StartGame.color = Color.white;
 		ViewScoreboard.color = Color.white;
 		ViewLeaderboard.color = Color.white;
