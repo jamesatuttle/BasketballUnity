@@ -49,25 +49,43 @@ public class Login : MonoBehaviour {
 	void Start () {
 		usernameAdded = false;
 		HideText (LoginText);
+		UsernameString = "";
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.playedBeforeQuestion) {
+
+		print ((GamePlay.ActiveScreen)GamePlay.ActiveScreenValue);
+
+		switch (GamePlay.ActiveScreenValue) {
+		case (int)GamePlay.ActiveScreen.playedBeforeQuestion:
 			SetupPlayedBeforeQuestion ();
+			break;
+		case (int)GamePlay.ActiveScreen.preGame:
+			SetUpPlayingGame ();
+			break;
+		case (int)GamePlay.ActiveScreen.mainGame:
+			SetUpPlayingGame ();
+			break;
+		case (int)GamePlay.ActiveScreen.welcome:
+			Welcome ();
+			break;
+		case (int)GamePlay.ActiveScreen.registerName:
+			SetupRegister ();
+			break;
 		}
+	}
 
-		if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.preGame || GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.mainGame) {
-			HideButton (NextButton);
-			HideButton (BackButton);
-			HideButton (YesButton);
-			HideButton (NoButton);
+	void SetUpPlayingGame() {
+		HideButton (NextButton);
+		HideButton (BackButton);
+		HideButton (YesButton);
+		HideButton (NoButton);
 
-			HideText(LoginText);
-			HideText(LoginHelp);
+		HideText(LoginText);
+		HideText(LoginHelp);
 
-			HideInputField(UserName);
-		}
+		HideInputField(UserName);
 	}
 
 	void HideButton(Button button) {
@@ -77,25 +95,27 @@ public class Login : MonoBehaviour {
 
 	void ShowButton(Button button) {
 		button.image.enabled = true;
-
-		if (button.name == "NextButton")
+	
+		switch (button.name) {
+		case "NextButton":
 			button.GetComponentInChildren<Text> ().text = "NEXT";
-
-		if (button.name == "BackButton")
+			break;
+		case "BackButton":
 			button.GetComponentInChildren<Text> ().text = "BACK";
-
-		if (button.name == "YesButton")
+			break;
+		case "YesButton":
 			button.GetComponentInChildren<Text> ().text = "YES";
-
-		if (button.name == "NoButton")
+			break;
+		case "NoButton":
 			button.GetComponentInChildren<Text> ().text = "NO";
+			break;
+		}
 	}
 
 	void HideInputField(InputField inputField) {
 		inputField.image.enabled = false;
 		inputField.placeholder.enabled = false;
 		inputField.text = "";
-		inputField.placeholder.enabled = false;
 		inputField.interactable = false;
 		inputField.placeholder.GetComponentInChildren<Text> ().text = "";
 	}
@@ -113,6 +133,7 @@ public class Login : MonoBehaviour {
 		inputField.placeholder.enabled = true;
 		inputField.enabled = true;
 		inputField.interactable = true;
+		inputField.placeholder.GetComponentInChildren<Text> ().text = "Username...";
 	}
 
 	void HideText(Text text) {
@@ -121,16 +142,16 @@ public class Login : MonoBehaviour {
 
 	public void BackButton_Pressed_BackToStart() {
 		GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.startScreen;
-		StartScreen.instance.SetUpStartScreen ();
 	}
 
 	public void BackButton_Pressed_BackToPlayedBeforeQuestion() {
-		SetupPlayedBeforeQuestion ();
+		//SetupPlayedBeforeQuestion ();
+		GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.playedBeforeQuestion;
 	}
 
 	public void SetupPlayedBeforeQuestion() {
-		GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.playedBeforeQuestion;
 		LoginText.text = "HAVE YOU PLAYED BEFORE?";
+		HideInputField (UserName);
 		HighlightText (LoginText);
 		HideText (LoginHelp);
 		ShowButton (YesButton);
@@ -165,7 +186,6 @@ public class Login : MonoBehaviour {
 		if (UserName.text != "") {
 			UsernameString = UserName.text;
 			if (DoesUsernameExist ()) {
-				//LoginHelp.text = "Username found";
 				if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.enterName) {
 					WelcomeBack ();
 					AddNewLeaderboardRow ();
