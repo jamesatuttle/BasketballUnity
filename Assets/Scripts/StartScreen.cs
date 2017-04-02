@@ -47,12 +47,17 @@ public class StartScreen : MonoBehaviour {
 	}
 
 	void Start () {
-		SetUpStartScreen ();
+		//SetUpStartScreen ();
+		GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.startScreen;
+		SetTextActive (StartGame);
 	}
 		
 	// Update is called once per frame
 	void Update () {
 		if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.startScreen) {
+
+			SetUpStartScreen ();
+
 			if (Input.GetKeyDown(KeyCode.DownArrow)) {
 				if (OptionSelected(StartGame))
 					SetTextActive(ViewScoreboard);
@@ -130,7 +135,6 @@ public class StartScreen : MonoBehaviour {
 		HideText (Leaderboard_Scores);
 
 		Basketball.UpdateFixedBasketballPosition(0f, 1.53f, -15.44f);
-		SetTextActive (StartGame);
 	}
 
 	public void ClearStartScreen() {
