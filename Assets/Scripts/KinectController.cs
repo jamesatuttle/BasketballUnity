@@ -76,10 +76,8 @@ public class KinectController : MonoBehaviour
 
 				if (manager.IsUserDetected ()) {
 
-					uint userId = manager.GetPlayer1ID ();  
+					uint userId = manager.GetPlayer1ID ();
 
-					//_handLeft = SmoothLeftHand(manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft));
-					//_handRight = SmoothRightHand(manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight);
 					_handLeft = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft);
 					_handRight = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight);
 					_wristLeft = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.WristLeft);
@@ -90,6 +88,8 @@ public class KinectController : MonoBehaviour
 					_shoulderRight = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ShoulderRight);
 					_elbowLeft = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ElbowLeft);
 					_elbowRight = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ElbowRight);
+
+					_handDifference = -_handLeft.x - -_handRight.x; //These x values are negative, the minus sets them positive
 
 					BasketballController ();
 
@@ -125,17 +125,11 @@ public class KinectController : MonoBehaviour
 	}
 
 	private void BasketballController () {
-		_handDifference = -_handLeft.x - -_handRight.x;  //These x values are negative, the minus sets them positive
 
-		if (_ballIsThrown) {
-			_trajectory.y *= 0.9f;
-		}
-
-		else if (_ballIsHeld) {
-
+		/*if (_ballIsHeld) {
 			GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Picked up ball";
 
-			if (IsBallDropped()) { //check they haven't dropped the ball
+			if (HasBallBeenDropped()) { //check they haven't dropped the ball
 				TrackDirection ();
 				dropBall ();
 			} else {
@@ -149,9 +143,32 @@ public class KinectController : MonoBehaviour
 			if (IsBallPickedUp()) {
 				callibrateUser ();
 				_ballIsHeld = true;
-				_ballIsThrown = false;
 			}
+		}*/
+
+
+
+
+		if (IsBallPickedUp () && _ballIsHeld == false) {
+			callibrateUser ();
+			_ballIsHeld = true;
 		}
+
+		if (HasBallBeenDropped ()) {
+			TrackDirection ();
+			if (HasBallBeenThrown ()) {
+				ThrowBall ();
+			} else {
+				dropBall ();
+			}
+		} else if (_ballIsHeld) {
+			GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Picked up ball";
+
+			collectSkeletalDifferences ();
+			moveBall ();
+			moveMainCamera ();
+		}
+
 	}
 
 	private bool IsBallPickedUp() {
@@ -165,7 +182,7 @@ public class KinectController : MonoBehaviour
 			return false;
 	}
 
-	private bool IsBallDropped() {
+	private bool HasBallBeenDropped () {
 		
 		if (_handDifference > (CommonValues.BallWidth + (CommonValues.Inch * 2)))
 			return true;
@@ -186,21 +203,28 @@ public class KinectController : MonoBehaviour
 		_previousCameraPosition = Cameras.MainCameraPosition;
 	}
 
-	private void dropBall() {
-		
+	private void ThrowBall() {
+		GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Thrown ball";
+
+		_basketball.transform.position += _trajectory;
+
+		Basketball.instance.SetBallGravity(true);
+
+		_ballIsHeld = false;
+	}
+
+	private bool HasBallBeenThrown() {
 		if (_trajectory.x < 0.2f && _trajectory.y < 0.2f && _trajectory.z < 0.2f) {
-
-			GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Dropped ball";
-
-			Basketball.SetBallGravity (true); //turn gravity on
-
-			_ballIsHeld = false;
-
+			return false;
 		} else {
-			GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Thrown ball";
-
-			_basketball.transform.position += _trajectory;
+			return true;
 		}
+	}
+
+	private void dropBall() {
+		GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Dropped ball";
+		Basketball.instance.SetBallGravity (true); //turn gravity on
+		_ballIsHeld = false;
 	}
 
 	private void moveBall () {
@@ -219,7 +243,7 @@ public class KinectController : MonoBehaviour
 		newBallPosition.y = Basketball.InitialBallPosition.y + (movement.y * movementSensitivity);
 		newBallPosition.z = Basketball.InitialBallPosition.z - (movement.z * movementSensitivity); //minus to move ball in the correct view of the user
 
-		Basketball.LockBasketballPosition (false);
+		Basketball.instance.LockBasketballPosition (false);
 
 		Vector3 smoothedBallPositon = SmoothBasketball (newBallPosition);
 
@@ -265,47 +289,57 @@ public class KinectController : MonoBehaviour
 
 	private Vector3 SmoothValues(Vector3 newPosition, Smoothing smoothing) {
 
-		float threshold = 0.3f;
+		float xThreshold = 0.3f;
+		float yThreshold = 0.3f;
+		float zThreshold = 0.3f;
+
 		Vector3 previousPosition = new Vector3(0f, 0f, 0f);
 
 		string gestureText = GameObject.Find ("GestureInfo").GetComponent<Text> ().text;
 
 		switch (smoothing) {
 		case Smoothing.ball:
-			threshold = 0.3f;
+			xThreshold = 0.3f;
+			yThreshold = 0.3f;
+			zThreshold = 0.3f;
 			previousPosition = _previousBallPosition;
 			break;
 		case Smoothing.camera:
-			threshold = 0.2f;
+			xThreshold = 0.2f;
+			yThreshold = 0.2f;
+			zThreshold = 0.2f;
 			previousPosition = _previousCameraPosition;
 			break;
 		case Smoothing.leftHand:
-			threshold = 0.3f;
+			xThreshold = 0.3f;
+			yThreshold = 0.3f;
+			zThreshold = 0.3f;
 			previousPosition = _previousLeftHandPosition;
 			break;
 		case Smoothing.rightHand:
-			threshold = 0.3f;
+			xThreshold = 0.3f;
+			yThreshold = 0.3f;
+			zThreshold = 0.3f;
 			previousPosition = _previousRightHandPosition;
 			break;
 		}
 
-		//print (_currentGesture); 
-
 		if ((_currentGesture == Gesture.professional || _currentGesture == Gesture.chest || _currentGesture == Gesture.low) && (smoothing == Smoothing.ball)) {
-			threshold = threshold + 1f;
-			//print ("inside here mofo");
+			xThreshold += 0.6f;
+			yThreshold += 1f;
+			zThreshold += 0.6f;
 		}
 
 		//if (smoothing == Smoothing.ball)
 		//	print ("threshold: " + threshold);
 
-		if (!isWithinBoundary (previousPosition.x, newPosition.x, threshold)) {
+		if (!isWithinBoundary (previousPosition.x, newPosition.x, xThreshold)) {
 			newPosition.x = previousPosition.x;
 		}
-		if (!isWithinBoundary (previousPosition.y, newPosition.y, threshold)) {
+		if (!isWithinBoundary (previousPosition.y, newPosition.y, yThreshold)) {
 			newPosition.y = previousPosition.y;
 		}
-		if (!isWithinBoundary (previousPosition.z, newPosition.z, threshold)) {
+		if (!isWithinBoundary (previousPosition.z, newPosition.z, zThreshold)) {
 			newPosition.z = previousPosition.z;
 		}
 
