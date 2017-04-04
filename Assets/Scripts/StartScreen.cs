@@ -134,7 +134,7 @@ public class StartScreen : MonoBehaviour {
 		HideText (Leaderboard_Usernames);
 		HideText (Leaderboard_Scores);
 
-		Basketball.UpdateFixedBasketballPosition(0f, 1.53f, -15.44f);
+		Basketball.instance.UpdateFixedBasketballPosition(0f, 1.53f, -15.44f);
 	}
 
 	public void ClearStartScreen() {

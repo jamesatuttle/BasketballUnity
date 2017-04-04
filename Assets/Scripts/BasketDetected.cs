@@ -33,7 +33,7 @@ public class BasketDetected : MonoBehaviour {
 
 				scored = false;
 
-				Basketball.ResetBall ();
+				Basketball.instance.ResetBall ();
 
 			} else if (basketCount == bonusSetting) {
 
@@ -47,7 +47,7 @@ public class BasketDetected : MonoBehaviour {
 
 				scored = false;
 
-				Basketball.ResetBall ();
+				Basketball.instance.ResetBall ();
 			}
 		}
 	}

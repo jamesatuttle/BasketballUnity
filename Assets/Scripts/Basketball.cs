@@ -5,8 +5,14 @@ using UnityEngine.UI;
 
 public class Basketball : MonoBehaviour {
 
+	public static Basketball instance;
+
 	public AudioClip bounce;
 	static public Vector3 InitialBallPosition = new Vector3(0.02f,5.08f,9.96f);
+
+	void Awake () {
+		instance = this;
+	}
 
 	void Start () {
 		GetComponent<AudioSource> ().playOnAwake = false;
@@ -35,12 +41,12 @@ public class Basketball : MonoBehaviour {
 		}
 	}
 
-	public static void ResetBall() {
+	public void ResetBall() {
 		UpdateFixedBasketballPosition(InitialBallPosition.x, InitialBallPosition.y, InitialBallPosition.z);
 		//KinectController.instance.SetTrajectory (new Vector3 (0, 0, 0));
 	}
 
-	public static void UpdateFixedBasketballPosition(float x, float y, float z)
+	public void UpdateFixedBasketballPosition(float x, float y, float z)
 	{
 		GameObject basketball = GameObject.Find ("Basketball");
 
@@ -49,7 +55,7 @@ public class Basketball : MonoBehaviour {
 		basketball.transform.position = new Vector3 (x, y, z);
 	}
 
-	public static void LockBasketballPosition(bool locked) 
+	public void LockBasketballPosition(bool locked) 
 	{
 		if (locked)
 			GameObject.Find ("Basketball").GetComponent<Rigidbody> ().constraints = RigidbodyConstraints.FreezeAll;
@@ -57,7 +63,7 @@ public class Basketball : MonoBehaviour {
 			GameObject.Find ("Basketball").GetComponent<Rigidbody> ().constraints = RigidbodyConstraints.None;
 	}
 
-	public static void SetBallGravity(bool gravity) {
+	public void SetBallGravity(bool gravity) {
 		GameObject.Find("Basketball").GetComponent<Rigidbody>().useGravity = gravity;
 	}
 }

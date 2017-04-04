@@ -16,14 +16,14 @@ public class BasketballTests {
 	public void ResetBall_CorrectPosition()
     {
         //tests to make sure that the ball starts in the correct location
-        Basketball.ResetBall();
+        Basketball.instance.ResetBall();
         Assert.AreEqual(new Vector3(0.02f, 5.08f, 9.96f), basketball.transform.position);
     }
 
     [Test]
     public void ResetBall_Gravity_Off()
     {
-        Basketball.ResetBall();
+        Basketball.instance.ResetBall();
         Assert.AreEqual(false, basketball.GetComponent<Rigidbody>().useGravity);
     }
 }
