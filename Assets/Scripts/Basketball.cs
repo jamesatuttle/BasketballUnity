@@ -37,7 +37,7 @@ public class Basketball : MonoBehaviour {
 
 	public static void ResetBall() {
 		UpdateFixedBasketballPosition(InitialBallPosition.x, InitialBallPosition.y, InitialBallPosition.z);
-		//KinectController.ballThrown = false;
+		//KinectController.instance.SetTrajectory (new Vector3 (0, 0, 0));
 	}
 
 	public static void UpdateFixedBasketballPosition(float x, float y, float z)

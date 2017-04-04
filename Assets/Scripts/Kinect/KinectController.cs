@@ -2,9 +2,12 @@ using UnityEngine;
 using System;
 using UnityEngine.UI;
 using Common;
+using System.Collections.Generic;
 
 public class KinectController : MonoBehaviour
 {
+	public static KinectController instance;
+
 	private Vector3 _handLeft;
 	private Vector3 _handRight;
 	private Vector3 _head;
@@ -17,6 +20,7 @@ public class KinectController : MonoBehaviour
 	private Vector3 _elbowRight;
 
 	private bool _ballIsHeld;
+	private bool _ballIsThrown;
 
 	private Vector3 _handsCallibratedPosition;
 	private Vector3 _headCallibratedPosition;
@@ -25,15 +29,40 @@ public class KinectController : MonoBehaviour
 
 	private Vector3 _previousBallPosition;
 	private Vector3 _previousCameraPosition;
+	private Vector3 _previousRightHandPosition;
+	private Vector3 _previousLeftHandPosition;
+
+	private Gesture _currentGesture;
+
+	private Vector3 _trajectory;
+
+	private GameObject _basketball;
+
+	List<Vector3> _ballPositionCollection = new List<Vector3> ();
+
+	enum Gesture {
+		stationary = 0,
+		professional,
+		chest,
+		low
+	}
 
 	enum Smoothing {
 		ball = 0,
-		camera = 1
+		camera,
+		rightHand, 
+		leftHand
 	};
+
+	void Awake () {
+		instance = this;
+	}
 
 	void Start () {  
 		_ballIsHeld = false;
 		GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "";
+		//_basketball = GameObject.Find ("Basketball");
+		_trajectory = new Vector3(0f, 0f, 0f);
 		ANN_CPU.InitialiseANN ();
 	}
 		
@@ -41,12 +70,16 @@ public class KinectController : MonoBehaviour
 		try {
 			if (GamePlay.GameIsPlayable) {
 
+				_basketball = GameObject.Find("Basketball").gameObject;
+
 				KinectManager manager = KinectManager.Instance;
 
 				if (manager.IsUserDetected ()) {
 
 					uint userId = manager.GetPlayer1ID ();  
 
+					//_handLeft = SmoothLeftHand(manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft));
+					//_handRight = SmoothRightHand(manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight);
 					_handLeft = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft);
 					_handRight = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight);
 					_wristLeft = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.WristLeft);
@@ -70,14 +103,40 @@ public class KinectController : MonoBehaviour
 		}
 	}
 
+	public void SetTrajectory(Vector3 newTraj) {
+		_trajectory = newTraj;
+	}
+
+	public void UpdateCurrentGesture(int gesture) {
+		switch (gesture) {
+		case (int)Gesture.stationary:
+			_currentGesture = Gesture.stationary;
+			break;
+		case (int)Gesture.chest:
+			_currentGesture = Gesture.chest;
+			break;
+		case (int)Gesture.low:
+			_currentGesture = Gesture.low;
+			break;
+		case (int)Gesture.professional:
+			_currentGesture = Gesture.professional;
+			break;
+		}
+	}
+
 	private void BasketballController () {
 		_handDifference = -_handLeft.x - -_handRight.x;  //These x values are negative, the minus sets them positive
 
-		if (_ballIsHeld) {
+		if (_ballIsThrown) {
+			_trajectory.y *= 0.9f;
+		}
+
+		else if (_ballIsHeld) {
 
 			GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Picked up ball";
 
 			if (IsBallDropped()) { //check they haven't dropped the ball
+				TrackDirection ();
 				dropBall ();
 			} else {
 				collectSkeletalDifferences ();
@@ -90,6 +149,7 @@ public class KinectController : MonoBehaviour
 			if (IsBallPickedUp()) {
 				callibrateUser ();
 				_ballIsHeld = true;
+				_ballIsThrown = false;
 			}
 		}
 	}
@@ -107,7 +167,7 @@ public class KinectController : MonoBehaviour
 
 	private bool IsBallDropped() {
 		
-		if (_handDifference > (CommonValues.BallWidth + (CommonValues.Inch * 3)))
+		if (_handDifference > (CommonValues.BallWidth + (CommonValues.Inch * 2)))
 			return true;
 		else
 			return false;
@@ -128,15 +188,23 @@ public class KinectController : MonoBehaviour
 
 	private void dropBall() {
 		
-		GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Dropped ball";
+		if (_trajectory.x < 0.2f && _trajectory.y < 0.2f && _trajectory.z < 0.2f) {
 
-		Basketball.SetBallGravity (true); //turn gravity on
+			GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Dropped ball";
 
-		_ballIsHeld = false;
+			Basketball.SetBallGravity (true); //turn gravity on
+
+			_ballIsHeld = false;
+
+		} else {
+			GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Thrown ball";
+
+			_basketball.transform.position += _trajectory;
+		}
 	}
 
 	private void moveBall () {
-		
+		 
 		int movementSensitivity = 3;
 
 		Vector3 newBallPosition;
@@ -153,7 +221,30 @@ public class KinectController : MonoBehaviour
 
 		Basketball.LockBasketballPosition (false);
 
-		GameObject.Find ("Basketball").transform.position = SmoothBasketball(newBallPosition);
+		Vector3 smoothedBallPositon = SmoothBasketball (newBallPosition);
+
+		GameObject.Find ("Basketball").transform.position = smoothedBallPositon; //newBallPosition;
+
+		TrackBallPosition (smoothedBallPositon);
+	}
+
+	private void TrackBallPosition(Vector3 position) {
+		_ballPositionCollection.Add (position);
+	}
+
+	private void TrackDirection() {
+
+		int listSize = _ballPositionCollection.Count;
+
+		int listThreshold = 6;
+		int sensitivity = 5;
+
+		if (listSize > listThreshold) {
+
+			Vector3 difference = _ballPositionCollection [listSize - 1] - _ballPositionCollection [listSize - (listThreshold - 1)];
+
+			_trajectory = (difference / listThreshold) * sensitivity;
+		}
 	}
 
 	private Vector3 SmoothBasketball(Vector3 ballPosition) {
@@ -164,10 +255,20 @@ public class KinectController : MonoBehaviour
 		return SmoothValues (cameraPosition, Smoothing.camera);
 	}
 
+	private Vector3 SmoothRightHand (Vector3 handPosition) {
+		return SmoothValues (handPosition, Smoothing.rightHand);
+	}
+
+	private Vector3 SmoothLeftHand (Vector3 handPosition) {
+		return SmoothValues (handPosition, Smoothing.leftHand);
+	}
+
 	private Vector3 SmoothValues(Vector3 newPosition, Smoothing smoothing) {
 
 		float threshold = 0.3f;
 		Vector3 previousPosition = new Vector3(0f, 0f, 0f);
+
+		string gestureText = GameObject.Find ("GestureInfo").GetComponent<Text> ().text;
 
 		switch (smoothing) {
 		case Smoothing.ball:
@@ -178,7 +279,25 @@ public class KinectController : MonoBehaviour
 			threshold = 0.2f;
 			previousPosition = _previousCameraPosition;
 			break;
+		case Smoothing.leftHand:
+			threshold = 0.3f;
+			previousPosition = _previousLeftHandPosition;
+			break;
+		case Smoothing.rightHand:
+			threshold = 0.3f;
+			previousPosition = _previousRightHandPosition;
+			break;
 		}
+
+		//print (_currentGesture); 
+
+		if ((_currentGesture == Gesture.professional || _currentGesture == Gesture.chest || _currentGesture == Gesture.low) && (smoothing == Smoothing.ball)) {
+			threshold = threshold + 1f;
+			//print ("inside here mofo");
+		}
+
+		//if (smoothing == Smoothing.ball)
+		//	print ("threshold: " + threshold);
 
 		if (!isWithinBoundary (previousPosition.x, newPosition.x, threshold)) {
 			newPosition.x = previousPosition.x;
@@ -198,6 +317,12 @@ public class KinectController : MonoBehaviour
 			break;
 		case Smoothing.camera:
 			_previousCameraPosition = previousPosition;
+			break;
+		case Smoothing.leftHand:
+			_previousLeftHandPosition = previousPosition;
+			break;
+		case Smoothing.rightHand:
+			_previousRightHandPosition = previousPosition;
 			break;
 		}
 

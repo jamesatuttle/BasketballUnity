@@ -55,7 +55,7 @@ public class Login : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		print ((GamePlay.ActiveScreen)GamePlay.ActiveScreenValue);
+		//print ((GamePlay.ActiveScreen)GamePlay.ActiveScreenValue);
 
 		switch (GamePlay.ActiveScreenValue) {
 		case (int)GamePlay.ActiveScreen.playedBeforeQuestion:

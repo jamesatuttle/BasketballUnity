@@ -129,9 +129,9 @@ public class ANN_CPU : MonoBehaviour {
 			break;
 		}
 
-		GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Gesture: " + actualOutput;
+		KinectController.instance.UpdateCurrentGesture (index);
 
-		//print ("");
+		GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Gesture: " + actualOutput;
 	}
 
 
