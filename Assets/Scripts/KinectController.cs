@@ -397,7 +397,7 @@ public class KinectController : MonoBehaviour
 		double leftHand_LeftShoulderY = _handLeft.y - _shoulderLeft.y;
 		double leftHand_LeftShoulderZ = _handLeft.z - _shoulderLeft.z;
 
-		double[] trackedSkeletalPoints = new double[30] 
+		/*double[] trackedSkeletalPoints = new double[30] 
 		{ 
 			rightHand_HipX, rightHand_HipY, rightHand_HipZ, 
 			rightHand_RightWristX, rightHand_RightWristY, rightHand_RightWristZ, 
@@ -409,7 +409,7 @@ public class KinectController : MonoBehaviour
 			leftWrist_LeftElbowX, leftWrist_LeftElbowY, leftWrist_LeftElbowZ, 
 			leftElbow_LeftShoulderX, leftElbow_LeftShoulderY, leftElbow_LeftShoulderZ, 
 			leftHand_LeftShoulderX, leftHand_LeftShoulderY, leftHand_LeftShoulderZ
-		};
+		};*/
 
 		/*
 		 * Stationary
@@ -417,24 +417,24 @@ public class KinectController : MonoBehaviour
 		 * Chest
 		 * Low
 		 */
-		//string gesture = "Professional";
+		string gesture = "Stationary";
 
-		//AddToDatabase.addToANNTrainingData (
-		//	formatSkelValue(RightHand_HipX), formatSkelValue(RightHand_HipY), formatSkelValue(RightHand_HipZ),
-			/*RightHand_RightWristX, RightHand_RightWristY, RightHand_RightWristZ,
-			RightWrist_RightElbowX, RightWrist_RightElbowY, RightWrist_RightElbowZ,
-			RightElbow_RightShoulderX, RightElbow_RightShoulderY, RightElbow_RightShoulderZ,
-			RightHand_RightShoulderX, RightHand_RightShoulderY, RightHand_RightShoulderZ,*/
+		AddToDatabase.addToANNTrainingData (
+			rightHand_HipX, rightHand_HipY, rightHand_HipZ,
+			rightHand_RightWristX, rightHand_RightWristY, rightHand_RightWristZ,
+			rightWrist_RightElbowX, rightWrist_RightElbowY, rightWrist_RightElbowZ,
+			rightElbow_RightShoulderX, rightElbow_RightShoulderY, rightElbow_RightShoulderZ,
+			rightHand_RightShoulderX, rightHand_RightShoulderY, rightHand_RightShoulderZ,
 
-		//	formatSkelValue(LeftHand_HipX), formatSkelValue(LeftHand_HipY), formatSkelValue(LeftHand_HipZ),
-			/*LeftHand_LeftWristX, LeftHand_LeftWristY, LeftHand_LeftWristZ,
-			LeftWrist_LeftElbowX, LeftWrist_LeftElbowY, LeftWrist_LeftElbowZ,
-			LeftElbow_LeftShoulderX, LeftElbow_LeftShoulderY, LeftElbow_LeftShoulderZ,
-			LeftHand_LeftShoulderX, LeftHand_LeftShoulderY, LeftHand_LeftShoulderZ,*/
+			leftHand_HipX, leftHand_HipY, leftHand_HipZ,
+			leftHand_LeftWristX, leftHand_LeftWristY, leftHand_LeftWristZ,
+			leftWrist_LeftElbowX, leftWrist_LeftElbowY, leftWrist_LeftElbowZ,
+			leftElbow_LeftShoulderX, leftElbow_LeftShoulderY, leftElbow_LeftShoulderZ,
+			leftHand_LeftShoulderX, leftHand_LeftShoulderY, leftHand_LeftShoulderZ,
 
-			/*gesture
-		);*/
+			gesture
+		);
 
-		ANN_CPU.StartANN (trackedSkeletalPoints);
+		//ANN_CPU.StartANN (trackedSkeletalPoints);
 	}
 }
