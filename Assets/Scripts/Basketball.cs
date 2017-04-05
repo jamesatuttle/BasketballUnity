@@ -23,9 +23,6 @@ public class Basketball : MonoBehaviour {
 		try {
 			var collision = col.gameObject.name;
 
-			if (collision == "OuterWallCollider")
-				ResetBall();
-
 			if (collision == "wall" || collision == "wall (1)" || collision == "wall (2)" || collision == "wall (3)" || collision == "Ceiling" ) {
 				GetComponent<AudioSource> ().volume = col.relativeVelocity.magnitude/100;
 				GetComponent<AudioSource> ().Play ();
