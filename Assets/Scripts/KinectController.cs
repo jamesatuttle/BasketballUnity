@@ -48,9 +48,7 @@ public class KinectController : MonoBehaviour
 
 	enum Smoothing {
 		ball = 0,
-		camera,
-		rightHand, 
-		leftHand
+		camera
 	};
 
 	void Awake () {
@@ -271,14 +269,6 @@ public class KinectController : MonoBehaviour
 
 	private Vector3 SmoothCameraMovement(Vector3 cameraPosition) {
 		return SmoothValues (cameraPosition, Smoothing.camera);
-	}
-
-	private Vector3 SmoothRightHand (Vector3 handPosition) {
-		return SmoothValues (handPosition, Smoothing.rightHand);
-	}
-
-	private Vector3 SmoothLeftHand (Vector3 handPosition) {
-		return SmoothValues (handPosition, Smoothing.leftHand);
 	}
 
 	private Vector3 SmoothValues(Vector3 newPosition, Smoothing smoothing) {
