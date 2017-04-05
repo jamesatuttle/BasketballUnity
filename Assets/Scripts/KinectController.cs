@@ -2,9 +2,12 @@ using UnityEngine;
 using System;
 using UnityEngine.UI;
 using Common;
+using System.Collections.Generic;
 
 public class KinectController : MonoBehaviour
 {
+	public static KinectController instance;
+
 	private Vector3 _handLeft;
 	private Vector3 _handRight;
 	private Vector3 _head;
@@ -17,6 +20,7 @@ public class KinectController : MonoBehaviour
 	private Vector3 _elbowRight;
 
 	private bool _ballIsHeld;
+	private bool _ballIsThrown;
 
 	private Vector3 _handsCallibratedPosition;
 	private Vector3 _headCallibratedPosition;
@@ -26,14 +30,38 @@ public class KinectController : MonoBehaviour
 	private Vector3 _previousBallPosition;
 	private Vector3 _previousCameraPosition;
 
+	private Gesture _currentGesture;
+
+	private Vector3 _trajectory;
+
+	private GameObject _basketball;
+	private string _gestureInfo;
+
+	List<Vector3> _ballPositionCollection = new List<Vector3> ();
+
+	enum Gesture {
+		stationary = 0,
+		professional,
+		chest,
+		low
+	}
+
 	enum Smoothing {
 		ball = 0,
-		camera = 1
+		camera
 	};
+
+	void Awake () {
+		instance = this;
+
+		_basketball = GameObject.Find("Basketball").gameObject;
+		_gestureInfo = GameObject.Find ("GestureInfo").GetComponent<Text> ().text;
+	}
 
 	void Start () {  
 		_ballIsHeld = false;
 		GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "";
+		_trajectory = Vector3.zero;
 		ANN_CPU.InitialiseANN ();
 	}
 		
@@ -45,7 +73,7 @@ public class KinectController : MonoBehaviour
 
 				if (manager.IsUserDetected ()) {
 
-					uint userId = manager.GetPlayer1ID ();  
+					uint userId = manager.GetPlayer1ID ();
 
 					_handLeft = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft);
 					_handRight = manager.GetRawSkeletonJointPos (userId, (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight);
@@ -58,10 +86,12 @@ public class KinectController : MonoBehaviour
 					_elbowLeft = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ElbowLeft);
 					_elbowRight = manager.GetRawSkeletonJointPos(userId, (int)KinectWrapper.NuiSkeletonPositionIndex.ElbowRight);
 
+					_handDifference = -_handLeft.x - -_handRight.x; //These x values are negative, the minus sets them positive
+
 					BasketballController ();
 
 				} else {
-					GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Stand in front of sensor";
+					_gestureInfo = "Stand in front of the sensor";
 				}
 			}
 		} catch (Exception e) {
@@ -70,28 +100,61 @@ public class KinectController : MonoBehaviour
 		}
 	}
 
+	private void SetTrajectory(Vector3 newTraj) {
+		_trajectory = newTraj;
+	}
+
+	public void UpdateCurrentGesture(int gesture) {
+		switch (gesture) {
+		case (int)Gesture.stationary:
+			_currentGesture = Gesture.stationary;
+			break;
+		case (int)Gesture.chest:
+			_currentGesture = Gesture.chest;
+			break;
+		case (int)Gesture.low:
+			_currentGesture = Gesture.low;
+			break;
+		case (int)Gesture.professional:
+			_currentGesture = Gesture.professional;
+			break;
+		}
+	}
+
 	private void BasketballController () {
-		_handDifference = -_handLeft.x - -_handRight.x;  //These x values are negative, the minus sets them positive
 
-		if (_ballIsHeld) {
+		if (_ballIsHeld) { //if the ball is being held
+			_gestureInfo = "Picked up ball";
 
-			GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Picked up ball";
+			if (HasBallBeenDropped ()) { //check if the ball has been dropped or thrown
+				TrackBallDirection ();
 
-			if (IsBallDropped()) { //check they haven't dropped the ball
-				dropBall ();
-			} else {
+				if (HasBallBeenThrown ()) { //check if the ball has been thrown
+					_gestureInfo = "Thrown ball";
+					ThrowBall ();
+				} else { //if the ball hasn't been thrown - it has been dropped
+					_gestureInfo = "Dropped ball";
+					DropBall ();
+				} 
+
+			} else { //if the ball has not been dropped or thrown - move the ball and camera
 				collectSkeletalDifferences ();
 				moveBall ();
 				moveMainCamera ();
 			}
 
-		} else {
+		} else if (!_ballIsHeld && HasBallBeenThrown ()) {
+			TrackBallDirection ();
+			ThrowBall ();
 
-			if (IsBallPickedUp()) {
-				callibrateUser ();
+		} else { //if the ball is not being held
+
+			if (IsBallPickedUp()) { //check if the ball has been picked up
+				callibrateUser (); //if so - calibrate the user to create an initial base for moving the ball
 				_ballIsHeld = true;
 			}
 		}
+
 	}
 
 	private bool IsBallPickedUp() {
@@ -105,9 +168,11 @@ public class KinectController : MonoBehaviour
 			return false;
 	}
 
-	private bool IsBallDropped() {
-		
-		if (_handDifference > (CommonValues.BallWidth + (CommonValues.Inch * 3)))
+	private bool HasBallBeenDropped () {
+
+		float dropBallHandDiff = CommonValues.BallWidth + (CommonValues.Inch * 2);
+
+		if (_handDifference > dropBallHandDiff)
 			return true;
 		else
 			return false;
@@ -126,17 +191,36 @@ public class KinectController : MonoBehaviour
 		_previousCameraPosition = Cameras.MainCameraPosition;
 	}
 
-	private void dropBall() {
-		
-		GameObject.Find ("GestureInfo").GetComponent<Text> ().text = "Dropped ball";
+	public void ClearBallTrackCollection () {
+		_ballPositionCollection.Clear ();
+		_ballPositionCollection.TrimExcess ();
+		SetTrajectory(Vector3.zero);
+	}
 
-		Basketball.SetBallGravity (true); //turn gravity on
+	private void ThrowBall() {
+
+		_basketball.transform.position += _trajectory;
+
+		Basketball.instance.SetBallGravity(true);
 
 		_ballIsHeld = false;
 	}
 
+	private bool HasBallBeenThrown() {
+		if (_trajectory.x < 0.2f && _trajectory.y < 0.2f && _trajectory.z < 0.2f) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	private void DropBall() {
+		Basketball.instance.SetBallGravity (true); //turn gravity on
+		_ballIsHeld = false;
+	}
+
 	private void moveBall () {
-		
+		 
 		int movementSensitivity = 3;
 
 		Vector3 newBallPosition;
@@ -151,9 +235,32 @@ public class KinectController : MonoBehaviour
 		newBallPosition.y = Basketball.InitialBallPosition.y + (movement.y * movementSensitivity);
 		newBallPosition.z = Basketball.InitialBallPosition.z - (movement.z * movementSensitivity); //minus to move ball in the correct view of the user
 
-		Basketball.LockBasketballPosition (false);
+		Basketball.instance.LockBasketballPosition (false);
 
-		GameObject.Find ("Basketball").transform.position = SmoothBasketball(newBallPosition);
+		Vector3 smoothedBallPositon = SmoothBasketball (newBallPosition);
+
+		_basketball.transform.position = smoothedBallPositon;
+
+		TrackBallPosition (smoothedBallPositon);
+	}
+
+	private void TrackBallPosition(Vector3 position) {
+		_ballPositionCollection.Add (position);
+	}
+
+	private void TrackBallDirection() {
+
+		int listSize = _ballPositionCollection.Count;
+
+		int listThreshold = 8;
+		int sensitivity = 6;
+
+		if (listSize > listThreshold) {
+
+			Vector3 difference = _ballPositionCollection [listSize - 1] - _ballPositionCollection [(listSize - 1) - listThreshold];
+
+			_trajectory = (difference / listThreshold) * sensitivity;
+		}
 	}
 
 	private Vector3 SmoothBasketball(Vector3 ballPosition) {
@@ -166,27 +273,42 @@ public class KinectController : MonoBehaviour
 
 	private Vector3 SmoothValues(Vector3 newPosition, Smoothing smoothing) {
 
-		float threshold = 0.3f;
+		float xThreshold = 0.3f;
+		float yThreshold = 0.3f;
+		float zThreshold = 0.3f;
+
 		Vector3 previousPosition = new Vector3(0f, 0f, 0f);
+
+		string gestureText = GameObject.Find ("GestureInfo").GetComponent<Text> ().text;
 
 		switch (smoothing) {
 		case Smoothing.ball:
-			threshold = 0.3f;
+			xThreshold = 0.3f;
+			yThreshold = 0.3f;
+			zThreshold = 0.3f;
 			previousPosition = _previousBallPosition;
 			break;
 		case Smoothing.camera:
-			threshold = 0.2f;
+			xThreshold = 0.3f;
+			yThreshold = 0.3f;
+			zThreshold = 0.3f;
 			previousPosition = _previousCameraPosition;
 			break;
 		}
 
-		if (!isWithinBoundary (previousPosition.x, newPosition.x, threshold)) {
+		if ((_currentGesture == Gesture.professional || _currentGesture == Gesture.chest || _currentGesture == Gesture.low) && (smoothing == Smoothing.ball)) {
+			xThreshold += 1.5f;
+			yThreshold += 1.5f;
+			zThreshold += 1.5f;
+		}
+
+		if (NotWithinBoundary (previousPosition.x, newPosition.x, xThreshold)) {
 			newPosition.x = previousPosition.x;
 		}
-		if (!isWithinBoundary (previousPosition.y, newPosition.y, threshold)) {
+		if (NotWithinBoundary (previousPosition.y, newPosition.y, yThreshold)) {
 			newPosition.y = previousPosition.y;
 		}
-		if (!isWithinBoundary (previousPosition.z, newPosition.z, threshold)) {
+		if (NotWithinBoundary (previousPosition.z, newPosition.z, zThreshold)) {
 			newPosition.z = previousPosition.z;
 		}
 
@@ -202,17 +324,16 @@ public class KinectController : MonoBehaviour
 		}
 
 		return newPosition;
-
 	}
 
-	private bool isWithinBoundary(float oldPosition, float newPosition, float threshold) {
+	private bool NotWithinBoundary(float oldPosition, float newPosition, float threshold) {
 		float upperBoundary = oldPosition + threshold;
 		float lowerBoudary = oldPosition - threshold;
 
 		if (newPosition > upperBoundary || newPosition < lowerBoudary) {
-			return false;
-		} else {
 			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -278,8 +399,16 @@ public class KinectController : MonoBehaviour
 
 		double[] trackedSkeletalPoints = new double[30] 
 		{ 
-			rightHand_HipX, rightHand_HipY, rightHand_HipZ, rightHand_RightWristX, rightHand_RightWristY, rightHand_RightWristZ, rightWrist_RightElbowX, rightWrist_RightElbowY, rightWrist_RightElbowZ, rightElbow_RightShoulderX, rightElbow_RightShoulderY, rightElbow_RightShoulderZ, rightHand_RightShoulderX, rightHand_RightShoulderY, rightHand_RightShoulderZ,
-			leftHand_HipX, leftHand_HipY, leftHand_HipZ, leftHand_LeftWristX, leftHand_LeftWristY, leftHand_LeftWristZ, leftWrist_LeftElbowX, leftWrist_LeftElbowY, leftWrist_LeftElbowZ, leftElbow_LeftShoulderX, leftElbow_LeftShoulderY, leftElbow_LeftShoulderZ, leftHand_LeftShoulderX, leftHand_LeftShoulderY, leftHand_LeftShoulderZ
+			rightHand_HipX, rightHand_HipY, rightHand_HipZ, 
+			rightHand_RightWristX, rightHand_RightWristY, rightHand_RightWristZ, 
+			rightWrist_RightElbowX, rightWrist_RightElbowY, rightWrist_RightElbowZ, 
+			rightElbow_RightShoulderX, rightElbow_RightShoulderY, rightElbow_RightShoulderZ, 
+			rightHand_RightShoulderX, rightHand_RightShoulderY, rightHand_RightShoulderZ,
+			leftHand_HipX, leftHand_HipY, leftHand_HipZ, 
+			leftHand_LeftWristX, leftHand_LeftWristY, leftHand_LeftWristZ, 
+			leftWrist_LeftElbowX, leftWrist_LeftElbowY, leftWrist_LeftElbowZ, 
+			leftElbow_LeftShoulderX, leftElbow_LeftShoulderY, leftElbow_LeftShoulderZ, 
+			leftHand_LeftShoulderX, leftHand_LeftShoulderY, leftHand_LeftShoulderZ
 		};
 
 		/*

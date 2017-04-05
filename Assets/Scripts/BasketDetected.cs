@@ -6,15 +6,15 @@ public class BasketDetected : MonoBehaviour {
 	private bool scored = false;
 	private int bonusSetting = 2;
 
-	Scoreboard scoreboard;
-
     public void Start () {
 		basketCount = 0;
     }
 
+	//TODO: Need to fix this!! Is triggered at the start!
     public void OnTriggerEnter (Collider col)
 	{
-		scored = true;
+		//print ("triggered score");
+		//scored = true;
 	}
 
 	public void OnTriggerExit (Collider col) 
@@ -23,29 +23,31 @@ public class BasketDetected : MonoBehaviour {
 		{
 			if (basketCount < bonusSetting) {
 
-				Scoreboard.score = Scoreboard.score + 10;
-                scoreboard.updateScore();
+				//Scoreboard.score = Scoreboard.score + 10;
+				//Scoreboard.updateScore();
+				Scoreboard.AddToScore(10);
 
-                Scoreboard.updateBonusColour("#181717"); // set the bonus text to black
+				Scoreboard.LightUpScoreboardBonus (false); // set the bonus text to black
 
 				basketCount++;
 
 				scored = false;
 
-				Basketball.ResetBall ();
+				Basketball.instance.ResetBall ();
 
 			} else if (basketCount == bonusSetting) {
 
-                Scoreboard.score = Scoreboard.score + 100;
-				scoreboard.updateScore ();
+                //Scoreboard.score = Scoreboard.score + 100;
+				//Scoreboard.updateScore ();
+				Scoreboard.AddToScore(100);
 
-				Scoreboard.updateBonusColour("#6BD289FF"); // set the bonus text to green
+				Scoreboard.LightUpScoreboardBonus (true); // set the bonus text to green
 
 				basketCount = 0;
 
 				scored = false;
 
-				Basketball.ResetBall ();
+				Basketball.instance.ResetBall ();
 			}
 		}
 	}

@@ -22,7 +22,7 @@ public class GamePlay : MonoBehaviour {
 	public static void SetUpMainGame() {
 		ActiveScreenValue = (int)ActiveScreen.mainGame;
 		Cameras.MainGameCameraSetUp ();
-		Basketball.ResetBall ();
+		Basketball.instance.ResetBall ();
 		StartScreen.instance.ClearStartScreen ();
 		PlayingMainGame = true;
 		Scoreboard.ResetScoreboard ();
@@ -32,7 +32,7 @@ public class GamePlay : MonoBehaviour {
 	public static void SetUpPregame() {
 		ActiveScreenValue = (int)ActiveScreen.preGame;
 		Cameras.MainGameCameraSetUp ();
-		Basketball.ResetBall ();
+		Basketball.instance.ResetBall ();
 		StartScreen.instance.ClearStartScreen ();
 		HUD.DisplayPreGameText ();
 		PlayingMainGame = false;
