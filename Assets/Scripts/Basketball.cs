@@ -23,14 +23,17 @@ public class Basketball : MonoBehaviour {
 		try {
 			var collision = col.gameObject.name;
 
-			//Debug.Log (col.relativeVelocity.magnitude / 21 * 100 + "%");
+			if (collision == "OuterWallCollider")
+				ResetBall();
 
-			if (collision == "Floor" || collision == "wall" || collision == "wall (1)" || collision == "wall (2)" || collision == "wall (3)" || collision == "Ceiling" ) {
+			if (collision == "wall" || collision == "wall (1)" || collision == "wall (2)" || collision == "wall (3)" || collision == "Ceiling" ) {
 				GetComponent<AudioSource> ().volume = col.relativeVelocity.magnitude/100;
 				GetComponent<AudioSource> ().Play ();
 			}
 
 			if (collision == "Floor") {
+				GetComponent<AudioSource> ().volume = col.relativeVelocity.magnitude/100;
+				GetComponent<AudioSource> ().Play ();
 				ResetBall();
 				Scoreboard.MinusAvailableBalls();
 				BasketDetected.basketCount = 0;
@@ -41,9 +44,26 @@ public class Basketball : MonoBehaviour {
 		}
 	}
 
+	void OnCollisionExit (Collision col) {
+
+		try {
+			var collision = col.gameObject.name;
+
+			if (collision == "Floor" || collision == "wall" || collision == "wall (1)" || collision == "wall (2)" || collision == "wall (3)" || collision == "Ceiling" ) {
+				GetComponent<AudioSource> ().volume = col.relativeVelocity.magnitude/100;
+				GetComponent<AudioSource> ().Play ();
+				ResetBall();
+			}
+
+		} catch {
+			GetComponent<AudioSource> ().volume = 1;
+		}
+
+	}
+
 	public void ResetBall() {
-		UpdateFixedBasketballPosition(InitialBallPosition.x, InitialBallPosition.y, InitialBallPosition.z);
 		KinectController.instance.ClearBallTrackCollection ();
+		UpdateFixedBasketballPosition(InitialBallPosition.x, InitialBallPosition.y, InitialBallPosition.z);
 	}
 
 	public void UpdateFixedBasketballPosition(float x, float y, float z)
