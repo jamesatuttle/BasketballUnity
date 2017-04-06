@@ -131,7 +131,7 @@ public class ANN_CPU : MonoBehaviour {
 
 		KinectController.instance.UpdateCurrentGesture (index);
 
-		HUD.UpdateGesture (actualOutput);
+		HUD.instance.UpdateGestureText (actualOutput);
 	}
 
 

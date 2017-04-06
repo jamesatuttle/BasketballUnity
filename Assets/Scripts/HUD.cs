@@ -137,7 +137,7 @@ public class HUD : MonoBehaviour {
 		_viewLeaderboardButton.onClick.AddListener (ViewLeaderboard);
 	}
 
-	public static void UpdateGesture(string gesture) {
+	public void UpdateGestureText(string gesture) {
 		GestureInfo.text = gesture;
 	}
 
