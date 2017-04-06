@@ -42,7 +42,6 @@ public class HUD : MonoBehaviour {
 		instance = this;
 		TopThreeLeaderboardData = new int[3,3];
 		construct = "URI=file:" + Application.dataPath + "\\TrainingData.db";
-		//SetUpCountdown ();
 		LeaderboardTitle = GameObject.Find ("Leaderboard Title").GetComponent<Text> ();
 		Leaderboard_Usernames = GameObject.Find ("Leaderboard_Usernames").GetComponent<Text> ();
 		Leaderboard_Scores = GameObject.Find ("Leaderboard_Scores").GetComponent<Text> ();
