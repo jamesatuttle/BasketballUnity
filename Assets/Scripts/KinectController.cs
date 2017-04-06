@@ -67,7 +67,9 @@ public class KinectController : MonoBehaviour
 		
 	void Update () { 
 		try {
-			if (GamePlay.GameIsPlayable) {
+			GamePlay.GameIsPlayable = true;
+
+			if (GamePlay.GameIsPlayable && (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.preGame || GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.mainGame)) {
 
 				KinectManager manager = KinectManager.Instance;
 
@@ -94,9 +96,10 @@ public class KinectController : MonoBehaviour
 					_gestureInfo = "Stand in front of the sensor";
 				}
 			}
+				
 		} catch (Exception e) {
 			GamePlay.GameIsPlayable = false;
-			Debug.Log ("An error occured: " + e.Message);
+			Debug.Log ("Exception Kinect Controller: " + e.Message);
 		}
 	}
 

@@ -2,7 +2,7 @@
 
 public class GamePlay : MonoBehaviour {
 	public static bool GameIsPlayable;
-	public static bool PlayingMainGame;
+	//public static bool PlayingMainGame;
 	public static int ActiveScreenValue;
 
 	public enum ActiveScreen {
@@ -17,6 +17,7 @@ public class GamePlay : MonoBehaviour {
 		scoreboard,
 		leaderboard,
 		howToPlay,
+		gameOver
 	};
 
 	public static void SetUpMainGame() {
@@ -24,9 +25,11 @@ public class GamePlay : MonoBehaviour {
 		Cameras.MainGameCameraSetUp ();
 		Basketball.instance.ResetBall ();
 		StartScreen.instance.ClearStartScreen ();
-		PlayingMainGame = true;
-		Scoreboard.ResetScoreboard ();
-		HUD.countdown = true;
+		Scoreboard.instance.SetAvailableBalls ();
+		//Scoreboard.instance.StartTimer ();
+		//HUD.countdown = true;
+		HUD.instance.StartCountdown();
+		//PlayingMainGame = true;
 	}
 
 	public static void SetUpPregame() {
@@ -35,8 +38,9 @@ public class GamePlay : MonoBehaviour {
 		Basketball.instance.ResetBall ();
 		StartScreen.instance.ClearStartScreen ();
 		HUD.DisplayPreGameText ();
-		PlayingMainGame = false;
-		Scoreboard.ResetScoreboard ();
+		//PlayingMainGame = false;
+		Scoreboard.instance.SetAvailableBalls ();
+		//HUD.instance.SetUpCountdown ();
 		GameIsPlayable = true;
 	}
 }

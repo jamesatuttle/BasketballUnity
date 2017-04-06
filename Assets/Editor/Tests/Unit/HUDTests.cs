@@ -29,7 +29,7 @@ public class HUDTests
 	[Test]
 	public void gameOverTextDisplays()
 	{
-		HUD.GameOver();
+		HUD.instance.GameOver();
 		Assert.AreEqual("GAME OVER", GameObject.Find("Game Over").GetComponent<UnityEngine.UI.Text>().text);
 	}
 

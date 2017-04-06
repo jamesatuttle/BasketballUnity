@@ -32,7 +32,7 @@ public class Basketball : MonoBehaviour {
 				GetComponent<AudioSource> ().volume = col.relativeVelocity.magnitude/100;
 				GetComponent<AudioSource> ().Play ();
 				ResetBall();
-				Scoreboard.MinusAvailableBalls();
+				Scoreboard.instance.MinusAvailableBalls();
 				BasketDetected.basketCount = 0;
 			}
 		}
