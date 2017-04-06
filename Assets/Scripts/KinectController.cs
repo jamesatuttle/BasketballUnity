@@ -338,6 +338,7 @@ public class KinectController : MonoBehaviour
 	}
 
 	private void moveMainCamera() {
+
 		int movementSensitivity = 3;
 
 		Vector3 newCameraPosition;
@@ -397,7 +398,7 @@ public class KinectController : MonoBehaviour
 		double leftHand_LeftShoulderY = _handLeft.y - _shoulderLeft.y;
 		double leftHand_LeftShoulderZ = _handLeft.z - _shoulderLeft.z;
 
-		/*double[] trackedSkeletalPoints = new double[30] 
+		double[] trackedSkeletalPoints = new double[30] 
 		{ 
 			rightHand_HipX, rightHand_HipY, rightHand_HipZ, 
 			rightHand_RightWristX, rightHand_RightWristY, rightHand_RightWristZ, 
@@ -409,7 +410,7 @@ public class KinectController : MonoBehaviour
 			leftWrist_LeftElbowX, leftWrist_LeftElbowY, leftWrist_LeftElbowZ, 
 			leftElbow_LeftShoulderX, leftElbow_LeftShoulderY, leftElbow_LeftShoulderZ, 
 			leftHand_LeftShoulderX, leftHand_LeftShoulderY, leftHand_LeftShoulderZ
-		};*/
+		};
 
 		/*
 		 * Stationary
@@ -417,7 +418,7 @@ public class KinectController : MonoBehaviour
 		 * Chest
 		 * Low
 		 */
-		string gesture = "Stationary";
+		/*string gesture = "Professional";
 
 		AddToDatabase.addToANNTrainingData (
 			rightHand_HipX, rightHand_HipY, rightHand_HipZ,
@@ -433,8 +434,8 @@ public class KinectController : MonoBehaviour
 			leftHand_LeftShoulderX, leftHand_LeftShoulderY, leftHand_LeftShoulderZ,
 
 			gesture
-		);
+		);*/
 
-		//ANN_CPU.StartANN (trackedSkeletalPoints);
+		ANN_CPU.StartANN (trackedSkeletalPoints);
 	}
 }
