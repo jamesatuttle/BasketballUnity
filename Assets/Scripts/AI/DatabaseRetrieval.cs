@@ -12,7 +12,7 @@ public class Database {
 	private static IDbConnection dbConnection;
 	private static IDbCommand dbCommand;
 	private static IDataReader dataReader;
-	private static int noRows = 60;
+	private static int noRows = 120;
 	private static int noInputs = 30;
 	private static int noOutputs = 4;
 
