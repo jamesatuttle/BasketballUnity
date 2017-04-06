@@ -23,8 +23,8 @@ public class Cameras : MonoBehaviour {
 		else if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.scoreboard)
 			ScoreboardCameraSetUp ();
 
-		else if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.mainGame || GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.preGame)
-			MainGameCameraSetUp ();
+		/*else if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.mainGame || GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.preGame)
+			MainGameCameraSetUp ();*/
 
 		else if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.leaderboard)
 			LeaderboardCameraSetUp();
