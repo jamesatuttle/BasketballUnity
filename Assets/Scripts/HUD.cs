@@ -10,12 +10,7 @@ public class HUD : MonoBehaviour {
 
 	public static HUD instance;
 
-	//static float endTime;
 	public static bool _countingDown;
-	//public static int Down = 3;
-	public static bool setTimer = true;
-	public int timer;
-
 	private float totalCountdownTime;
 
 	private static Text LeaderboardTitle;
