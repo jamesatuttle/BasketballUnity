@@ -76,6 +76,10 @@ public class HUD : MonoBehaviour {
 		}
 	}
 
+	public void UpdateGestureText(string gesture) {
+		GestureInfo.text = gesture;
+	}
+
 	static void HideButton(Button button) {
 		button.image.enabled = false;
 		button.GetComponentInChildren<Text> ().text = "";
@@ -98,10 +102,6 @@ public class HUD : MonoBehaviour {
 		_countingDown = true;
 	}
 
-	private void ClearPracticeText () {
-		PracticeText.text = "";
-	}
-
 	void CountdownFromThree() {
 		int timeLeft = Convert.ToInt32(totalCountdownTime) - Convert.ToInt32(Time.time);
 
@@ -122,6 +122,10 @@ public class HUD : MonoBehaviour {
 		PracticeText.fontStyle = FontStyle.Normal;
 	}
 
+	private void ClearPracticeText () {
+		PracticeText.text = "";
+	}
+
 	public void GameOver() {
 		GamePlay.GameIsPlayable = false;
 		GestureInfo.text = "";
@@ -135,10 +139,6 @@ public class HUD : MonoBehaviour {
 		_playAgainButton.onClick.AddListener (RestartGame);
 		_mainMenuButton.onClick.AddListener (BackToMainMenu);
 		_viewLeaderboardButton.onClick.AddListener (ViewLeaderboard);
-	}
-
-	public void UpdateGestureText(string gesture) {
-		GestureInfo.text = gesture;
 	}
 
 	public void BackToMainMenu() {

@@ -114,7 +114,7 @@ public class Leaderboard : MonoBehaviour {
 			Leaderboard_Scores2.text += LeaderboardDataString [43, 1];
 		}
 
-		for (int i = 44; i < 63; i++) {
+		for (int i = 44; i < 65; i++) {
 			if (LeaderboardDataString [i, 0] != "") {
 				Leaderboard_Usernames3.text += (LeaderboardDataString [i, 0] + "\n");
 				Leaderboard_Scores3.text += (LeaderboardDataString [i, 1] + "\n");
@@ -122,7 +122,7 @@ public class Leaderboard : MonoBehaviour {
 			else
 				Leaderboard_Usernames3.text += "\n";
 		}
-		if (LeaderboardDataString [63, 1] != "") {
+		if (LeaderboardDataString [65, 1] != "") {
 			Leaderboard_Usernames3.text += LeaderboardDataString [63, 0];
 			Leaderboard_Scores3.text += LeaderboardDataString [63, 1];
 		}
