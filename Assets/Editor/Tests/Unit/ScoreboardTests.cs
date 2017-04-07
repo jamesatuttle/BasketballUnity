@@ -154,7 +154,7 @@ public class ScoreboardTests
         startBasketDetected();
         startScoreboard();
         basketDetected.OnTriggerEnter(col);
-        basketDetected.OnTriggerExit(col);
+        //basketDetected.OnTriggerExit(col);
 
         Assert.AreEqual("010", GameObject.Find("Score").GetComponent<TextMesh>().text);
     }
@@ -167,7 +167,7 @@ public class ScoreboardTests
 
         startBasketDetected();
         startScoreboard();
-        basketDetected.OnTriggerExit(col);
+        //basketDetected.OnTriggerExit(col);
 
         Assert.AreNotEqual("010", GameObject.Find("Score").GetComponent<TextMesh>().text);
         Assert.AreEqual("000", GameObject.Find("Score").GetComponent<TextMesh>().text);
@@ -182,10 +182,10 @@ public class ScoreboardTests
         startBasketDetected();
         startScoreboard();
         basketDetected.OnTriggerEnter(col);
-        basketDetected.OnTriggerExit(col);
+        //basketDetected.OnTriggerExit(col);
 
         basketDetected.OnTriggerEnter(col);
-        basketDetected.OnTriggerExit(col);
+        //basketDetected.OnTriggerExit(col);
 
         Assert.AreEqual("020", GameObject.Find("Score").GetComponent<TextMesh>().text);
     }
@@ -199,13 +199,13 @@ public class ScoreboardTests
         startBasketDetected();
         startScoreboard();
         basketDetected.OnTriggerEnter(col);
-        basketDetected.OnTriggerExit(col);
+        //basketDetected.OnTriggerExit(col);
 
         basketDetected.OnTriggerEnter(col);
-        basketDetected.OnTriggerExit(col);
+        //basketDetected.OnTriggerExit(col);
 
         basketDetected.OnTriggerEnter(col);
-        basketDetected.OnTriggerExit(col);
+        //basketDetected.OnTriggerExit(col);
 
         Assert.AreNotEqual("30", GameObject.Find("Score").GetComponent<TextMesh>().text);
     }
@@ -219,13 +219,13 @@ public class ScoreboardTests
         startBasketDetected();
         startScoreboard();
         basketDetected.OnTriggerEnter(col);
-        basketDetected.OnTriggerExit(col);
+        //basketDetected.OnTriggerExit(col);
 
         basketDetected.OnTriggerEnter(col);
-        basketDetected.OnTriggerExit(col);
+        //basketDetected.OnTriggerExit(col);
 
         basketDetected.OnTriggerEnter(col);
-        basketDetected.OnTriggerExit(col);
+        //basketDetected.OnTriggerExit(col);
 
         Assert.AreEqual("120", GameObject.Find("Score").GetComponent<TextMesh>().text);
     }
@@ -247,15 +247,15 @@ public class ScoreboardTests
         startScoreboard();
 
         basketDetected.OnTriggerEnter(col);
-        basketDetected.OnTriggerExit(col);
+        //basketDetected.OnTriggerExit(col);
 
         //basketball.OnCollisionEnter(collision);
 
         basketDetected.OnTriggerEnter(col);
-        basketDetected.OnTriggerExit(col);
+        //basketDetected.OnTriggerExit(col);
 
         basketDetected.OnTriggerEnter(col);
-        basketDetected.OnTriggerExit(col);
+        //basketDetected.OnTriggerExit(col);
 
         Assert.AreEqual("30", GameObject.Find("Score").GetComponent<TextMesh>().text);
     }*/
@@ -285,7 +285,7 @@ public class ScoreboardTests
         startScoreboard();
 
         basketDetected.OnTriggerEnter(col);
-        basketDetected.OnTriggerExit(col);
+        //basketDetected.OnTriggerExit(col);
 
         Color bonusOff = new Color();
         ColorUtility.TryParseHtmlString("#181717", out bonusOff);
@@ -303,10 +303,10 @@ public class ScoreboardTests
         startScoreboard();
 
         basketDetected.OnTriggerEnter(col);
-        basketDetected.OnTriggerExit(col);
+        //basketDetected.OnTriggerExit(col);
 
         basketDetected.OnTriggerEnter(col);
-        basketDetected.OnTriggerExit(col);
+        //basketDetected.OnTriggerExit(col);
 
         Color bonusOff = new Color();
         ColorUtility.TryParseHtmlString("#181717", out bonusOff);
@@ -323,13 +323,13 @@ public class ScoreboardTests
         startBasketDetected();
         startScoreboard();
         basketDetected.OnTriggerEnter(col);
-        basketDetected.OnTriggerExit(col);
+        //basketDetected.OnTriggerExit(col);
 
         basketDetected.OnTriggerEnter(col);
-        basketDetected.OnTriggerExit(col);
+        //basketDetected.OnTriggerExit(col);
 
         basketDetected.OnTriggerEnter(col);
-        basketDetected.OnTriggerExit(col);
+        //basketDetected.OnTriggerExit(col);
 
         Color bonusColour = new Color();
         ColorUtility.TryParseHtmlString("#6BD289FF", out bonusColour);
