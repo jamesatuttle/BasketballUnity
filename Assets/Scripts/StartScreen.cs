@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,6 +17,8 @@ public class StartScreen : MonoBehaviour {
 	Text LeaderboardTitle;
 	Text Leaderboard_Usernames;
 	Text Leaderboard_Scores;
+
+	private Text _kinectConnectedText;
 
 	InputField UserName;
 
@@ -43,54 +46,68 @@ public class StartScreen : MonoBehaviour {
 		LeaderboardTitle = GameObject.Find ("Leaderboard Title").GetComponent<Text> ();
 		Leaderboard_Usernames = GameObject.Find ("Leaderboard_Usernames").GetComponent<Text> ();
 		Leaderboard_Scores = GameObject.Find ("Leaderboard_Scores").GetComponent<Text> ();
-
+		_kinectConnectedText = GameObject.Find ("KinectConnected").GetComponent<Text> ();
 	}
 
 	void Start () {
-		//SetUpStartScreen ();
 		GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.startScreen;
 		SetTextActive (StartGame);
 	}
 		
 	// Update is called once per frame
 	void Update () {
-		if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.startScreen) {
 
-			SetUpStartScreen ();
+		try {
+			if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.startScreen) {
 
-			if (Input.GetKeyDown(KeyCode.DownArrow)) {
-				if (OptionSelected(StartGame))
-					SetTextActive(ViewScoreboard);
-				else if (OptionSelected(ViewScoreboard))
-					SetTextActive(ViewLeaderboard);
-				else if (OptionSelected(ViewLeaderboard))
-					SetTextActive(HowToPlayText);
-				else if (OptionSelected(HowToPlayText))
-					SetTextActive(StartGame);
-			}
-			if (Input.GetKeyDown(KeyCode.UpArrow)) {
-				if (OptionSelected(StartGame))
-					SetTextActive(HowToPlayText);
-				else if (OptionSelected(HowToPlayText))
-					SetTextActive(ViewLeaderboard);
-				else if (OptionSelected(ViewLeaderboard))
-					SetTextActive(ViewScoreboard);
-				else if (OptionSelected(ViewScoreboard))
-					SetTextActive(StartGame);
-			}
+				SetUpStartScreen ();
 
-			if (Input.GetKeyDown (KeyCode.Return)) {
-				if (OptionSelected(StartGame))
-					GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.playedBeforeQuestion;
-				else if (OptionSelected(ViewScoreboard))
-					GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.scoreboard;
-				else if (OptionSelected(ViewLeaderboard))
-					GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.leaderboard;
-				else if (OptionSelected(HowToPlayText))
-					GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.howToPlay;
+				if (Input.GetKeyDown(KeyCode.DownArrow)) {
+					if (OptionSelected(StartGame))
+						SetTextActive(ViewScoreboard);
+					else if (OptionSelected(ViewScoreboard))
+						SetTextActive(ViewLeaderboard);
+					else if (OptionSelected(ViewLeaderboard))
+						SetTextActive(HowToPlayText);
+					else if (OptionSelected(HowToPlayText))
+						SetTextActive(StartGame);
+				}
+				if (Input.GetKeyDown(KeyCode.UpArrow)) {
+					if (OptionSelected(StartGame))
+						SetTextActive(HowToPlayText);
+					else if (OptionSelected(HowToPlayText))
+						SetTextActive(ViewLeaderboard);
+					else if (OptionSelected(ViewLeaderboard))
+						SetTextActive(ViewScoreboard);
+					else if (OptionSelected(ViewScoreboard))
+						SetTextActive(StartGame);
+				}
+
+				if (Input.GetKeyDown (KeyCode.Return)) {
+					if (OptionSelected (StartGame)) {
+
+						if (_kinectConnectedText.text == "A Kinect Sensor is needed to play")
+							_kinectConnectedText.text = "Please attach Kinect and restart";
+						else if (_kinectConnectedText.text == "Please attach Kinect and restart") {
+							_kinectConnectedText.color = Color.white;
+						} else {
+							GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.playedBeforeQuestion;
+							_kinectConnectedText.text = "";
+						}
+						
+					} else if (OptionSelected(ViewScoreboard))
+						GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.scoreboard;
+					else if (OptionSelected(ViewLeaderboard))
+						GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.leaderboard;
+					else if (OptionSelected(HowToPlayText))
+						GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.howToPlay;
+				}
+			} else {
+				ClearStartScreen ();
 			}
-		} else {
-			ClearStartScreen ();
+		} catch (Exception e) {
+			print ("Exception Start Screen: " + e.Message);
+			_kinectConnectedText.text = "A problem seems to have occured.  Please restart";
 		}
 	}
 

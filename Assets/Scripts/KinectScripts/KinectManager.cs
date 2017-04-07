@@ -85,6 +85,8 @@ public class KinectManager : MonoBehaviour
 	
 	// GUI Text to show messages.
 	public GUIText CalibrationText;
+
+	public Text KinectErrorText;
 	
 	// GUI Texture to display the hand cursor for Player1
 	public GameObject HandCursor1;
@@ -1012,6 +1014,8 @@ public class KinectManager : MonoBehaviour
 		}
 		catch (Exception e)
 		{
+			KinectErrorText.text = "A Kinect Sensor is needed to play";
+			print ("Connect the kinect sensor - if it is connected, please make sure it is connected. If all else fails, restart game");
 			string message = e.Message + " - " + KinectWrapper.GetNuiErrorString(hr);
 			Debug.LogError(message);
 			Debug.LogError(e.ToString());

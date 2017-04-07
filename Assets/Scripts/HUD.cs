@@ -8,11 +8,10 @@ using Mono.Data.SqliteClient;
 
 public class HUD : MonoBehaviour {
 
-	static float endTime;
-	public static bool countdown;
-	public static int Down = 3;
-	public static bool setTimer = true;
-	public int timer;
+	public static HUD instance;
+
+	public static bool _countingDown;
+	private float totalCountdownTime;
 
 	private static Text LeaderboardTitle;
 	private static Text Leaderboard_Usernames;
@@ -20,6 +19,11 @@ public class HUD : MonoBehaviour {
 	private static Text Countdown;
 	private static Text Gameover;
 	private static Text PracticeText;
+	private static Text GestureInfo;
+
+	private static Button _mainMenuButton;
+	private static Button _playAgainButton;
+	private static Button _viewLeaderboardButton;
 
 	private static string construct;
 	private static IDbConnection dbConnection;
@@ -30,68 +34,131 @@ public class HUD : MonoBehaviour {
 
 	void Awake()
 	{
+		instance = this;
 		TopThreeLeaderboardData = new int[3,3];
 		construct = "URI=file:" + Application.dataPath + "\\TrainingData.db";
-		timer = 55;
 		LeaderboardTitle = GameObject.Find ("Leaderboard Title").GetComponent<Text> ();
 		Leaderboard_Usernames = GameObject.Find ("Leaderboard_Usernames").GetComponent<Text> ();
 		Leaderboard_Scores = GameObject.Find ("Leaderboard_Scores").GetComponent<Text> ();
 		Countdown = GameObject.Find ("Countdown").GetComponent<Text> ();
 		Gameover = GameObject.Find ("Game Over").GetComponent<Text> ();
 		PracticeText = GameObject.Find ("PracticeText").GetComponent<Text> ();
+		GestureInfo = GameObject.Find ("GestureInfo").GetComponent<Text> ();
+		_mainMenuButton = GameObject.Find ("MainMenuButton").GetComponent<Button> ();
+		_playAgainButton = GameObject.Find ("PlayAgainButton").GetComponent<Button> ();
+		_viewLeaderboardButton = GameObject.Find ("ViewLeaderboardButton").GetComponent<Button> ();
 	}
 
 	public static void Start () {
 		Countdown.text = "";
-		Gameover.text = "";
 	}
 
 	void Update () {
-		if (countdown) CountdownFromThree();
+		if (_countingDown) 
+			CountdownFromThree();
 
 		PullLeaderboardData ();
+
+		if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.mainGame)
+			ClearPracticeText ();
+
 		if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.preGame || GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.mainGame) {
 			LeaderboardTitle.text = "Top 3 Scores";
 			UpdateTopThreeLeaderboard ();
+			HideGameOver ();
+		} else if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.gameOver) {
+			GameOver ();
 		} else {
 			LeaderboardTitle.text = "";
 			Leaderboard_Usernames.text = "";
 			Leaderboard_Scores.text = "";
+			HideGameOver ();
 		}
-		
 	}
 
-	void CountdownFromThree()
-	{
-		PracticeText.text = "";
+	public void UpdateGestureText(string gesture) {
+		GestureInfo.text = gesture;
+	}
 
-		timer--;
-		//Debug.Log (timer);
-		if (timer == 44) {
-			Countdown.text = "3";
-		}
-		else if (timer == 33)
-			Countdown.text = "2";
-		else if (timer == 22)
-			Countdown.text = "1";
-		else if (timer == 11)
+	static void HideButton(Button button) {
+		button.image.enabled = false;
+		button.GetComponentInChildren<Text> ().text = "";
+		button.onClick.RemoveAllListeners ();
+	}
+
+	static void ShowButton(Button button) {
+		button.image.enabled = true;
+
+		if (button == _mainMenuButton)
+			button.GetComponentInChildren<Text> ().text = "Main Menu";
+		else if (button == _playAgainButton)
+			button.GetComponentInChildren<Text> ().text = "Play Again";
+		else if (button == _viewLeaderboardButton)
+			button.GetComponentInChildren<Text> ().text = "View Leaderboard";
+	}
+
+	public void StartCountdown() {
+		totalCountdownTime = Time.time + 3;
+		_countingDown = true;
+	}
+
+	void CountdownFromThree() {
+		int timeLeft = Convert.ToInt32(totalCountdownTime) - Convert.ToInt32(Time.time);
+
+		if (timeLeft > 0)
+			Countdown.text = timeLeft.ToString ();
+		else if (timeLeft == 0) {
 			Countdown.text = "GO";
-		else if (timer < 0) {
+			Scoreboard.instance.StartTimer ();
+			GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.mainGame;
+		} else {
 			Countdown.text = "";
-			countdown = false;
-			GamePlay.GameIsPlayable = true;
+			_countingDown = false;
 		}
 	}
 
-	public static void DisplayPreGameText()
-	{
+	public static void DisplayPreGameText() {
 		PracticeText.text = "3 BALL PRACTICE";
 		PracticeText.fontStyle = FontStyle.Normal;
 	}
 
-	public static void GameOver()
-	{
+	private void ClearPracticeText () {
+		PracticeText.text = "";
+	}
+
+	public void GameOver() {
+		GamePlay.GameIsPlayable = false;
+		GestureInfo.text = "";
+		LeaderboardTitle.text = "";
+		Leaderboard_Usernames.text = "";
+		Leaderboard_Scores.text = "";
 		Gameover.text = "GAME OVER";
+		ShowButton (_mainMenuButton);
+		ShowButton (_playAgainButton);
+		ShowButton (_viewLeaderboardButton);
+		_playAgainButton.onClick.AddListener (RestartGame);
+		_mainMenuButton.onClick.AddListener (BackToMainMenu);
+		_viewLeaderboardButton.onClick.AddListener (ViewLeaderboard);
+	}
+
+	public void BackToMainMenu() {
+		GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.startScreen;
+	}
+
+	public void RestartGame() {
+		GamePlay.SetUpPregame ();
+		Scoreboard.instance.Reset ();
+	}
+
+	public void ViewLeaderboard() {
+		GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.leaderboard;
+	}
+
+	public static void HideGameOver() {
+		Gameover.text = "";
+		HideButton (_mainMenuButton);
+		HideButton (_playAgainButton);
+		HideButton (_viewLeaderboardButton);
 	}
 
 	private static void PullLeaderboardData() {
