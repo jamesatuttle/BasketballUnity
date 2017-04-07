@@ -10,45 +10,38 @@ public class BasketDetected : MonoBehaviour {
 		basketCount = 0;
     }
 
-	//TODO: Need to fix this!! Is triggered at the start!
-    public void OnTriggerEnter (Collider col)
-	{
-		//print ("triggered score");
-		//scored = true;
-	}
-
-	public void OnTriggerExit (Collider col) 
-	{
-		if (scored)
+	void Update () {
+		if (scored && GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.mainGame)
 		{
+			scored = false;
+
 			if (basketCount < bonusSetting) {
 
-				//Scoreboard.score = Scoreboard.score + 10;
-				//Scoreboard.updateScore();
 				Scoreboard.AddToScore(10);
 
 				Scoreboard.LightUpScoreboardBonus (false); // set the bonus text to black
 
 				basketCount++;
 
-				scored = false;
-
-				Basketball.instance.ResetBall ();
-
 			} else if (basketCount == bonusSetting) {
 
-                //Scoreboard.score = Scoreboard.score + 100;
-				//Scoreboard.updateScore ();
 				Scoreboard.AddToScore(100);
 
 				Scoreboard.LightUpScoreboardBonus (true); // set the bonus text to green
 
 				basketCount = 0;
-
-				scored = false;
-
-				Basketball.instance.ResetBall ();
 			}
+
+			Basketball.instance.ResetBall ();
 		}
 	}
+
+    public void OnTriggerEnter (Collider col)
+	{
+		if (col.gameObject.name == "Basketball") {
+			print ("triggered score");
+			scored = true;
+		}
+	}
+
 }
