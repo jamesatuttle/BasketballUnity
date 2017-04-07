@@ -202,8 +202,8 @@ public class KinectController : MonoBehaviour
 
 	private void ThrowBall() {
 
-		_basketball.transform.position += _trajectory;
-
+		_basketball.GetComponent<Rigidbody> ().AddForce (_basketball.transform.position += _trajectory);
+			
 		Basketball.instance.SetBallGravity(true);
 
 		_ballIsHeld = false;
@@ -256,7 +256,7 @@ public class KinectController : MonoBehaviour
 		int listSize = _ballPositionCollection.Count;
 
 		int listThreshold = 8;
-		int sensitivity = 6;
+		int sensitivity = 4;
 
 		if (listSize > listThreshold) {
 

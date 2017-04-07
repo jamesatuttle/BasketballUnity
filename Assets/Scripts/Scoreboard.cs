@@ -29,7 +29,7 @@ public class Scoreboard : MonoBehaviour {
 	
 		UpdateAvailableBalls ();
 
-        score = 0;
+       // score = 0;
 		AddToScore(0);
 
 		LightUpScoreboardBonus (false); // set the bonus text to black
@@ -49,6 +49,7 @@ public class Scoreboard : MonoBehaviour {
 	public void Reset () {
 		SetAvailableBalls ();
 		score = 0;
+		AddToScore (0);
 	}
 
 	public void StartTimer() {
