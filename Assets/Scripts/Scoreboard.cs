@@ -29,7 +29,6 @@ public class Scoreboard : MonoBehaviour {
 	
 		UpdateAvailableBalls ();
 
-       // score = 0;
 		AddToScore(0);
 
 		LightUpScoreboardBonus (false); // set the bonus text to black
