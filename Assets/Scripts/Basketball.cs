@@ -27,14 +27,6 @@ public class Basketball : MonoBehaviour {
 				GetComponent<AudioSource> ().volume = col.relativeVelocity.magnitude/100;
 				GetComponent<AudioSource> ().Play ();
 			}
-
-			if (collision == "Floor") {
-				GetComponent<AudioSource> ().volume = col.relativeVelocity.magnitude/100;
-				GetComponent<AudioSource> ().Play ();
-				ResetBall();
-				Scoreboard.instance.MinusAvailableBalls();
-				BasketDetected.basketCount = 0;
-			}
 		}
 		catch {
 			GetComponent<AudioSource> ().volume = 1;
@@ -50,6 +42,8 @@ public class Basketball : MonoBehaviour {
 				GetComponent<AudioSource> ().volume = col.relativeVelocity.magnitude/100;
 				GetComponent<AudioSource> ().Play ();
 				ResetBall();
+				Scoreboard.instance.MinusAvailableBalls();
+				BasketDetected.basketCount = 0;
 			}
 
 		} catch {
