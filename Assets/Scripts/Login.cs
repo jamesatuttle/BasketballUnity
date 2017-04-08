@@ -186,7 +186,6 @@ public class Login : MonoBehaviour {
 			if (DoesUsernameExist ()) {
 				if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.enterName) {
 					WelcomeBack ();
-					//AddNewLeaderboardRow ();
 				}
 			}
 			else
@@ -204,8 +203,6 @@ public class Login : MonoBehaviour {
 			else if (usernameAdded) {
 				LoginHelp.text = "Username added";
 				NextButton.onClick.AddListener (Welcome);
-
-				//usernameAdded = false;
 			} else {
 				AddNewUsername ();
 			}

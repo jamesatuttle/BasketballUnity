@@ -47,14 +47,12 @@ public class Scoreboard : MonoBehaviour {
 
 	public void Reset () {
 		SetAvailableBalls ();
-		//core = 0;
-		//AddToScore (0);
 		ResetScore ();
 	}
 
 	public void ResetScore() {
 		score = 0;
-		//AddToScore (0);
+		GameObject.Find("Score").GetComponent<TextMesh>().text = "000";
 	}
 
 	public void StartTimer() {
