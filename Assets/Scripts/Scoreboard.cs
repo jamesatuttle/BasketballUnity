@@ -47,8 +47,17 @@ public class Scoreboard : MonoBehaviour {
 
 	public void Reset () {
 		SetAvailableBalls ();
+		ResetScore ();
+	}
+
+	public void ResetScore() {
 		score = 0;
-		AddToScore (0);
+		GameObject.Find("Score").GetComponent<TextMesh>().text = "000";
+	}
+
+	public void SetUpScoreboard() {
+		ResetScore ();
+		SetAvailableBalls ();
 	}
 
 	public void StartTimer() {
@@ -139,7 +148,9 @@ public class Scoreboard : MonoBehaviour {
 	public static void AddToScore(int add) {
 		TextMesh Scoreboard_score = GameObject.Find("Score").GetComponent<TextMesh>();
 
-		score = score + add;
+		score += add;
+
+		Leaderboard.instance.UpdateLeaderboardWithScore (score);
 
 		if (score >= 100)
 			Scoreboard_score.text = score.ToString();

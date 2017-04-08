@@ -55,8 +55,6 @@ public class Login : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		//print ((GamePlay.ActiveScreen)GamePlay.ActiveScreenValue);
-
 		switch (GamePlay.ActiveScreenValue) {
 		case (int)GamePlay.ActiveScreen.playedBeforeQuestion:
 			SetupPlayedBeforeQuestion ();
@@ -145,7 +143,6 @@ public class Login : MonoBehaviour {
 	}
 
 	public void BackButton_Pressed_BackToPlayedBeforeQuestion() {
-		//SetupPlayedBeforeQuestion ();
 		GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.playedBeforeQuestion;
 	}
 
@@ -188,7 +185,6 @@ public class Login : MonoBehaviour {
 			if (DoesUsernameExist ()) {
 				if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.enterName) {
 					WelcomeBack ();
-					AddNewLeaderboardRow ();
 				}
 			}
 			else
@@ -206,8 +202,6 @@ public class Login : MonoBehaviour {
 			else if (usernameAdded) {
 				LoginHelp.text = "Username added";
 				NextButton.onClick.AddListener (Welcome);
-
-				//usernameAdded = false;
 			} else {
 				AddNewUsername ();
 			}
@@ -341,7 +335,7 @@ public class Login : MonoBehaviour {
 		usernameAdded = true;
 	}
 
-	private void AddNewLeaderboardRow() {
+	public void AddNewLeaderboardRow() {
 
 		int userId = 0;
 		int score = 0;
@@ -371,4 +365,6 @@ public class Login : MonoBehaviour {
 
 		dbConnection.Close ();
 	}
+
+
 }
