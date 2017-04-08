@@ -146,8 +146,12 @@ public class HUD : MonoBehaviour {
 	}
 
 	public void RestartGame() {
-		GamePlay.SetUpPregame ();
-		Scoreboard.instance.Reset ();
+		if (!GamePlay.restartActivated) {
+			GamePlay.restartActivated = true;
+			//Scoreboard.instance.ResetScore ();
+			Scoreboard.instance.Reset ();
+			GamePlay.SetUpPregame ();
+		}
 	}
 
 	public void ViewLeaderboard() {

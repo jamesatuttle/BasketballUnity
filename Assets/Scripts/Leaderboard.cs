@@ -7,6 +7,8 @@ using Mono.Data.SqliteClient;
 
 public class Leaderboard : MonoBehaviour {
 
+	public static Leaderboard instance;
+
 	private static string construct;
 	private static IDbConnection dbConnection;
 	private static IDbCommand dbCommand;
@@ -27,6 +29,8 @@ public class Leaderboard : MonoBehaviour {
 	private static string[,] LeaderboardDataString;
 
 	void Awake () {
+		instance = this;
+
 		LeaderboardDataString = new string[66,2];
 		construct = "URI=file:" + Application.dataPath + "\\TrainingData.db";
 		Leaderboard_Numbers1 = GameObject.Find ("Numbers").GetComponent<TextMesh> ();
@@ -126,5 +130,17 @@ public class Leaderboard : MonoBehaviour {
 			Leaderboard_Usernames3.text += LeaderboardDataString [63, 0];
 			Leaderboard_Scores3.text += LeaderboardDataString [63, 1];
 		}
+	}
+
+	public void UpdateLeaderboardWithScore(int score) {
+
+		dbConnection = new SqliteConnection (construct);
+		dbConnection.Open ();
+		dbCommand = dbConnection.CreateCommand ();
+
+		dbCommand.CommandText = "UPDATE Leaderboard SET Score = " + score + " WHERE ID = " + Login.LeaderboardID + ";";
+		dbCommand.ExecuteNonQuery ();
+
+		dbConnection.Close ();
 	}
 }
