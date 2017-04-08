@@ -151,6 +151,8 @@ public class StartScreen : MonoBehaviour {
 		HideText (Leaderboard_Usernames);
 		HideText (Leaderboard_Scores);
 
+		Scoreboard.instance.ResetScore ();
+
 		Basketball.instance.UpdateFixedBasketballPosition(0f, 1.53f, -15.44f);
 	}
 

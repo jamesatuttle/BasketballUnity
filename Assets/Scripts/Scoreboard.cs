@@ -55,6 +55,11 @@ public class Scoreboard : MonoBehaviour {
 		GameObject.Find("Score").GetComponent<TextMesh>().text = "000";
 	}
 
+	public void SetUpScoreboard() {
+		ResetScore ();
+		SetAvailableBalls ();
+	}
+
 	public void StartTimer() {
 		totalTime = Time.time + 180;
 		SetTimer ();

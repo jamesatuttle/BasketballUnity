@@ -182,7 +182,6 @@ public class Login : MonoBehaviour {
 	public void ReadUsernameInput() {
 		if (UserName.text != "") {
 			UsernameString = UserName.text;
-			Scoreboard.instance.ResetScore ();
 			if (DoesUsernameExist ()) {
 				if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.enterName) {
 					WelcomeBack ();

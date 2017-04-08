@@ -36,7 +36,7 @@ public class GamePlay : MonoBehaviour {
 		Basketball.instance.ResetBall ();
 		StartScreen.instance.ClearStartScreen ();
 		HUD.DisplayPreGameText ();
-		Scoreboard.instance.SetAvailableBalls ();
+		Scoreboard.instance.SetUpScoreboard ();
 		Login.instance.AddNewLeaderboardRow ();
 		GameIsPlayable = true;
 	}
