@@ -146,8 +146,9 @@ public class HUD : MonoBehaviour {
 	}
 
 	public void RestartGame() {
-		if (!GamePlay.restartActivated) {
-			GamePlay.restartActivated = true;
+		if (!GamePlay.restartActivated) { 
+			//prevents the reset function being fired more than once, preventing the addition of many new leaderboard rows
+			GamePlay.restartActivated = true; //set to true here, but reset back to false when the main game is loaded
 			Scoreboard.instance.Reset ();
 			GamePlay.SetUpPregame ();
 		}
