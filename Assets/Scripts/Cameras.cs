@@ -5,7 +5,7 @@ using UnityEngine;
 public class Cameras : MonoBehaviour {
 
 	public static Vector3 MainCameraPosition = new Vector3 (0f, 6.5f, 5f); //the position of the main camera in the game environment
-	private static Camera MainCamera; //a value to score the main camera object
+	private static Camera MainCamera; //a value to store the main camera object
 
 	public enum Facing { //an emum value to give the values within an associated integer value
 		forwards = 0,
