@@ -15,7 +15,7 @@ public class BasketDetected : MonoBehaviour {
   }
 
 	/*
-	* Update is called approximately 20 frames per second
+	* Update is called once per frame
 	* If the user has scored then update the scoreboard as appropriate
 	*/
 	void Update () {

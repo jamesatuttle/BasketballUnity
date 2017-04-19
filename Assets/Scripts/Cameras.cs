@@ -18,7 +18,7 @@ public class Cameras : MonoBehaviour {
 	}
 
 	/*
-	* Update is called approximately 20 frames per second
+	* Update is called once per frame
 	* Used to change the camera depending on which screen is active
 	*/
 	void Update () {
