@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class ScoreboardTests
 {
-    //private Scoreboard scoreboard = new Scoreboard();
-
 	[TearDown] public void Cleanup()
 	{
 		HUDTests.ClearHUD ();
@@ -59,7 +57,6 @@ public class ScoreboardTests
 	public void PreGame_minusAvailableBalls()
 	{
 		GamePlay.GameIsPlayable = true;
-		//GamePlay.PlayingMainGame = false;
 		Scoreboard.availableBalls = 3;
 		Scoreboard.instance.MinusAvailableBalls();
 
@@ -71,10 +68,8 @@ public class ScoreboardTests
 	public void PreGame_minusAvailableBalls_Zero_Reset()
 	{
 		GamePlay.GameIsPlayable = true;
-		//GamePlay.PlayingMainGame = false;
 		Scoreboard.availableBalls = 1;
 		Scoreboard.instance.MinusAvailableBalls();
-
 
 		Assert.AreEqual(10, Scoreboard.availableBalls);
 	}
@@ -83,22 +78,16 @@ public class ScoreboardTests
 	public void PreGame_minusAvailableBalls_Zero_StartCountdown()
 	{
 		GamePlay.GameIsPlayable = true;
-		//GamePlay.PlayingMainGame = false;
 		Scoreboard.availableBalls = 0;
 		Scoreboard.instance.MinusAvailableBalls();
-
-
-		//Assert.AreEqual(true, HUD.countdown);
 	}
 
 	[Test]
 	public void MainGame_minusAvailableBalls()
 	{
 		GamePlay.GameIsPlayable = true;
-		//GamePlay.PlayingMainGame = true;
 		Scoreboard.availableBalls = 3;
 		Scoreboard.instance.MinusAvailableBalls();
-
 
 		Assert.AreEqual(2, Scoreboard.availableBalls);
 	}
@@ -107,7 +96,6 @@ public class ScoreboardTests
     public void MainGame_minusAvailableBalls_Zero()
     {
 		GamePlay.GameIsPlayable = true;
-		//GamePlay.PlayingMainGame = true;
         Scoreboard.availableBalls = 1;
         Scoreboard.instance.MinusAvailableBalls();
 
@@ -118,10 +106,8 @@ public class ScoreboardTests
     public void MainGame_minusAvailableBalls_Zero_GameOver()
     {
 		GamePlay.GameIsPlayable = true;
-		//GamePlay.PlayingMainGame = true;
         Scoreboard.availableBalls = 0;
         Scoreboard.instance.MinusAvailableBalls();
-
 
         Assert.AreEqual("GAME OVER", GameObject.Find("Game Over").GetComponent<UnityEngine.UI.Text>().text);
     }
@@ -129,11 +115,10 @@ public class ScoreboardTests
     [Test]
     public void minusAvailableBalls_Zero_IsGamePlayable()
     {
+		GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.mainGame;
 		GamePlay.GameIsPlayable = true;
-		//GamePlay.PlayingMainGame = true;
         Scoreboard.availableBalls = 0;
         Scoreboard.instance.MinusAvailableBalls();
-
 
 		Assert.AreEqual(false, GamePlay.GameIsPlayable);
     }
@@ -154,7 +139,6 @@ public class ScoreboardTests
         startBasketDetected();
         startScoreboard();
         basketDetected.OnTriggerEnter(col);
-        //basketDetected.OnTriggerExit(col);
 
         Assert.AreEqual("010", GameObject.Find("Score").GetComponent<TextMesh>().text);
     }
@@ -167,7 +151,6 @@ public class ScoreboardTests
 
         startBasketDetected();
         startScoreboard();
-        //basketDetected.OnTriggerExit(col);
 
         Assert.AreNotEqual("010", GameObject.Find("Score").GetComponent<TextMesh>().text);
         Assert.AreEqual("000", GameObject.Find("Score").GetComponent<TextMesh>().text);
@@ -182,10 +165,8 @@ public class ScoreboardTests
         startBasketDetected();
         startScoreboard();
         basketDetected.OnTriggerEnter(col);
-        //basketDetected.OnTriggerExit(col);
 
         basketDetected.OnTriggerEnter(col);
-        //basketDetected.OnTriggerExit(col);
 
         Assert.AreEqual("020", GameObject.Find("Score").GetComponent<TextMesh>().text);
     }
@@ -199,13 +180,10 @@ public class ScoreboardTests
         startBasketDetected();
         startScoreboard();
         basketDetected.OnTriggerEnter(col);
-        //basketDetected.OnTriggerExit(col);
 
         basketDetected.OnTriggerEnter(col);
-        //basketDetected.OnTriggerExit(col);
 
         basketDetected.OnTriggerEnter(col);
-        //basketDetected.OnTriggerExit(col);
 
         Assert.AreNotEqual("30", GameObject.Find("Score").GetComponent<TextMesh>().text);
     }
@@ -219,47 +197,14 @@ public class ScoreboardTests
         startBasketDetected();
         startScoreboard();
         basketDetected.OnTriggerEnter(col);
-        //basketDetected.OnTriggerExit(col);
 
         basketDetected.OnTriggerEnter(col);
-        //basketDetected.OnTriggerExit(col);
 
         basketDetected.OnTriggerEnter(col);
-        //basketDetected.OnTriggerExit(col);
 
         Assert.AreEqual("120", GameObject.Find("Score").GetComponent<TextMesh>().text);
     }
-
-	//NEED TO MOCK COLLISION OF HITTING FLOOR
-
-    /*[Test]
-    public void showCorrectScore_ScoreMissScoreScore()
-    {
-        Collider col = new Collider();
-        Collision collision = new Collision();
-
-        BasketDetected basketDetected = new BasketDetected();
-        Basketball basketball = new Basketball();
-
-       // collision.gameObject.name = "Floor";
-
-        startBasketDetected();
-        startScoreboard();
-
-        basketDetected.OnTriggerEnter(col);
-        //basketDetected.OnTriggerExit(col);
-
-        //basketball.OnCollisionEnter(collision);
-
-        basketDetected.OnTriggerEnter(col);
-        //basketDetected.OnTriggerExit(col);
-
-        basketDetected.OnTriggerEnter(col);
-        //basketDetected.OnTriggerExit(col);
-
-        Assert.AreEqual("30", GameObject.Find("Score").GetComponent<TextMesh>().text);
-    }*/
-
+		
     [Test]
     public void hideBonusLight_OnStart()
     {
@@ -285,7 +230,6 @@ public class ScoreboardTests
         startScoreboard();
 
         basketDetected.OnTriggerEnter(col);
-        //basketDetected.OnTriggerExit(col);
 
         Color bonusOff = new Color();
         ColorUtility.TryParseHtmlString("#181717", out bonusOff);
@@ -303,10 +247,8 @@ public class ScoreboardTests
         startScoreboard();
 
         basketDetected.OnTriggerEnter(col);
-        //basketDetected.OnTriggerExit(col);
 
         basketDetected.OnTriggerEnter(col);
-        //basketDetected.OnTriggerExit(col);
 
         Color bonusOff = new Color();
         ColorUtility.TryParseHtmlString("#181717", out bonusOff);
@@ -323,13 +265,10 @@ public class ScoreboardTests
         startBasketDetected();
         startScoreboard();
         basketDetected.OnTriggerEnter(col);
-        //basketDetected.OnTriggerExit(col);
 
         basketDetected.OnTriggerEnter(col);
-        //basketDetected.OnTriggerExit(col);
 
         basketDetected.OnTriggerEnter(col);
-        //basketDetected.OnTriggerExit(col);
 
         Color bonusColour = new Color();
         ColorUtility.TryParseHtmlString("#6BD289FF", out bonusColour);
