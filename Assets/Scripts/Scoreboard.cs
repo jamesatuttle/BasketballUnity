@@ -6,27 +6,29 @@ using System;
 
 public class Scoreboard : MonoBehaviour {
 
-	public static Scoreboard instance;
+	public static Scoreboard instance; //create an instance of the class, so that other classes can access instances of its methods
 
-	float totalTime;
-	public static int availableBalls;
-    public static int score;
+	float totalTime; //stores the total time left on the game
+	public static int availableBalls; //stores the remaining basketballs
+  public static int score; //stores the score
+
 	Button BackButton;
 
 	TextMesh TimeRemaining;
 
-	private bool _startedTimer;
+	private bool _startedTimer; //a bool to store if the timer has been started
 
+	//Awake is called at the start of the game, used to initialise variables
 	void Awake () {
 		instance = this;
 		BackButton = GameObject.Find ("BackButton").GetComponent<Button> ();
 		TimeRemaining = GameObject.Find ("Time Remaining").GetComponent<TextMesh> ();
 	}
 
-	// Use this for initialization
+	//called after Awake, at the start of the game
 	public void Start () {
 		_startedTimer = false;
-	
+
 		UpdateAvailableBalls ();
 
 		AddToScore(0);
@@ -34,8 +36,13 @@ public class Scoreboard : MonoBehaviour {
 		LightUpScoreboardBonus (false); // set the bonus text to black
 	}
 
-    // Update is called once per frame
-    void Update () {
+	/*
+	* Update is called once per frame
+	* if the scoreboard is being viewed from the start screen
+	* then display the backbutton
+	* display the time on the scoreboard
+	*/
+	void Update () {
 		if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.scoreboard) {
 			BackButton.image.enabled = true;
 			BackButton.GetComponentInChildren<Text> ().text = "BACK";
@@ -45,34 +52,52 @@ public class Scoreboard : MonoBehaviour {
 		SetTimer ();
 	}
 
+	/*
+	* Reset the scoreboard with the available balls and reset the score
+	*/
 	public void Reset () {
 		SetAvailableBalls ();
 		ResetScore ();
 	}
 
+	/*
+	* Reset the scoreboard by setting the score variable to 0 and setting the score text to 000
+	*/
 	public void ResetScore() {
 		score = 0;
 		GameObject.Find("Score").GetComponent<TextMesh>().text = "000";
 	}
 
+	/*
+	* Set the score to 0 and set the availableBalls for the game
+	*/
 	public void SetUpScoreboard() {
 		ResetScore ();
 		SetAvailableBalls ();
 	}
 
+	/*
+	* Start the timer at 3 minutes
+	*/
 	public void StartTimer() {
-		totalTime = Time.time + 180;
+		totalTime = Time.time + 180; //set the totalTime to the seconds since the game started plus 180 (3 minutes)
 		SetTimer ();
 		_startedTimer = true;
 	}
 
+	/*
+	* Stop the timer by setting the variable to false
+	*/
 	public void StopTimer() {
 		_startedTimer = false;
 	}
 
+	/*
+	* Set the correct time on the scoreboard
+	*/
 	void SetTimer() {
 		if (_startedTimer) {
-			int timeLeft = Convert.ToInt32 (totalTime) - Convert.ToInt32 (Time.time);
+			int timeLeft = Convert.ToInt32 (totalTime) - Convert.ToInt32 (Time.time); //calculate the time left by minusing the current time from the total time
 			if (timeLeft < 0)
 				timeLeft = 0;
 
@@ -105,6 +130,7 @@ public class Scoreboard : MonoBehaviour {
 			}
 
 			if (timeLeft == 0f && GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.mainGame) {
+				//if the timer runs out and the main game is being played then gameover
 				GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.gameOver;
 			}
 		} else {
@@ -112,6 +138,9 @@ public class Scoreboard : MonoBehaviour {
 		}
 	}
 
+	/*
+	* Update the availableBalls on the scoreboard
+	*/
 	public void UpdateAvailableBalls() {
 		TextMesh Scoreboard_noOfBalls = GameObject.Find("NumberOfBalls").GetComponent<TextMesh>();
 
@@ -121,14 +150,17 @@ public class Scoreboard : MonoBehaviour {
 			Scoreboard_noOfBalls.text = "00" + availableBalls.ToString ();
 	}
 
+	/*
+	* Minus one from the available balls and update the scoreboard
+	*/
 	public void MinusAvailableBalls() {
 		if (availableBalls > 0)
 			availableBalls--;
 		if (availableBalls == 0) {
-			if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.mainGame) {
+			if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.mainGame) { //if the balls run out on the main game then game over
 				GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.gameOver;
 				StopTimer ();
-			} else if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.preGame) {
+			} else if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.preGame) { //if the balls run out on the pregame then start the main game
 				GamePlay.GameIsPlayable = false;
 				GamePlay.SetUpMainGame ();
 			}
@@ -137,20 +169,26 @@ public class Scoreboard : MonoBehaviour {
 		UpdateAvailableBalls();
 	}
 
+	/*
+	* Set the availableBalls when the pregame or maingame starts
+	*/
 	public void SetAvailableBalls() {
 		if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.mainGame)
 			availableBalls = 30;
-		else if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.preGame) 
+		else if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.preGame)
 			availableBalls = 3;
 		UpdateAvailableBalls ();
 	}
 
+	/*
+	* Add to the score and update it on the scoreboard
+	*/
 	public static void AddToScore(int add) {
 		TextMesh Scoreboard_score = GameObject.Find("Score").GetComponent<TextMesh>();
 
-		score += add;
+		score += add; //score = score + add
 
-		Leaderboard.instance.UpdateLeaderboardWithScore (score);
+		Leaderboard.instance.UpdateLeaderboardWithScore (score); //update the leaderboard with the users score
 
 		if (score >= 100)
 			Scoreboard_score.text = score.ToString();
@@ -160,12 +198,19 @@ public class Scoreboard : MonoBehaviour {
 			Scoreboard_score.text = "00" + score.ToString();
 	}
 
-    public static void updateBonusColour(string hex) {
-        Color bonusColour = new Color();
-        ColorUtility.TryParseHtmlString(hex, out bonusColour);
-        GameObject.Find("Bonus").GetComponent<TextMesh>().color = bonusColour;
-    }
+	/*
+	* A generic method to update the bonus colour on the scoreboard with a hexidecimal colour value
+	*/
+  public static void updateBonusColour(string hex) {
+      Color bonusColour = new Color();
+      ColorUtility.TryParseHtmlString(hex, out bonusColour);
+      GameObject.Find("Bonus").GetComponent<TextMesh>().color = bonusColour;
+  }
 
+	/*
+	* Light up the scoreboard bonus colour if lightUp is true, else set it to black
+	* used when a user gets a triple basket bonus
+	*/
 	public static void LightUpScoreboardBonus(bool lightUp) {
 		if (lightUp)
 			updateBonusColour("#6BD289FF"); //set to green
