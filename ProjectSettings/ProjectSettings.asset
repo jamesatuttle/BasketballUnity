@@ -10,7 +10,7 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
+  companyName: JamesTuttle13004928
   productName: IP_Testing
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
@@ -50,7 +50,7 @@ PlayerSettings:
   m_ActiveColorSpace: 0
   m_MTRendering: 1
   m_MobileMTRendering: 0
-  m_StackTraceTypes: 010000000100000001000000020000000100000001000000
+  m_StackTraceTypes: 020000000000000000000000000000000100000001000000
   iosShowActivityIndicatorOnLoading: -1
   androidShowActivityIndicatorOnLoading: -1
   tizenShowActivityIndicatorOnLoading: -1

@@ -40,12 +40,12 @@ public class Cameras : MonoBehaviour {
 
 	public static void MainGameCameraSetUp() {
 		UpdateCameraRotation (Facing.forwards);
-		UpdateCameraPosition (MainCameraPosition.x, MainCameraPosition.y, MainCameraPosition.z, 34);
+		UpdateCameraPosition (MainCameraPosition.x, MainCameraPosition.y, MainCameraPosition.z, 45);
 	}
 
 	public static void ScoreboardCameraSetUp() {
 		UpdateCameraRotation (Facing.forwards);
-		UpdateCameraPosition (13f, 14.3f, 37.9f, 62);
+		UpdateCameraPosition (13f, 14.3f, 37.9f, 70);
 	}
 
 	public static void LeaderboardCameraSetUp() {
