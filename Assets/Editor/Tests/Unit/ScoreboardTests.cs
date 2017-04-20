@@ -146,9 +146,6 @@ public class ScoreboardTests
     [Test]
     public void preventScore_OnCollision_WhenNoEnterTrigger()
     {
-        Collider col = new Collider();
-        BasketDetected basketDetected = new BasketDetected();
-
         startBasketDetected();
         startScoreboard();
 
@@ -208,9 +205,6 @@ public class ScoreboardTests
     [Test]
     public void hideBonusLight_OnStart()
     {
-        Collider col = new Collider();
-        BasketDetected basketDetected = new BasketDetected();
-
         startBasketDetected();
         startScoreboard();
 
@@ -275,7 +269,5 @@ public class ScoreboardTests
 
         Assert.AreEqual(bonusColour, GameObject.Find("Bonus").GetComponent<TextMesh>().color);
     }
-
-    
 
 }
