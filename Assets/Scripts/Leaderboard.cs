@@ -7,13 +7,15 @@ using Mono.Data.SqliteClient;
 
 public class Leaderboard : MonoBehaviour {
 
-	public static Leaderboard instance;
+	public static Leaderboard instance; //create an instance of the class, so that other classes can access instances of its methods
 
-	private static string construct;
-	private static IDbConnection dbConnection;
-	private static IDbCommand dbCommand;
-	private static IDataReader dataReader;
+	//variables to connect to the database
+	private static string construct; //the location of the database file
+	private static IDbConnection dbConnection; //the connection to the database
+	private static IDbCommand dbCommand; //used to perform SQL statements and commands
+	private static IDataReader dataReader; //used to read information from the database
 
+	//stores the TextMesh objects of the username, score and number columns on the leaderboard
 	private static TextMesh Leaderboard_Usernames1;
 	private static TextMesh Leaderboard_Usernames2;
 	private static TextMesh Leaderboard_Usernames3;
@@ -26,13 +28,16 @@ public class Leaderboard : MonoBehaviour {
 
 	Button BackButton;
 
-	private static string[,] LeaderboardDataString;
+	private static string[,] LeaderboardDataString; //a 2d array which stores the leaderboard data
 
+	//Awake is called at the start of the game, used to initialise variables
 	void Awake () {
-		instance = this;
+		instance = this; //create an instance of the leaderboard class
 
-		LeaderboardDataString = new string[66,2];
-		construct = "URI=file:" + Application.dataPath + "\\TrainingData.db";
+		LeaderboardDataString = new string[66,2]; //intialise the size of the leaderboard data array
+		construct = "URI=file:" + Application.dataPath + "\\TrainingData.db"; //sets the database file path
+
+		//initialises the game objects
 		Leaderboard_Numbers1 = GameObject.Find ("Numbers").GetComponent<TextMesh> ();
 		Leaderboard_Numbers2 = GameObject.Find ("Numbers2").GetComponent<TextMesh> ();
 		Leaderboard_Numbers3 = GameObject.Find ("Numbers3").GetComponent<TextMesh> ();
@@ -45,13 +50,18 @@ public class Leaderboard : MonoBehaviour {
 		BackButton = GameObject.Find ("BackButton").GetComponent<Button> ();
 	}
 
+	//called after Awake, at the start of the game
 	void Start () {
 		Leaderboard_Numbers1.color = Color.yellow;
 		Leaderboard_Numbers2.color = Color.yellow;
 		Leaderboard_Numbers3.color = Color.yellow;
 	}
 
-	// Update is called once per frame
+	/*
+	* Update is called once per frame
+	* If the leaderboard is the active screen then set it up
+	* Display the back button image and text and activate it
+	*/
 	void Update () {
 		if (GamePlay.ActiveScreenValue == (int)GamePlay.ActiveScreen.leaderboard) {
 			BackButton.image.enabled = true;
@@ -59,10 +69,14 @@ public class Leaderboard : MonoBehaviour {
 			BackButton.onClick.AddListener (StartScreen.instance.SetUpStartScreen);
 		}
 
-		PullLeaderboardData ();
-		UpdateFullLeaderboard ();
+		PullLeaderboardData (); //pull the data from the leaderboard table
+		UpdateFullLeaderboard (); //update the leaderboard with the pulled data
 	}
 
+	/*
+	* Pull the data from the leaderboard table in the database
+	* uses a LIMIT 66 to pull the highest 66 scores
+	*/
 	private static void PullLeaderboardData() {
 
 		dbConnection = new SqliteConnection (construct);
@@ -74,6 +88,7 @@ public class Leaderboard : MonoBehaviour {
 
 		int count = 0;
 
+		//pull the data from each row in the leaderboard table, storing the username and score
 		while (dataReader.Read ()) {
 			LeaderboardDataString [count, 0] = dataReader ["Username"].ToString ();
 			LeaderboardDataString [count, 1] = dataReader ["Score"].ToString ();
@@ -83,6 +98,9 @@ public class Leaderboard : MonoBehaviour {
 		dbConnection.Close ();
 	}
 
+	/*
+	* Update the physical leaderboard in the game environment with the leaderboard data
+	*/
 	private static void UpdateFullLeaderboard() {
 
 		Leaderboard_Usernames1.text = "";
@@ -92,6 +110,9 @@ public class Leaderboard : MonoBehaviour {
 		Leaderboard_Usernames3.text = "";
 		Leaderboard_Scores3.text = "";
 
+		//as there are three columns of the leaderboard, they need to be filled one by one
+
+		//column one
 		for (int i = 0; i < 21; i++) {
 			if (LeaderboardDataString [i, 0] != "") {
 				Leaderboard_Usernames1.text += (LeaderboardDataString [i, 0] + "\n");
@@ -105,6 +126,7 @@ public class Leaderboard : MonoBehaviour {
 			Leaderboard_Scores1.text += LeaderboardDataString [21, 1];
 		}
 
+		//column two
 		for (int i = 22; i < 43; i++) {
 			if (LeaderboardDataString [i, 0] != "") {
 				Leaderboard_Usernames2.text += (LeaderboardDataString [i, 0] + "\n");
@@ -118,6 +140,7 @@ public class Leaderboard : MonoBehaviour {
 			Leaderboard_Scores2.text += LeaderboardDataString [43, 1];
 		}
 
+		//column three
 		for (int i = 44; i < 65; i++) {
 			if (LeaderboardDataString [i, 0] != "") {
 				Leaderboard_Usernames3.text += (LeaderboardDataString [i, 0] + "\n");
@@ -132,6 +155,9 @@ public class Leaderboard : MonoBehaviour {
 		}
 	}
 
+	/*
+	* update the leaderboard with the score when the user scores a hoop
+	*/
 	public void UpdateLeaderboardWithScore(int score) {
 
 		dbConnection = new SqliteConnection (construct);
