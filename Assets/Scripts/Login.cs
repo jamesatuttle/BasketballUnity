@@ -7,8 +7,9 @@ using Mono.Data.SqliteClient;
 
 public class Login : MonoBehaviour {
 
-	public static Login instance;
+	public static Login instance; //create an instance of the class, so that other classes can access instances of its methods
 
+	//stores the game object
 	public Text LoginText;
 	private Text LoginHelp;
 
@@ -19,19 +20,21 @@ public class Login : MonoBehaviour {
 	Button YesButton;
 	Button NoButton;
 
-	StartScreen startScreen;
+	StartScreen startScreen; //an instance of the start screen
 
-	private string UsernameString;
-	public static int LeaderboardID;
-	public static int UserID;
+	private string UsernameString; //the username of the user
+	public static int LeaderboardID; //the leaderboard id, to update the score
+	public static int UserID; //the leaderboard id, to be used to pull the data of the user
 
-	private static string construct;
-	private static IDbConnection dbConnection;
-	private static IDbCommand dbCommand;
-	private static IDataReader dataReader;
+	//variables to connect to the database
+	private static string construct; //the location of the database file
+	private static IDbConnection dbConnection; //the connection to the database
+	private static IDbCommand dbCommand; //used to perform SQL statements and commands
+	private static IDataReader dataReader; //used to read information from the database
 
 	bool usernameAdded;
 
+	//Awake is called at the start of the game, used to initialise variables
 	void Awake() {
 		construct = "URI=file:" + Application.dataPath + "\\TrainingData.db";
 		instance = this;
@@ -45,14 +48,18 @@ public class Login : MonoBehaviour {
 		BackButton = GameObject.Find ("BackButton").GetComponent<Button> ();
 	}
 
-	// Use this for initialization
+	//called after Awake, at the start of the game
 	void Start () {
 		usernameAdded = false;
 		HideText (LoginText);
 		UsernameString = "";
 	}
-	
-	// Update is called once per frame
+
+	/*
+	* Update is called once per frame
+	* Controls the login functionality
+	* Allows the appropriate page to be loaded
+	*/
 	void Update () {
 
 		switch (GamePlay.ActiveScreenValue) {
@@ -74,6 +81,10 @@ public class Login : MonoBehaviour {
 		}
 	}
 
+	/*
+	* Hides the buttons on the display
+	* Hides the login text and the input field
+	*/
 	void SetUpPlayingGame() {
 		HideButton (NextButton);
 		HideButton (BackButton);
@@ -86,14 +97,21 @@ public class Login : MonoBehaviour {
 		HideInputField(UserName);
 	}
 
+	/*
+	* Generic method to hide the button which is passed through
+	*/
 	void HideButton(Button button) {
 		button.image.enabled = false;
 		button.GetComponentInChildren<Text> ().text = "";
 	}
 
+	/*
+	* A method to show the passed in button
+	* The button text is set depending on which button has been passed in
+	*/
 	void ShowButton(Button button) {
 		button.image.enabled = true;
-	
+
 		switch (button.name) {
 		case "NextButton":
 			button.GetComponentInChildren<Text> ().text = "NEXT";
@@ -110,6 +128,11 @@ public class Login : MonoBehaviour {
 		}
 	}
 
+	/*
+	* Hides the inputField by disabling the image and placeholder text
+	* Clears the inputted text
+	* Prevnts users from interacting with the input field
+	*/
 	void HideInputField(InputField inputField) {
 		inputField.image.enabled = false;
 		inputField.placeholder.enabled = false;
@@ -118,6 +141,10 @@ public class Login : MonoBehaviour {
 		inputField.placeholder.GetComponentInChildren<Text> ().text = "";
 	}
 
+	/*
+	* Hides the ask name screen
+	* Hides the buttons, input field and text
+	*/
 	public void HideAskNameScreen() {
 		HideButton (NextButton);
 		HideButton (BackButton);
@@ -126,6 +153,10 @@ public class Login : MonoBehaviour {
 		HideText (LoginHelp);
 	}
 
+	/*
+	* Shows the input field by enabling the input image and placeholder text
+	* Sets the input field to interactable
+	*/
 	void ShowInputField(InputField inputField) {
 		inputField.image.enabled = true;
 		inputField.placeholder.enabled = true;
@@ -134,18 +165,34 @@ public class Login : MonoBehaviour {
 		inputField.placeholder.GetComponentInChildren<Text> ().text = "Username...";
 	}
 
+	/*
+	* A generic method to hide whichever text is passed through
+	*/
 	void HideText(Text text) {
 		text.text = "";
 	}
 
+	/*
+	* A function which is called when the user clicks a button to go back to the start screen
+	* Sets the active screen to the start screen
+	*/
 	public void BackButton_Pressed_BackToStart() {
 		GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.startScreen;
 	}
 
+	/*
+	* A function which takes the user to the initial login question
+	*/
 	public void BackButton_Pressed_BackToPlayedBeforeQuestion() {
 		GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.playedBeforeQuestion;
 	}
 
+	/*
+	* A method to set up the initial quesiton
+	* Hides the previous login input field and text
+	* Displays the YES, NO and BACK buttons
+	* Activates these buttons to allow them to be used
+	*/
 	public void SetupPlayedBeforeQuestion() {
 		LoginText.text = "HAVE YOU PLAYED BEFORE?";
 		HideInputField (UserName);
@@ -160,6 +207,11 @@ public class Login : MonoBehaviour {
 		NoButton.onClick.AddListener (SetupRegister);
 	}
 
+	/*
+	* Sets up the login page
+	* Sets the active screen to the enterName screen
+	* Displays the appropriate text and buttons and actives these with listeners
+	*/
 	public void SetupLogin() {
 		GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.enterName;
 
@@ -179,6 +231,11 @@ public class Login : MonoBehaviour {
 		NextButton.onClick.AddListener (ReadUsernameInput);
 	}
 
+	/*
+	* Reads the username which the user inputs
+	* if the username exists then the WelcomeBack page is displayed
+	* if the username does not exist then it displays the appropriate error message
+	*/
 	public void ReadUsernameInput() {
 		if (UserName.text != "") {
 			UsernameString = UserName.text;
@@ -191,9 +248,13 @@ public class Login : MonoBehaviour {
 				LoginHelp.text = "Username not found";
 		} else
 			LoginHelp.text = "Enter a Username";
-		
 	}
 
+	/*
+	* Reads the username for the register
+	* If the username exists then an error is displayed
+	* if the username does not exist then the username is added to the database
+	*/
 	public void ReadUsernameInput_Register() {
 		if (UserName.text != "") {
 			UsernameString = UserName.text;
@@ -209,6 +270,9 @@ public class Login : MonoBehaviour {
 			LoginHelp.text = "Enter a Username";
 	}
 
+	/*
+	* Sets up the register page by displaying the text, input field and buttons
+	*/
 	public void SetupRegister() {
 		GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.registerName;
 
@@ -227,6 +291,10 @@ public class Login : MonoBehaviour {
 		NextButton.onClick.AddListener (ReadUsernameInput_Register);
 	}
 
+	/*
+	* Displays the welcome back screen
+	* Shows the next and back buttons and uses the inputted username to display this on the page
+	*/
 	public void WelcomeBack() {
 		GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.welcomeBack;
 
@@ -248,6 +316,10 @@ public class Login : MonoBehaviour {
 		LoginHelp.enabled = false;
 	}
 
+	/*
+	* Displays the welcome screen
+	* Shows the next and back buttons and uses the inputted username to display this on the page
+	*/
 	public void Welcome() {
 		GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.welcome;
 
@@ -268,10 +340,16 @@ public class Login : MonoBehaviour {
 		NextButton.onClick.AddListener (GamePlay.SetUpPregame);
 	}
 
+	/*
+	* Display the passed in text in yellow to highlight it
+	*/
 	public void HighlightText(Text text) {
 		text.color = Color.yellow;
 	}
 
+	/*
+	* Returns true if text is highlighted in yellow, otherwise false
+	*/
 	public bool IsHighlighted(Text text) {
 		if (text.color == Color.yellow)
 			return true;
@@ -279,6 +357,10 @@ public class Login : MonoBehaviour {
 			return false;
 	}
 
+	/*
+	* Checks against the users table to see if the username exists
+	* if it does then returns true, else returns false
+	*/
 	private bool DoesUsernameExist() {
 		dbConnection = new SqliteConnection (construct);
 		dbConnection.Open ();
@@ -299,6 +381,10 @@ public class Login : MonoBehaviour {
 		return usernameFound;
 	}
 
+	/*
+	* Adds the new username to the users table in the database
+	* also adds a new row into the leaderboard with the new user's userID
+	*/
 	private void AddNewUsername() {
 
 		int userId = 0;
@@ -335,6 +421,9 @@ public class Login : MonoBehaviour {
 		usernameAdded = true;
 	}
 
+	/*
+	* Adds a new row into the leaderboard with the new userId
+	*/
 	public void AddNewLeaderboardRow() {
 
 		int userId = 0;
