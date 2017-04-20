@@ -3625,8 +3625,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 550, y: 0}
-  m_SizeDelta: {x: 1000, y: 30}
+  m_AnchoredPosition: {x: 500, y: 0}
+  m_SizeDelta: {x: 900, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &744268441
 MonoBehaviour:
@@ -3640,7 +3640,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -3660,11 +3660,14 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "The game starts by giving you 3 pratice balls \nTo pick up the ball put
-    your hands a basketball width apart which is roughly 26cm \nMove the ball around
-    as if you were holding a real basketball\nTo throw the ball you need to move the
-    ball fast in the direction you want to throw and move your hands apart to release
-    the ball"
+  m_Text: 'The game starts by giving you 3 pratice balls.
+
+    To pick up the ball put your hands a basketball width apart which is roughly 26cm.
+
+    Move the ball around as if you were holding a real basketball.
+
+    To throw the ball you need to move the ball fast in the direction you want to
+    throw and move your hands apart to release the ball.'
 --- !u!222 &744268442
 CanvasRenderer:
   m_ObjectHideFlags: 0

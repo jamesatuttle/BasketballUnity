@@ -29,6 +29,9 @@ public class StartScreen : MonoBehaviour {
 	Button BackButton;
 	Button YesButton;
 	Button NoButton;
+	Button _mainMenuButton;
+	Button _playAgainButton;
+	Button _viewLeaderboardButton;
 
 	//Awake is called at the start of the game, used to initialise variables
 	void Awake() {
@@ -51,12 +54,22 @@ public class StartScreen : MonoBehaviour {
 		Leaderboard_Usernames = GameObject.Find ("Leaderboard_Usernames").GetComponent<Text> ();
 		Leaderboard_Scores = GameObject.Find ("Leaderboard_Scores").GetComponent<Text> ();
 		_kinectConnectedText = GameObject.Find ("KinectConnected").GetComponent<Text> ();
+		_mainMenuButton = GameObject.Find ("MainMenuButton").GetComponent<Button> ();
+		_playAgainButton = GameObject.Find ("PlayAgainButton").GetComponent<Button> ();
+		_viewLeaderboardButton = GameObject.Find ("ViewLeaderboardButton").GetComponent<Button> ();
 	}
 
 	//called after Awake, at the start of the game
 	void Start () {
 		GamePlay.ActiveScreenValue = (int)GamePlay.ActiveScreen.startScreen;
 		SetTextActive (StartGame); //sets the START GAME text to hightlight at the start
+		HideButton(BackButton);
+		HideButton (NextButton);
+		HideButton (YesButton);
+		HideButton (NoButton);
+		HideButton (_mainMenuButton);
+		HideButton (_playAgainButton);
+		HideButton (_viewLeaderboardButton);
 	}
 
 	/*

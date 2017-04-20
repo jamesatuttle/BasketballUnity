@@ -447,7 +447,7 @@ public class KinectController : MonoBehaviour
 		Vector3 smoothedCameraPosition = SmoothCameraMovement (newCameraPosition);
 
 		//Update the camera position with the smooted values
-		Cameras.UpdateCameraPosition (smoothedCameraPosition.x, smoothedCameraPosition.y, smoothedCameraPosition.z, 34);
+		Cameras.UpdateCameraPosition (smoothedCameraPosition.x, smoothedCameraPosition.y, smoothedCameraPosition.z, 45);
 	}
 
 	/*
